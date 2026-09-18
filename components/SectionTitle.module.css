@@ -1,0 +1,29 @@
+.wrap { max-width: 720px; }
+.center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.center .eyebrow { justify-content: center; }
+
+.line {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: var(--line);
+}
+
+.title { letter-spacing: 0.02em; }
+.lead { margin-top: 20px; }
+
+@media (max-width: 540px) {
+  .eyebrow { margin-bottom: 12px; }
+  .lead { margin-top: 12px; }
+}

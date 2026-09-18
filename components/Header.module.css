@@ -1,0 +1,121 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 80;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease),
+    backdrop-filter 0.3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+/* スクロール後：背景をぼかして下線を出す */
+.scrolled {
+  background: rgba(247, 247, 245, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--line);
+}
+
+.inner {
+  width: 100%;
+  max-width: calc(var(--content) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo {
+  width: 160px;
+  flex: none;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.nav { margin-left: auto; }
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.navLink {
+  display: block;
+  position: relative;
+  font-family: var(--font-en);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  padding-block: 6px;
+}
+
+/* ホバーは「1つの変化」だけ：下線が中央から伸びる */
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s var(--ease);
+}
+.navLink:hover::after,
+.navLink[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.cta {
+  flex: none;
+  width: 132px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  background: var(--accent-dark);
+  color: var(--bg);
+  font-family: var(--font-en);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  transition: opacity 0.25s var(--ease);
+}
+.cta:hover { opacity: 0.82; }
+
+.burger {
+  display: none;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  cursor: pointer;
+}
+.burger span {
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 1.5px;
+  background: var(--text);
+  transition: transform 0.3s var(--ease);
+}
+.burger span:nth-child(1) { top: 9px; }
+.burger span:nth-child(2) { top: 15px; }
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+@media (max-width: 1024px) {
+  .logo { width: auto; font-size: 16px; }
+  .nav,
+  .cta { display: none; }
+  .burger { display: block; }
+}

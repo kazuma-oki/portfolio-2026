@@ -1,0 +1,27 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--accent-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.logo {
+  color: var(--bg);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.bar {
+  display: block;
+  width: 120px;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: left center;
+}

@@ -1,0 +1,57 @@
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  visibility: hidden;
+  pointer-events: none;
+}
+.open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  cursor: pointer;
+}
+.open .overlay { opacity: 1; }
+
+/* 右からスライドイン（幅280px・設計図どおり） */
+.panel {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 280px;
+  max-width: 82vw;
+  background: var(--surface);
+  padding: calc(var(--header-h) + 32px) 32px 32px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.4s var(--ease-out);
+}
+.open .panel { transform: none; }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.link {
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.tagline {
+  margin-top: auto;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}

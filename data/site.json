@@ -1,0 +1,141 @@
+{
+  "siteName": "KAZUMA OKI",
+  "logo": "KAZUMA",
+  "tagline": "Design to Move People.",
+  "description": "大木千馬（Kazuma Oki）のポートフォリオ。伝えたいことを、適切に、分かりやすくデザインする。Webデザインと情報設計の制作実績を掲載しています。",
+  "nav": [
+    {
+      "label": "Works",
+      "href": "/works"
+    },
+    {
+      "label": "About",
+      "href": "/about"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
+  ],
+  "hero": {
+    "eyebrow": "Portfolio 2026",
+    "title": [
+      "伝わるかたちを、",
+      "つくる。"
+    ],
+    "titleEn": "KAZUMA OKI",
+    "role": "Web Designer",
+    "lead": "情報は、ただ存在するだけでは意味がない。\n伝え方ひとつで、人の理解も選択も変わる。\nその一歩手前を設計するのが、私のデザインです。",
+    "image": "images/hero.webp",
+    "imageAlt": "青空に向かって手を伸ばす、黄色いドレスの人物"
+  },
+  "worksSection": {
+    "eyebrow": "Works",
+    "title": "制作実績",
+    "lead": "学びながら手を動かしてつくったものを、考えた過程ごと載せています。"
+  },
+  "aboutSection": {
+    "eyebrow": "About",
+    "title": "つくる人について",
+    "lead": "経済学部で「人の行動を左右するのは情報である」と学び、その伝え方を設計する手段としてWebデザインを選びました。"
+  },
+  "cta": {
+    "title": "お仕事のご相談、お待ちしています。",
+    "lead": "制作のご依頼、インターンのお問い合わせなどお気軽にどうぞ。",
+    "button": "Contact"
+  },
+  "about": {
+    "heading": "About me",
+    "lead": "伝えたいことを、適切に、分かりやすく。",
+    "name": "大木 千馬 — Kazuma Oki",
+    "role": "Web Designer / Content Marketer",
+    "image": "",
+    "imagePlaceholder": "Photo",
+    "body": [
+      "2001年12月、茨城県出身。現在、慶應義塾大学経済学部に在籍しています。",
+      "「情報は、ただ存在するだけでは意味がない。」\nどんなに価値のある情報でも、伝え方次第で誤解を生んだり、届くべき人に届かなかったりする。",
+      "経済を学ぶ中で、「人々の行動を左右するのは情報である」と強く実感しました。特に、誤った情報が拡散されることで社会に混乱が生じる場面を目の当たりにし、「正しい情報を、わかりやすく、魅力的に伝えることができれば、人々の選択はもっと良いものになるのでは？」と考えるようになりました。",
+      "そこで出会ったのが Webデザイン です。\nインターネットが情報の中心となった今、視覚的なデザインが人々の理解や印象を大きく左右します。「伝えたいことを、適切に、分かりやすくデザインする」スキルを身につけるため、私はWebデザインを学び始めました。",
+      "このポートフォリオでは、学びながら制作したものを、考えた過程ごと紹介しています。"
+    ],
+    "stats": [
+      {
+        "value": "2001",
+        "label": "Born"
+      },
+      {
+        "value": "2025—",
+        "label": "Design"
+      },
+      {
+        "value": "3",
+        "label": "Projects"
+      }
+    ],
+    "skills": [
+      {
+        "title": "Web デザイン",
+        "text": "情報設計からビジュアル、コーディングまで。伝える順番と余白を考えることを大切にしています。",
+        "tools": "Figma / HTML / CSS / STUDIO"
+      },
+      {
+        "title": "コンテンツマーケティング",
+        "text": "GA4・Search Console を用いた分析から、記事やホワイトペーパーの構成・制作までを担当しています。",
+        "tools": "GA4 / Search Console / Looker Studio"
+      },
+      {
+        "title": "データ分析",
+        "text": "経済学部で計量経済学とゲーム理論を専攻。数字から示唆を引き出し、次の打ち手につなげます。",
+        "tools": "Python / SQL / Excel"
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Contact",
+    "lead": "制作のご依頼やご質問など、お気軽にご連絡ください。",
+    "fields": [
+      {
+        "name": "name",
+        "label": "お名前",
+        "type": "text",
+        "placeholder": "例：山田 太郎",
+        "required": true
+      },
+      {
+        "name": "email",
+        "label": "メールアドレス",
+        "type": "email",
+        "placeholder": "例：example@co.jp",
+        "required": true
+      },
+      {
+        "name": "message",
+        "label": "お問い合わせ内容",
+        "type": "textarea",
+        "placeholder": "ご自由にご記入ください。",
+        "required": true
+      }
+    ],
+    "submitLabel": "送信する",
+    "thanksTitle": "送信ありがとうございました",
+    "thanksText": "内容を確認のうえ、折り返しご連絡いたします。"
+  },
+  "googleForm": {
+    "actionUrl": "",
+    "entries": {
+      "name": "",
+      "email": "",
+      "message": ""
+    }
+  },
+  "social": [
+    {
+      "name": "X",
+      "href": "https://x.com/"
+    },
+    {
+      "name": "Instagram",
+      "href": "https://www.instagram.com/"
+    }
+  ]
+}

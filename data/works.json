@@ -1,0 +1,286 @@
+[
+  {
+    "id": "greenloop",
+    "title": "Green Loop",
+    "category": "Website",
+    "tag": "仮想",
+    "date": "2025/4/8",
+    "thumb": "images/works/greenloop-thumb.webp",
+    "mainImage": "images/works/greenloop-main.webp",
+    "sections": [
+      {
+        "heading": "作品URL",
+        "blocks": [
+          {
+            "text": "【 [https://kazu451.github.io/greenloop/](https://kazu451.github.io/greenloop/) 】※現在細かいデザインを修正中"
+          }
+        ]
+      },
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "環境×テクノロジーをテーマにした架空企業「GreenLoop株式会社」のコーポレートサイトを制作しました。サステナブルな社会を目指す企業の理念や事業内容をわかりやすく伝えるための構成・デザインを意識しています。"
+          }
+        ]
+      },
+      {
+        "heading": "ペルソナ設計",
+        "blocks": [
+          {
+            "list": [
+              "年齢：30代〜40代の企業担当者",
+              "職業：自治体職員、中小企業の環境担当、教育機関の先生など",
+              "目的：環境対策やエコ教育のパートナー企業を探している",
+              "デバイス：PCメイン（一部スマホ対応も想定）"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "サイトの目的",
+        "blocks": [
+          {
+            "text": "企業のビジョンや事業内容をわかりやすく伝え、問い合わせや連携につなげること。再生可能エネルギー導入や教育プログラムなど、具体的なサービス内容を明示し、信頼感のある印象を与えることを重視しました。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "list": [
+              "グリーンやホワイトを基調とした、清潔感と自然を意識した配色",
+              "見出しと文章の余白を広めに取り、視認性を高めるレイアウト",
+              "アイコンやイラストを活用し、事業内容を視覚的にわかりやすく表現",
+              "ヒーローエリアでは印象的なキャッチコピーと自然の画像で世界観を訴求"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "使用ツール",
+        "blocks": [
+          {
+            "list": [
+              "作成期間：１週間（制作・修正中）",
+              "使用ツール：HTML / CSS"
+            ]
+          },
+          {
+            "text": "※デザインツール未使用（コーディングベースで制作）"
+          }
+        ]
+      },
+      {
+        "heading": "全体デザイン",
+        "blocks": [
+          {
+            "image": "images/works/greenloop-full.webp",
+            "alt": "Green Loop コーポレートサイトの全体デザイン"
+          }
+        ]
+      }
+    ],
+    "year": "2025",
+    "role": "設計 / デザイン / コーディング",
+    "tools": [
+      "HTML",
+      "CSS"
+    ],
+    "url": "https://kazu451.github.io/greenloop/",
+    "summary": "環境×テクノロジーをテーマにした架空企業のコーポレートサイト。",
+    "kv": "images/works/greenloop-main.webp"
+  },
+  {
+    "id": "portfolio",
+    "title": "ポートフォリオ",
+    "category": "Website",
+    "tag": "自主制作",
+    "date": "2025/3/30",
+    "thumb": "images/works/portfolio-thumb.webp",
+    "mainImage": "images/works/portfolio-main.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "インターンで使用するポートフォリオ"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "このポートフォリオは、インターンシップの応募に向けて、自分の制作物やスキルを企業の採用担当者様に見ていただくためのものです。現時点でのスキルセットや成長の余地を客観的に評価してもらい、より良いクリエイターを目指すためのステップとします。"
+          }
+        ]
+      },
+      {
+        "heading": "ターゲット",
+        "blocks": [
+          {
+            "text": "インターンを募集する企業の採用担当者の方"
+          }
+        ]
+      },
+      {
+        "heading": "設計情報",
+        "blocks": [
+          {
+            "text": "誰でも直感的に見やすいシンプルなデザインを重視しました。"
+          },
+          {
+            "list": [
+              "固定ヘッダー を採用し、スムーズなナビゲーションを実現",
+              "レスポンシブデザイン に対応し、タブレットやスマートフォンでも快適に閲覧可能",
+              "シンプルかつ視認性の高いレイアウト で、作品の魅力を引き立てる"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "デザイン",
+        "blocks": [
+          {
+            "text": "このポートフォリオは、一冊のスケッチブックをイメージして作成しました。スケッチブックのように、自由な発想で制作物を表現できる場にしたいと考えています。空の色は変えられなくても、私たちの創造力次第でどんな世界にも変えられる──そんな想いを込めています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作期間",
+        "blocks": [
+          {
+            "text": "ノーコードツールSTUDIO　１週間（現在制作・修正中）"
+          }
+        ]
+      },
+      {
+        "heading": "使用ツール",
+        "blocks": [
+          {
+            "text": "STUDIO / Canva"
+          },
+          {
+            "text": "このポートフォリオが、私のクリエイティブな挑戦の軌跡を伝えられるものになれば幸いです。"
+          }
+        ]
+      }
+    ],
+    "year": "2025",
+    "role": "設計 / デザイン",
+    "tools": [
+      "STUDIO",
+      "Canva"
+    ],
+    "url": "",
+    "summary": "インターン応募のために制作した自身のポートフォリオサイト。",
+    "kv": "images/works/portfolio-main.webp"
+  },
+  {
+    "id": "kaiza",
+    "title": "Ka!za",
+    "category": "Website",
+    "tag": "仮想",
+    "date": "2025/3/30",
+    "thumb": "images/works/kaiza-thumb.webp",
+    "mainImage": "images/works/kaiza-main.webp",
+    "sections": [
+      {
+        "heading": "作品URL",
+        "blocks": [
+          {
+            "text": "[https://kaiza-inc.studio.site](https://kaiza-inc.studio.site)"
+          }
+        ]
+      },
+      {
+        "heading": "作成にあたって",
+        "blocks": [
+          {
+            "text": "今回作成したこちらの架空サイトは、@studians_jpさんの動画【[https://youtube.com/playlist?list=PLUaZJLagGToKQDbiaOFbns4KE6J-kWiNf&feature=shared](https://youtube.com/playlist?list=PLUaZJLagGToKQDbiaOFbns4KE6J-kWiNf&feature=shared)】を参考にしました。"
+          },
+          {
+            "text": "初めて作成したコーポレートサイトなので、随時修正していきたいと思います。"
+          }
+        ]
+      },
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "Ka!zaは、テクノロジーの力で企業と求職者のアンマッチを解決し、日本の人材市場に活力をもたらすことを目指しています。このコーポレートサイトでは、私たちの理念やサービス、強みを明確に伝え、より多くの企業・求職者とつながることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "サイトの目的",
+        "blocks": [
+          {
+            "list": [
+              "企業の採用担当者に向けて、Ka!zaのサービスや実績をわかりやすく紹介",
+              "テクノロジーを活用した人材マッチングの仕組みを伝え、導入のハードルを下げる",
+              "信頼性の高いコーポレートブランドを構築し、企業とのパートナーシップを強化"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "デザイン・設計のこだわり",
+        "blocks": [
+          {
+            "text": "このコーポレートサイトでは、Ka!zaのミッションや強みを直感的に理解してもらうため、以下の設計・デザインを採用しました。"
+          },
+          {
+            "sub": "シンプルでわかりやすい情報構成"
+          },
+          {
+            "list": [
+              "採用担当者が求める情報に素早くアクセスできるよう、整理されたレイアウトを設計"
+            ]
+          },
+          {
+            "sub": "レスポンシブ対応で快適な閲覧体験"
+          },
+          {
+            "list": [
+              "PC・タブレット・スマートフォンでもストレスなく閲覧可能"
+            ]
+          },
+          {
+            "sub": "ブランドイメージを反映したデザイン"
+          },
+          {
+            "list": [
+              "テクノロジーの先進性と信頼感を表現するカラー・フォント・ビジュアルを採用"
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "使用ツール",
+        "blocks": [
+          {
+            "list": [
+              "制作期間：１週間",
+              "使用ツール：STUDIO / Canva"
+            ]
+          },
+          {
+            "text": "このコーポレートサイトを通じて、Ka!zaのサービスをより多くの企業に届け、日本の人材市場に新たな可能性を生み出します。"
+          }
+        ]
+      }
+    ],
+    "year": "2025",
+    "role": "設計 / デザイン",
+    "tools": [
+      "STUDIO",
+      "Canva"
+    ],
+    "url": "https://kaiza-inc.studio.site",
+    "summary": "人材マッチングを手がける架空企業のコーポレートサイト。",
+    "kv": "images/works/kaiza-main.webp"
+  }
+]

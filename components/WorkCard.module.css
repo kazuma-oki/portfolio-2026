@@ -1,0 +1,54 @@
+.card { height: 100%; }
+
+.link {
+  display: block;
+  height: 100%;
+  transition: transform 0.4s var(--ease-out);
+}
+/* ホバーは拡大だけ（参考サイトの実測に合わせ、変化はひとつに絞る） */
+.link:hover { transform: scale(1.03); }
+
+.thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);
+  transition: box-shadow 0.4s var(--ease-out);
+}
+.link:hover .thumb { box-shadow: 0 18px 40px rgba(24, 24, 24, 0.12); }
+
+.thumb :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.title {
+  margin-top: 4px;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.summary {
+  margin-top: 8px;
+  max-width: 420px;
+}
+
+@media (max-width: 1024px) {
+  .title { font-size: 18px; line-height: 28px; }
+  .summary { display: none; }
+}
+
+@media (max-width: 540px) {
+  .title { font-size: 16px; line-height: 26px; }
+  .meta { margin-top: 12px; }
+}

@@ -1,0 +1,113 @@
+.profile {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.visual {
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--surface);
+}
+.visual :global(img) {
+  width: 100%;
+  height: auto;
+}
+
+.placeholder {
+  aspect-ratio: 320 / 400;
+  background: var(--surface);
+  color: var(--subtext);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  letter-spacing: 0.2em;
+}
+
+.text { max-width: 560px; }
+
+.name {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 500;
+}
+.role { margin-top: 4px; }
+
+.body { margin-top: 32px; }
+.body p { white-space: pre-line; }
+.body p + p { margin-top: 1.6em; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-m);
+  margin-top: var(--section);
+  padding-block: var(--gap-m);
+  border-block: 1px solid var(--line);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.statValue {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.skillSection {
+  margin-top: var(--section);
+  border-top: 1px solid var(--line);
+}
+.skillHead { margin-bottom: var(--gap-l); }
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-m);
+}
+.skill {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.skillNo { color: var(--text); }
+.skillTitle {
+  margin-top: 12px;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 500;
+}
+.skillText { margin-top: 12px; }
+.skillTools {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.action { margin-top: var(--gap-l); }
+
+@media (max-width: 1024px) {
+  .profile {
+    grid-template-columns: 1fr;
+    gap: var(--gap-m);
+  }
+  .visual { max-width: 320px; }
+  .skills {
+    grid-template-columns: 1fr;
+    gap: var(--gap-s);
+  }
+  .statValue { font-size: 32px; }
+}
+
+@media (max-width: 540px) {
+  .stats { gap: var(--gap-s); }
+  .statValue { font-size: 24px; }
+  .skillTitle {
+    font-size: 18px;
+    line-height: 28px;
+  }
+}

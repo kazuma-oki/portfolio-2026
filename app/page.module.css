@@ -1,0 +1,78 @@
+/* ---------- Works プレビュー ---------- */
+.head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-m);
+}
+.headAction { margin-left: auto; flex: none; }
+
+.works { margin-top: var(--gap-l); }
+
+/* ---------- About プレビュー ---------- */
+.about { border-top: 1px solid var(--line); }
+
+.skills {
+  margin-top: var(--gap-l);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-m);
+}
+
+.skill {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.skillNo { color: var(--text); }
+
+.skillTitle {
+  margin-top: 12px;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.skillText { margin-top: 12px; }
+
+.skillTools {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.aboutAction { margin-top: var(--gap-l); }
+
+/* ---------- CTA ---------- */
+.cta {
+  background: var(--accent-dark);
+  color: var(--bg);
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-m);
+}
+
+.ctaTitle { letter-spacing: 0.02em; }
+.ctaLead {
+  margin-top: 12px;
+  color: rgba(247, 247, 245, 0.72);
+}
+
+.cta :global(.fade-in) > :first-child { margin-right: auto; }
+
+@media (max-width: 1024px) {
+  .head { flex-direction: column; align-items: flex-start; }
+  .headAction { margin-left: 0; }
+  .skills { grid-template-columns: 1fr; gap: var(--gap-s); }
+  .cta { min-height: 0; padding-block: var(--section); }
+  .ctaInner { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 540px) {
+  .skillTitle { font-size: 18px; line-height: 28px; }
+  .ctaInner { width: 100%; }
+}
