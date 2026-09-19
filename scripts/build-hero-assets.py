@@ -28,6 +28,7 @@ PERSON_SRC = Path.home() / "Downloads" / "人物.png"
 BLEND = 320
 
 
+
 def seamless(im):
     """右端の帯を左端に重ねて、左右がつながる画像にする"""
     w, h = im.size
@@ -65,18 +66,25 @@ def build_sky():
     print(f"元の空: {src.size[0]}x{src.size[1]}  左右の色差 {edge_gap(src):.1f}")
 
     tile = seamless(src)
-    print(f"加工後: {tile.size[0]}x{tile.size[1]}  左右の色差 {edge_gap(tile):.1f}")
+    print(f"つなぎ目処理後: {tile.size[0]}x{tile.size[1]}  左右の色差 {edge_gap(tile):.1f}")
+
+    # 同じタイルを2枚つないで1枚の画像にする。
+    # 表示側で要素を2つ並べると、その境界にサブピクセルの隙間が出て
+    # 細い線に見えてしまうため、画像の中で完結させる。
+    loop = Image.new("RGB", (tile.width * 2, tile.height))
+    loop.paste(tile, (0, 0))
+    loop.paste(tile, (tile.width, 0))
 
     dest = IMAGES / "sky-loop.webp"
-    tile.save(dest, "WEBP", quality=88, method=6)
-    print(f"sky-loop.webp  {tile.width}x{tile.height}  {dest.stat().st_size // 1024}KB")
+    loop.save(dest, "WEBP", quality=88, method=6)
+    print(f"sky-loop.webp  {loop.width}x{loop.height}（1枚ぶん {tile.width}px）  {dest.stat().st_size // 1024}KB")
 
     # 表示側が縦横比を知る必要があるので data/site.json に書き戻す
     sp = ROOT / "data" / "site.json"
     data = json.loads(sp.read_text(encoding="utf-8"))
-    data["hero"]["skyRatio"] = f"{tile.width} / {tile.height}"
+    data["hero"]["skyRatio"] = f"{loop.width} / {loop.height}"
     sp.write_text(json.dumps(data, ensure_ascii=False, indent=2) + chr(10), encoding="utf-8")
-    print(f"  site.json の skyRatio を {tile.width} / {tile.height} に更新")
+    print(f"  site.json の skyRatio を {loop.width} / {loop.height} に更新")
 
 
 def build_person():

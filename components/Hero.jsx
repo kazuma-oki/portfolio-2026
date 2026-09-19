@@ -93,18 +93,16 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
         >
-          {/* 同じ画像を2枚つないで左から右へ流す。画像は左右端の色が揃えてあるので継ぎ目が出ない */}
-          <div className={styles.sky} aria-hidden="true">
-            {[0, 1].map((i) => (
-              <span
-                key={i}
-                style={{
-                  backgroundImage: `url(${asset(hero.sky)})`,
-                  aspectRatio: hero.skyRatio,
-                }}
-              />
-            ))}
-          </div>
+          {/* 空は2枚ぶんが1枚の画像になっている。要素はひとつだけにして、
+              半分（＝1枚ぶん）動かす。要素を並べないので境界に線が出ない */}
+          <div
+            className={styles.sky}
+            aria-hidden="true"
+            style={{
+              backgroundImage: `url(${asset(hero.sky)})`,
+              aspectRatio: hero.skyRatio,
+            }}
+          />
 
           <Image
             className={styles.person}

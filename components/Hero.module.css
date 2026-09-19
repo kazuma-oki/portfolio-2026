@@ -73,21 +73,18 @@
   background: #bcd9ef;
 }
 
-/* 背景の空：同じ絵を2枚つなぎ、1枚ぶん動かして左から右へ流す */
+/* 背景の空：画像そのものが「1枚ぶん×2」なので、半分だけ動かすと元の位置に戻る。
+   要素をひとつで済ませることで、要素の境目に細い線が出るのを防ぐ */
 .sky {
   position: absolute;
-  inset: 0;
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  animation: sky-flow var(--sky-duration) linear infinite;
-}
-.sky span {
-  display: block;
-  flex: none;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: auto;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  will-change: transform;
+  animation: sky-flow var(--sky-duration) linear infinite;
 }
 
 @keyframes sky-flow {
