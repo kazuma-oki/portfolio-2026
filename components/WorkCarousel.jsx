@@ -5,6 +5,8 @@ import WorkCard from "./WorkCard";
 import styles from "./WorkCarousel.module.css";
 
 const THUMB_RATIO = "4 / 3";
+// 大きさが変わりきるまでの時間（CSS の transition とそろえる）
+const GROW_MS = 500;
 
 // サーバー側では useLayoutEffect が動かないので、そこだけ useEffect にする
 const useBeforePaint = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -28,7 +30,10 @@ export default function WorkCarousel({ works }) {
 
   const trackRef = useRef(null);
   const indexRef = useRef(startIndex);
+  const changedAt = useRef(0);
   const [center, setCenter] = useState(startIndex);
+  // 位置を戻している最中。この1コマだけ大きさの変化を止める
+  const [jump, setJump] = useState(false);
 
   const slides = Array.from({ length: n * copies }, (_, i) => works[i % n]);
 
@@ -76,26 +81,59 @@ export default function WorkCarousel({ works }) {
     let frame = 0;
     let timer = 0;
 
+    /* どれを中央として見せるかを、その場で書き換える。
+       React の描き直しを待つと画面の更新に間に合わず、
+       入れ替わった瞬間だけ小さいまま映ってしまう */
+    const paint = (i) => {
+      for (let k = 0; k < t.children.length; k += 1) {
+        const el = t.children[k];
+        if (k === i) {
+          el.setAttribute("data-center", "true");
+          el.removeAttribute("data-side");
+        } else {
+          el.removeAttribute("data-center");
+          el.setAttribute("data-side", k < i ? "left" : "right");
+        }
+      }
+    };
+
     const update = () => {
       frame = 0;
       const i = nearest();
+      if (i !== indexRef.current) changedAt.current = performance.now();
       indexRef.current = i;
       setCenter(i);
     };
 
-    // 指が止まったら真ん中の組へ戻す。同じ並びなので見た目は変わらない
+    // 指が止まったら真ん中の組へ戻す。同じ並びなので見た目は変わらない。
+    // ただし中央のカードは別の要素に入れ替わるので、
+    // 大きさが変わりきる前に戻すと、縮んでからまた大きくなって見える。
+    // 変わりきるのを待ってから、変化を止めた状態で入れ替える
     const normalize = () => {
       if (!loop) return;
       const shift = Math.floor(indexRef.current / n) - startCopy;
       if (shift === 0) return;
+
+      const wait = GROW_MS - (performance.now() - changedAt.current);
+      // 控えを使い切りそうなときは待たずに戻す
+      if (wait > 0 && Math.abs(shift) < 2) {
+        clearTimeout(timer);
+        timer = setTimeout(normalize, wait);
+        return;
+      }
+
       const target = indexRef.current - shift * n;
       const el = t.children[target];
       if (!el) return;
+      // 位置を戻すのと、中央の入れ替えを、同じコマでまとめて行う
+      t.setAttribute("data-jump", "true");
       // 飛ばしている間はスナップを切る（飛んだ先で引き戻されないように）
       t.style.scrollSnapType = "none";
       t.scrollLeft = leftFor(el, t);
       t.style.scrollSnapType = "";
+      paint(target);
       indexRef.current = target;
+      setJump(true);
       setCenter(target);
     };
 
@@ -119,6 +157,13 @@ export default function WorkCarousel({ works }) {
     };
   }, [goToIndex, nearest, loop, n, startCopy]);
 
+  // 入れ替えたつぎのコマで、大きさの変化を戻す
+  useEffect(() => {
+    if (!jump) return undefined;
+    const id = requestAnimationFrame(() => setJump(false));
+    return () => cancelAnimationFrame(id);
+  }, [jump]);
+
   const move = (dir) => goToIndex(indexRef.current + dir, true);
 
   /** ドット：同じ作品のうち、いまの位置からいちばん近いものへ */
@@ -136,6 +181,7 @@ export default function WorkCarousel({ works }) {
       <ul
         className={styles.track}
         ref={trackRef}
+        data-jump={jump ? "true" : undefined}
         tabIndex={loop ? 0 : undefined}
         role={loop ? "region" : undefined}
         aria-label={loop ? "制作実績（横にスクロールできます）" : undefined}
