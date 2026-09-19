@@ -26,7 +26,7 @@
   /* layout — Desktop（すべて --u の倍数） */
   --content: calc(var(--u) * 87.6);
   --gutter: calc(var(--u) * 7.5);
-  --header-h: calc(var(--u) * 5.5);
+  --header-h: 88px;
   /* ファーストビューは画面いっぱい。svh未対応ブラウザには vh を先に渡す */
   --hero-h: 100vh;
   --hero-h: 100svh;

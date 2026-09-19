@@ -169,75 +169,73 @@
   100% { transform: scaleX(0); transform-origin: right center; }
 }
 
-/* タブレット以下は設計図どおり、画像を全面に敷いて文字を重ねる */
+/* タブレット以下：写真の上に白をかぶせて文字を置くのはやめ、
+   写真は上、文章は下に並べる（fuyuna.net の組み方を参考にした）。
+   写真そのものの色が出るようになる */
 @media (max-width: 1024px) {
   .hero {
-    --hero-pad: clamp(28px, 5vh, 48px);
+    --hero-pad: clamp(24px, 4vh, 40px);
     min-height: max(520px, var(--hero-h));
     align-items: stretch;
   }
+
   .inner {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-block: var(--hero-pad) 56px;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    padding-block: var(--hero-pad) calc(var(--hero-pad) * 1.2);
     gap: 0;
   }
 
+  /* 写真は先頭。右端まで伸ばし、左に少し余白を残す */
   .visual {
-    position: absolute;
-    inset: 0 calc(var(--gutter) * -1);
-    z-index: 0;
+    position: relative;
+    inset: auto;
+    order: -1;
+    width: auto;
+    height: 36svh;
+    min-height: 240px;
     max-height: none;
-    aspect-ratio: auto;
-    border-radius: 0;
+    margin-right: calc(var(--gutter) * -1);
+    margin-left: calc(var(--gutter) * 0.5);
+    border-radius: var(--r-card) 0 0 var(--r-card);
   }
-  /* 縦に長い画面では人物の顔が切れないよう、上寄りで見せる */
-  .person { object-position: center 30%; }
-  .visual::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(247, 247, 245, 0.96) 0%,
-      rgba(247, 247, 245, 0.92) 42%,
-      rgba(247, 247, 245, 0.55) 68%,
-      rgba(247, 247, 245, 0) 92%
-    );
-  }
+  /* 白いグラデーションは使わない */
+  .visual::after { content: none; }
 
   .text {
+    align-self: stretch;
+    margin-top: calc(var(--u) * 1.75);
     position: relative;
     z-index: 1;
   }
+
   .actions {
     position: relative;
     z-index: 1;
-    margin-top: 32px;
+    margin-top: calc(var(--u) * 1.75);
   }
+
   .scroll { display: none; }
 }
 
 @media (max-width: 540px) {
-  .hero { --hero-pad: clamp(24px, 4vh, 32px); }
-  .inner { padding-block: var(--hero-pad) 24px; }
-  .title { margin-top: 12px; }
-  .name { margin-top: 16px; font-size: 12px; gap: 10px; }
-  .lead { margin-top: 12px; }
+  .hero { --hero-pad: clamp(20px, 3.4vh, 32px); }
+  .visual {
+    height: 34svh;
+    min-height: 220px;
+    margin-left: calc(var(--gutter) * 0.4);
+  }
+  .title { margin-top: calc(var(--u) * 0.9); }
+  .name { margin-top: calc(var(--u) * 1.1); gap: 10px; }
+  .lead { margin-top: calc(var(--u) * 0.9); }
   .actions {
+    margin-top: calc(var(--u) * 1.4);
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-  }
-  .visual::after {
-    background: linear-gradient(
-      180deg,
-      rgba(247, 247, 245, 0.96) 0%,
-      rgba(247, 247, 245, 0.93) 46%,
-      rgba(247, 247, 245, 0.6) 70%,
-      rgba(247, 247, 245, 0) 94%
-    );
+    gap: 10px;
   }
 }
