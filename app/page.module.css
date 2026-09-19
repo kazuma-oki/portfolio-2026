@@ -1,18 +1,21 @@
 /* ---------- Works プレビュー ---------- */
-.head {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--gap-m);
+/* 白とオフホワイトを交互にしてセクションの切れ目をつくる */
+.works {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
 }
-.headAction { margin-left: auto; flex: none; }
 
-.works { margin-top: var(--gap-l); }
+.worksInner { margin-top: 96px; }
+
+.headAction {
+  margin-top: var(--gap-l);
+  display: flex;
+  justify-content: center;
+}
 
 /* ---------- About プレビュー ---------- */
-.about { border-top: 1px solid var(--line); }
-
 .skills {
-  margin-top: var(--gap-l);
+  margin-top: 96px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-m);
@@ -27,7 +30,7 @@
 
 .skillTitle {
   margin-top: 12px;
-  font-size: 20px;
+  font-size: 19px;
   line-height: 30px;
   font-weight: 500;
 }
@@ -39,7 +42,11 @@
   font-size: 13px;
 }
 
-.aboutAction { margin-top: var(--gap-l); }
+.aboutAction {
+  margin-top: var(--gap-l);
+  display: flex;
+  justify-content: center;
+}
 
 /* ---------- CTA ---------- */
 .cta {
@@ -65,14 +72,25 @@
 .cta :global(.fade-in) > :first-child { margin-right: auto; }
 
 @media (max-width: 1024px) {
-  .head { flex-direction: column; align-items: flex-start; }
-  .headAction { margin-left: 0; }
-  .skills { grid-template-columns: 1fr; gap: var(--gap-s); }
-  .cta { min-height: 0; padding-block: var(--section); }
-  .ctaInner { flex-direction: column; align-items: flex-start; }
+  .worksInner { margin-top: 56px; }
+  .skills {
+    margin-top: 56px;
+    grid-template-columns: 1fr;
+    gap: var(--gap-s);
+  }
+  .cta {
+    min-height: 0;
+    padding-block: var(--section);
+  }
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 540px) {
-  .skillTitle { font-size: 18px; line-height: 28px; }
+  .worksInner { margin-top: 40px; }
+  .skills { margin-top: 40px; }
+  .skillTitle { font-size: 17px; line-height: 28px; }
   .ctaInner { width: 100%; }
 }

@@ -3,26 +3,23 @@
 .link {
   display: block;
   height: 100%;
-  transition: transform 0.4s var(--ease-out);
 }
-/* ホバーは拡大だけ（参考サイトの実測に合わせ、変化はひとつに絞る） */
-.link:hover { transform: scale(1.03); }
 
 .thumb {
   position: relative;
   overflow: hidden;
   border-radius: var(--r-card);
   background: var(--surface);
-  box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);
-  transition: box-shadow 0.4s var(--ease-out);
 }
-.link:hover .thumb { box-shadow: 0 18px 40px rgba(24, 24, 24, 0.12); }
 
+/* 動くのは画像だけ。枠は動かさず、静かに見せる */
 .thumb :global(img) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
 }
+.link:hover .thumb :global(img) { transform: scale(1.02); }
 
 .meta {
   display: flex;

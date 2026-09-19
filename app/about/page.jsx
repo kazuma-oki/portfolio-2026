@@ -70,7 +70,9 @@ export default function AboutPage() {
           </ul>
 
           <FadeIn className={styles.action}>
-            <Button href="/contact">Contact</Button>
+            <Button href="/contact" variant="primary">
+              Contact
+            </Button>
           </FadeIn>
         </div>
       </section>

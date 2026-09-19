@@ -17,29 +17,28 @@ export default function Home() {
       <Hero />
 
       {/* Works プレビュー */}
-      <section className="section" id="works">
+      <section className={`section ${styles.works}`} id="works">
         <div className="container">
-          <div className={styles.head}>
-            <SectionTitle
-              eyebrow={site.worksSection.eyebrow}
-              title={site.worksSection.title}
-              lead={site.worksSection.lead}
-            />
-            <FadeIn className={styles.headAction} delay={80}>
-              <Button href="/works" variant="ghost">
-                View all
-              </Button>
-            </FadeIn>
-          </div>
+          <SectionTitle
+            eyebrow={site.worksSection.eyebrow}
+            title={site.worksSection.title}
+            lead={site.worksSection.lead}
+          />
 
-          <FadeIn className={styles.works} delay={120}>
+          <FadeIn className={styles.worksInner} delay={80}>
             <WorkGrid works={featured} columns={3} />
+          </FadeIn>
+
+          <FadeIn className={styles.headAction} delay={120}>
+            <Button href="/works" variant="ghost">
+              View all
+            </Button>
           </FadeIn>
         </div>
       </section>
 
       {/* About プレビュー（3カラム） */}
-      <section className={`section ${styles.about}`}>
+      <section className="section">
         <div className="container">
           <SectionTitle
             eyebrow={site.aboutSection.eyebrow}

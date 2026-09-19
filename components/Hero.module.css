@@ -1,8 +1,9 @@
 .hero {
-  --hero-pad: 64px;
+  --hero-pad: clamp(32px, 6vh, 64px);
   position: relative;
   overflow: hidden;
-  min-height: var(--hero-h);
+  min-height: 560px;
+  min-height: max(560px, var(--hero-h));
   padding-top: var(--header-h);
   display: flex;
   align-items: center;
@@ -112,8 +113,8 @@
 /* タブレット以下は設計図どおり、画像を全面に敷いて文字を重ねる */
 @media (max-width: 1024px) {
   .hero {
-    --hero-pad: 48px;
-    min-height: var(--hero-h);
+    --hero-pad: clamp(28px, 5vh, 48px);
+    min-height: max(520px, var(--hero-h));
     align-items: stretch;
   }
   .inner {
@@ -159,7 +160,7 @@
 }
 
 @media (max-width: 540px) {
-  .hero { --hero-pad: 32px; }
+  .hero { --hero-pad: clamp(24px, 4vh, 32px); }
   .inner { padding-block: var(--hero-pad) 24px; }
   .title { margin-top: 12px; }
   .name { margin-top: 16px; font-size: 12px; gap: 10px; }

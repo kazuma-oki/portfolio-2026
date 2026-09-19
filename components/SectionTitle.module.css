@@ -1,27 +1,29 @@
-.wrap { max-width: 720px; }
-.center {
+.wrap {
+  max-width: 720px;
   margin-inline: auto;
   text-align: center;
 }
+/* 左揃えにしたい場面のための逃げ道 */
+.left {
+  margin-inline: 0;
+  text-align: left;
+}
 
 .eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: var(--text);
-  margin-bottom: 16px;
-}
-.center .eyebrow { justify-content: center; }
-
-.line {
   display: block;
-  width: 48px;
-  height: 1px;
-  background: var(--line);
+  color: var(--subtext);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
-.title { letter-spacing: 0.02em; }
-.lead { margin-top: 20px; }
+.title { letter-spacing: 0.05em; }
+.lead { margin-top: 24px; }
+
+@media (max-width: 1024px) {
+  .eyebrow { margin-bottom: 16px; }
+  .lead { margin-top: 16px; }
+}
 
 @media (max-width: 540px) {
   .eyebrow { margin-bottom: 12px; }
