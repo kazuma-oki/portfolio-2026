@@ -65,6 +65,9 @@
 .visual {
   --sky-duration: 130s;
   position: relative;
+  /* 幅を明示しておかないと、画面が縦に狭いときに max-height につられて
+     幅まで縮み、右端がカラムの右端からずれてしまう */
+  width: 100%;
   aspect-ratio: 4 / 5;
   /* ヒーロー全体が設計図の高さに収まるよう、画像の高さを頭打ちにする */
   max-height: calc(var(--hero-h) - var(--header-h) - var(--hero-pad) * 2);
