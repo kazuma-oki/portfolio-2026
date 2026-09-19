@@ -17,9 +17,11 @@
   --font-en: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   --font-jp: var(--font-noto), "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
 
-  /* layout — Desktop */
-  --content: 1200px;
-  --gutter: 120px;
+  /* layout — Desktop
+     大きな画面ほど横幅を使う。1440px前後までは従来どおり1200pxで、
+     それより広い画面では画面幅に応じて伸びる */
+  --content: clamp(1200px, 72vw, 1840px);
+  --gutter: clamp(120px, 6vw, 160px);
   --header-h: 88px;
   /* ファーストビューは画面いっぱい。svh未対応ブラウザには vh を先に渡す */
   --hero-h: 100vh;
