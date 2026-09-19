@@ -6,25 +6,31 @@
   min-height: max(560px, var(--hero-h));
   padding-top: var(--header-h);
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .inner {
   display: grid;
-  grid-template-columns: 5.5fr 6.5fr;
-  align-items: center;
-  gap: 48px;
+  grid-template-columns: minmax(0, 5.5fr) minmax(0, 6.5fr);
+  align-items: stretch;
+  gap: calc(var(--u) * 3);
   padding-block: var(--hero-pad);
+  width: 100%;
 }
+
+/* 文章は縦中央、写真は枠いっぱいに伸ばす */
+.text { align-self: center; }
 
 .eyebrow {
   color: var(--text);
-  font-size: clamp(14px, 0.95vw, 18px);
+  font-size: calc(var(--u) * 0.875);
 }
 
 .title {
-  margin-top: 20px;
-  font-size: clamp(28px, 4.4vw, 88px);
+  margin-top: calc(var(--u) * 1.25);
+  /* 基本は基準単位の4倍。ただし左カラムからはみ出さないよう、
+     使える横幅からも上限をかける（1行8文字が収まる大きさ） */
+  font-size: min(calc(var(--u) * 4), calc((100vw - var(--gutter) * 2) * 0.054));
   line-height: 1.25;
   letter-spacing: 0.01em;
   word-break: keep-all;
@@ -32,11 +38,11 @@
 .line { display: block; }
 
 .name {
-  margin-top: clamp(28px, 2.2vw, 40px);
+  margin-top: calc(var(--u) * 1.75);
   display: flex;
   align-items: center;
   gap: 16px;
-  font-size: clamp(15px, 0.85vw, 20px);
+  font-size: calc(var(--u) * 0.94);
   letter-spacing: 0.16em;
 }
 .role {
@@ -54,23 +60,22 @@
 }
 
 .lead {
-  margin-top: clamp(24px, 1.8vw, 36px);
+  margin-top: calc(var(--u) * 1.5);
   max-width: 34em;
-  font-size: clamp(15px, 1vw, 22px);
+  font-size: calc(var(--u) * 0.94);
   line-height: 1.9;
   white-space: pre-line;
 }
 
 .actions {
-  margin-top: clamp(40px, 3vw, 56px);
+  margin-top: calc(var(--u) * 2.5);
   display: flex;
-  gap: 16px;
+  gap: var(--u);
 }
-/* 大きな画面ではボタンも少しだけ大きく */
 .actions :global(a) {
-  height: clamp(48px, 3.4vw, 60px);
-  padding-inline: clamp(24px, 1.8vw, 34px);
-  font-size: clamp(15px, 0.85vw, 18px);
+  height: calc(var(--u) * 3);
+  padding-inline: calc(var(--u) * 1.5);
+  font-size: calc(var(--u) * 0.94);
 }
 
 .visual {
@@ -78,10 +83,11 @@
   position: relative;
   /* 幅を明示しておかないと、画面が縦に狭いときに max-height につられて
      幅まで縮み、右端がカラムの右端からずれてしまう */
+  /* 高さは行いっぱい。幅はカラム幅に固定する。
+     縦長の画面でも上下に余白が残らない */
   width: 100%;
-  aspect-ratio: 4 / 5;
-  /* ヒーロー全体が設計図の高さに収まるよう、画像の高さを頭打ちにする */
-  max-height: calc(var(--hero-h) - var(--header-h) - var(--hero-pad) * 2);
+  height: 100%;
+  min-height: 0;
   border-radius: var(--r-card);
   overflow: hidden;
   background: #bcd9ef;

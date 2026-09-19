@@ -17,21 +17,25 @@
   --font-en: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   --font-jp: var(--font-noto), "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
 
-  /* layout — Desktop
-     大きな画面ほど横幅を使う。1440px前後までは従来どおり1200pxで、
-     それより広い画面では画面幅に応じて伸びる */
-  --content: clamp(1200px, 72vw, 1840px);
-  --gutter: clamp(120px, 6vw, 160px);
-  --header-h: 88px;
+  /* すべての寸法のもとになる基準単位。
+     画面幅1440pxで16px。1260px以下と1890px以上では止まる。
+     文字も余白もレイアウト幅もこの倍数にしているので、
+     画面幅を変えたときに全体が同じ割合で拡大・縮小する */
+  --u: clamp(15px, 1.111vw, 20px);
+
+  /* layout — Desktop（すべて --u の倍数） */
+  --content: calc(var(--u) * 87.6);
+  --gutter: calc(var(--u) * 7.5);
+  --header-h: calc(var(--u) * 5.5);
   /* ファーストビューは画面いっぱい。svh未対応ブラウザには vh を先に渡す */
   --hero-h: 100vh;
   --hero-h: 100svh;
 
-  /* spacing */
-  --section: 120px;
-  --gap-l: 80px;
-  --gap-m: 40px;
-  --gap-s: 24px;
+  /* spacing（同じく --u の倍数） */
+  --section: calc(var(--u) * 7.5);
+  --gap-l: calc(var(--u) * 5);
+  --gap-m: calc(var(--u) * 2.5);
+  --gap-s: calc(var(--u) * 1.5);
 
   /* radius */
   --r-card: 6px;
@@ -45,6 +49,8 @@
 
 @media (max-width: 1024px) {
   :root {
+    /* ここから下は設計図どおりの固定値に戻す */
+    --u: 15px;
     --content: 672px;
     --gutter: 48px;
     --header-h: 64px;
@@ -58,6 +64,7 @@
 
 @media (max-width: 540px) {
   :root {
+    --u: 14px;
     --content: 358px;
     --gutter: 16px;
     --header-h: 56px;
@@ -85,8 +92,8 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-jp);
-  font-size: 16px;
-  line-height: 30px;
+  font-size: var(--u);
+  line-height: 1.875;
   letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -121,9 +128,9 @@ button { font: inherit; color: inherit; }
   letter-spacing: 0.05em;
 }
 
-.h1 { font-size: 72px; line-height: 86px; }
-.h2 { font-size: 48px; line-height: 58px; }
-.h3 { font-size: 32px; line-height: 42px; }
+.h1 { font-size: calc(var(--u) * 4.5); line-height: 1.2; }
+.h2 { font-size: calc(var(--u) * 3); line-height: 1.22; }
+.h3 { font-size: calc(var(--u) * 2); line-height: 1.32; }
 
 /* 欧文だけの見出しは字間を詰める（参考サイトの実測に基づく） */
 .en {
@@ -131,12 +138,12 @@ button { font: inherit; color: inherit; }
   letter-spacing: -0.02em;
 }
 
-.body-s { font-size: 15px; line-height: 28px; }
+.body-s { font-size: calc(var(--u) * 0.94); line-height: 1.86; }
 
 .caption {
   font-family: var(--font-en);
-  font-size: 14px;
-  line-height: 22px;
+  font-size: calc(var(--u) * 0.875);
+  line-height: 1.6;
   letter-spacing: 0.06em;
   color: var(--subtext);
 }
@@ -149,6 +156,7 @@ button { font: inherit; color: inherit; }
   .h2 { font-size: 32px; line-height: 48px; }
   .h3 { font-size: 24px; line-height: 36px; }
   .body-s { font-size: 14px; line-height: 24px; }
+  .caption { font-size: 14px; line-height: 22px; }
 }
 
 @media (max-width: 540px) {
