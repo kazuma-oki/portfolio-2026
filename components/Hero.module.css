@@ -63,7 +63,7 @@
 }
 
 .visual {
-  --sky-duration: 60s;
+  --sky-duration: 90s;
   position: relative;
   aspect-ratio: 4 / 5;
   /* ヒーロー全体が設計図の高さに収まるよう、画像の高さを頭打ちにする */
