@@ -1,39 +1,50 @@
-/* 横に並ぶカード。1枚目の左端は本文の左端にそろえ、
-   はみ出したぶん（--peek）で隣のカードを覗かせる */
+/* 必ず1枚が画面の中央にくる横並び。両隣は少し小さくして中央を引き立てる */
 .wrap {
   --gap: 32px;
-  /* container の余白のうち、トラックが食い込む量。
-     PCは余白が広いので上限をかけ、覗く量を一定に保つ */
-  --peek: min(var(--gutter), 96px);
-  /* カードを縮めて次のカードを覗かせる量。余白が狭い画面で使う */
-  --shrink: 0px;
-  --per: 3;
+  /* 中央に置くカードの幅。PCは3枚ぶんが本文の幅にちょうど収まる大きさ。
+     スナップ対象の幅に % を使うと iOS Safari で効かないので、実寸で持つ */
+  --slide-w: calc((min(var(--content), 100vw - var(--gutter) * 2) - var(--gap) * 2) / 3);
+  --scale: 0.9;
   position: relative;
 }
 
 .track {
+  /* 位置の基準をこの要素にする。
+     こうしないと中のカードの offsetLeft が外側の箱からの距離になり、
+     スクロール位置の計算がずれる（画面が広いほど大きくずれる） */
+  position: relative;
   display: flex;
   gap: var(--gap);
-  /* container の内側から --peek ぶん外へ広げ、同じ量を内側の余白に戻す。
-     こうすると1枚目の左端は本文の左端のまま、右に続きが見える */
-  margin-inline: calc(var(--peek) * -1);
-  padding-inline: var(--peek);
+  /* 画面の幅いっぱいに広げ、中央のカードが画面の真ん中にくるよう左右をあける */
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - var(--slide-w) / 2);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline-start: var(--peek);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 .track::-webkit-scrollbar { display: none; }
 
 .slide {
-  flex: 0 0 calc((100% - var(--gap) * (var(--per) - 1) - var(--shrink)) / var(--per));
-  scroll-snap-align: start;
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  /* 中央以外は少し小さく。中央に近いほうの辺を軸に縮めるので、
+     端で見切れているぶんの幅は変わらず、高さだけが低くなる */
+  transform: scale(var(--scale));
+  transition: transform 0.45s var(--ease-out);
+}
+.slide[data-side="left"] { transform-origin: right center; }
+.slide[data-side="right"] { transform-origin: left center; }
+.slide[data-center="true"] { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
 }
 
 /* 矢印を置くための見えない枠。
-   ::before でサムネイル（4:3）と同じ高さをつくり、その中央に矢印を置く */
+   ::before で中央のカードのサムネイル（4:3）と同じ高さをつくり、その中央に矢印を置く */
 .rail {
   position: absolute;
   top: 0;
@@ -44,10 +55,12 @@
 .rail::before {
   content: "";
   display: block;
-  width: calc((100% - var(--gap) * (var(--per) - 1) - var(--shrink)) / var(--per));
+  width: var(--slide-w);
+  margin-inline: auto;
   aspect-ratio: 4 / 3;
 }
 
+/* 中央のカードの左右の辺にまたがる位置に置く */
 .arrow {
   position: absolute;
   top: 50%;
@@ -66,7 +79,7 @@
   color: var(--text);
   cursor: pointer;
   transition: background-color 0.2s var(--ease), color 0.2s var(--ease),
-    opacity 0.2s var(--ease), border-color 0.2s var(--ease);
+    border-color 0.2s var(--ease);
 }
 .arrow svg { width: 16px; height: 16px; }
 .arrow:hover {
@@ -74,15 +87,11 @@
   border-color: var(--accent-dark);
   color: var(--bg);
 }
-.arrow:disabled {
-  opacity: 0;
-  pointer-events: none;
-}
 
-.prev { left: 10px; }
-.next { right: 10px; }
+.prev { left: calc(50% - var(--slide-w) / 2 - 22px); }
+.next { right: calc(50% - var(--slide-w) / 2 - 22px); }
 
-/* 実績が増えても収まるよう折り返す */
+/* いま何枚目を見ているかの目印。実績が増えても収まるよう折り返す */
 .dots {
   margin-top: 28px;
   display: flex;
@@ -114,23 +123,25 @@
   height: 44px;
   margin-block: -18px;
 }
+
+/* ===== タブレット・スマホ =====
+   中央の1枚だけを見せ、両サイドに次と前を少しのぞかせる */
 @media (max-width: 1024px) {
   .wrap {
-    --per: 2;
     --gap: 24px;
-    /* 余白が狭いぶん、カードを少し縮めて覗く量をつくる */
-    --shrink: 48px;
+    /* 中央のカードの左右にあける幅。ここから gap を引いたぶんが隣の見える幅 */
+    --side: calc(var(--gutter) + 40px);
+    --slide-w: calc(100vw - var(--side) * 2);
   }
   .arrow { width: 40px; height: 40px; }
+  .prev { left: calc(50% - var(--slide-w) / 2 - 20px); }
+  .next { right: calc(50% - var(--slide-w) / 2 - 20px); }
 }
 
 @media (max-width: 540px) {
   .wrap {
-    --per: 1;
-    --gap: 16px;
-    --shrink: 28px;
+    --gap: 12px;
+    --side: calc(var(--gutter) + 20px);
   }
-  .prev { left: 8px; }
-  .next { right: 8px; }
   .dots { margin-top: 24px; }
 }

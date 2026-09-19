@@ -18,7 +18,8 @@ Next.js（App Router）+ Framer Motion で組み、GitHub Pages に静的書き�
    - 詳細ページのメイン画像：`<id>-main.webp`
    - 記事中に挟む画像（任意）：`<id>-full.webp`
 2. `data/works.json` の **配列の先頭** に1件ぶん追記する（先頭が一覧の左上に並ぶ）
-   - TOPは先頭から順に横に並ぶカルーセル。何件足してもTOPが縦に長くならない
+   - TOPは横に流れるカルーセル。必ず1枚が画面の中央にきて、左右にループする。
+     何件足してもTOPが縦に長くならない
 3. push する。GitHub Actions が自動でビルドして公開する
 
 手元で確認したいときは次のコマンド。
@@ -154,7 +155,8 @@ app/
   about/ contact/       各ページ
   globals.css           デザインの決まりごと
 components/             ヘッダー・カード・ボタンなどの部品
-  WorkCarousel.jsx      TOPの実績（横スライド。PC3枚 / タブレット2枚 / スマホ1枚）
+  WorkCarousel.jsx      TOPの実績（中央の1枚を大きく、左右にループ。
+                        見える枚数は PC 3枚 / タブレット・スマホ 1枚）
   Hero.jsx              ファーストビュー。スマホ・タブレットはスクロールで紹介文が1行ずつ出る
 data/works.json         ★実績データ（普段さわるのはここだけ）
 data/site.json          文言とサイト設定

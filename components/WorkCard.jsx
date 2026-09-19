@@ -3,10 +3,10 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import styles from "./WorkCard.module.css";
 
-export default function WorkCard({ work, priority = false, ratio = "4 / 3" }) {
+export default function WorkCard({ work, priority = false, ratio = "4 / 3", tabIndex }) {
   return (
     <article className={styles.card}>
-      <Link href={`/works/${work.id}`} className={styles.link}>
+      <Link href={`/works/${work.id}`} className={styles.link} tabIndex={tabIndex}>
         <div className={styles.thumb} style={{ aspectRatio: ratio }}>
           <Image
             src={asset(work.thumb)}
