@@ -119,6 +119,8 @@
 }
 
 /* 人物は動かさない。現状と同じ見え方になるよう cover + 中央基準 */
+.veil { display: none; }
+
 .person {
   position: absolute;
   inset: 0;
@@ -169,73 +171,97 @@
   100% { transform: scaleX(0); transform-origin: right center; }
 }
 
-/* タブレット以下：写真の上に白をかぶせて文字を置くのはやめ、
-   写真は上、文章は下に並べる（fuyuna.net の組み方を参考にした）。
-   写真そのものの色が出るようになる */
+/* タブレット以下：写真をヒーロー全体に敷き、その上に文字を置く。
+   人物は写真の下寄りに来るので（上から34%までは空だけ）、
+   文字は上部に置けば重ならない */
 @media (max-width: 1024px) {
   .hero {
-    --hero-pad: clamp(24px, 4vh, 40px);
+    --hero-pad: clamp(20px, 3vh, 32px);
+    --veil-color: rgba(247, 247, 245, 0.5);
     min-height: max(520px, var(--hero-h));
     align-items: stretch;
   }
 
   .inner {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    display: block;
     grid-template-columns: none;
     grid-template-rows: none;
-    padding-block: var(--hero-pad) calc(var(--hero-pad) * 1.2);
+    padding-block: var(--hero-pad);
     gap: 0;
   }
 
-  /* 写真は先頭。右端まで伸ばし、左に少し余白を残す */
+  /* 写真：左右は余白のラインに合わせ、上下はヘッダー下から下端まで */
   .visual {
-    position: relative;
-    inset: auto;
-    order: -1;
+    position: absolute;
+    inset: 0;
+    order: 0;
     width: auto;
-    height: 36svh;
-    min-height: 240px;
+    height: auto;
+    min-height: 0;
     max-height: none;
-    margin-right: calc(var(--gutter) * -1);
-    margin-left: calc(var(--gutter) * 0.5);
-    border-radius: var(--r-card) 0 0 var(--r-card);
+    margin: 0;
+    border-radius: var(--r-card);
+    z-index: 0;
   }
-  /* 白いグラデーションは使わない */
   .visual::after { content: none; }
 
-  .text {
-    align-self: stretch;
-    margin-top: calc(var(--u) * 1.75);
-    position: relative;
+  /* 空を上に見せて、人物を下へ送る */
+  .person { object-position: center top; }
+
+  /* スクロールすると写真の上にかかるレイヤー */
+  .veil {
+    display: block;
+    position: absolute;
+    inset: 0;
     z-index: 1;
+    background: var(--veil-color);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+    pointer-events: none;
+  }
+  .hero[data-scrolled="true"] .veil { opacity: 1; }
+
+  /* 文字は余白のラインからもう一段内側へ */
+  .text {
+    position: relative;
+    z-index: 2;
+    align-self: auto;
+    margin-top: 0;
+    padding-inline: calc(var(--u) * 1.5);
   }
 
-  .actions {
-    position: relative;
-    z-index: 1;
-    margin-top: calc(var(--u) * 1.75);
+  /* ボタンは出さない */
+  .actions { display: none; }
+
+  /* 紹介文はスクロールしてから現れる（場所は取らない）。
+     読み込み時のアニメーションが要素に直接 opacity を書き込むため、
+     ここではそれより強く指定する */
+  .lead {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: calc(var(--u) * 6);
+    opacity: 0 !important;
+    transform: translateY(12px) !important;
+    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+    pointer-events: none;
+  }
+  .hero[data-scrolled="true"] .lead {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .scroll { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .veil,
+    .lead { transition: none; }
+  }
 }
 
 @media (max-width: 540px) {
-  .hero { --hero-pad: clamp(20px, 3.4vh, 32px); }
-  .visual {
-    height: 34svh;
-    min-height: 220px;
-    margin-left: calc(var(--gutter) * 0.4);
-  }
+  .hero { --hero-pad: clamp(16px, 2.6vh, 24px); }
   .title { margin-top: calc(var(--u) * 0.9); }
   .name { margin-top: calc(var(--u) * 1.1); gap: 10px; }
-  .lead { margin-top: calc(var(--u) * 0.9); }
-  .actions {
-    margin-top: calc(var(--u) * 1.4);
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
 }

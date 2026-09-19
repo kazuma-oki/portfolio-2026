@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import site from "@/data/site.json";
@@ -18,9 +19,18 @@ const rise = {
 
 export default function Hero() {
   const { hero } = site;
+  const [scrolled, setScrolled] = useState(false);
+
+  // 少しスクロールしたら、写真の上にレイヤーをかけて紹介文を出す
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} data-scrolled={scrolled ? "true" : undefined}>
       <div className={`${styles.inner} container`}>
         {/* 左5カラム：テキスト */}
         <div className={styles.text}>
@@ -103,6 +113,8 @@ export default function Hero() {
               aspectRatio: hero.skyRatio,
             }}
           />
+
+          <span className={styles.veil} aria-hidden="true" />
 
           <Image
             className={styles.person}
