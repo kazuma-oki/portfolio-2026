@@ -188,7 +188,11 @@
 @media (max-width: 1024px) {
   .stickyWrap { position: relative; }
 
-  .stickyWrap { --hero-pad: clamp(20px, 3vh, 32px); }
+  .stickyWrap {
+    --hero-pad: clamp(20px, 3vh, 32px);
+    /* 紹介文の面の高さ。演出に使うスクロール量そのもの */
+    --reveal-h: 260svh;
+  }
 
   .hero {
     position: sticky;
@@ -259,15 +263,24 @@
   .scrollGrid { display: none; }
 
   /* 写真にも紹介文にも隠れない層。
-     高さぶんは打ち消して、レイアウトを押し下げないようにしている */
+     絶対配置なので、高さを持ってもレイアウトを押し下げない。
+     この箱の高さぶんだけ Scroll が画面に貼り付き、
+     文章が出きったところで貼り付けをやめてそのまま流れていく
+     （実績セクションまで連れていかないため） */
   .scrollLayer {
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(100svh + var(--reveal-h) * 0.78);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .scrollStick {
     position: sticky;
     top: 0;
     height: 100svh;
-    margin-bottom: -100svh;
-    pointer-events: none;
-    z-index: 5;
   }
   .scrollFloat {
     display: flex;
@@ -283,7 +296,7 @@
     display: block;
     position: relative;
     z-index: 1;
-    height: 260svh;
+    height: var(--reveal-h);
     background: var(--reveal-bg);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);

@@ -17,6 +17,9 @@ const rise = {
   }),
 };
 
+// 文章が出きる位置（進み具合）。CSS の --reveal-h の係数とそろえること
+const DONE = 0.78;
+
 export default function Hero() {
   const { hero } = site;
   const wrapRef = useRef(null);
@@ -26,6 +29,7 @@ export default function Hero() {
   // この箱を通り抜けるあいだの進み具合から、何行目まで出すかを決める。
   // 白い面が写真を覆いきるのが 0.38 あたりなので、そのあとから1行ずつ。
   const [shown, setShown] = useState(0);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -38,6 +42,13 @@ export default function Hero() {
       const total = rect.height - window.innerHeight;
       const p = total <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / total));
       setShown(lines.filter((_, i) => p >= 0.46 + i * 0.12).length);
+
+      // Scroll の案内は、文章が出きったところで貼り付けをやめ（CSS側）、
+      // 実績にたどり着くまでのあいだに消す。実績の上まで連れていかないため
+      if (scrollRef.current) {
+        const fade = Math.min(1, Math.max(0, (p - DONE) / 0.17));
+        scrollRef.current.style.opacity = String(1 - fade);
+      }
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(measure);
@@ -57,9 +68,11 @@ export default function Hero() {
     <div className={styles.stickyWrap} ref={wrapRef}>
       {/* スクロールの案内。写真の上にも紹介文の上にも出し続ける（スマホ・タブレット） */}
       <div className={styles.scrollLayer} aria-hidden="true">
-        <div className={`${styles.scroll} ${styles.scrollFloat} caption en`}>
-          <span>Scroll</span>
-          <span className={styles.scrollLine} />
+        <div className={styles.scrollStick}>
+          <div className={`${styles.scroll} ${styles.scrollFloat} caption en`} ref={scrollRef}>
+            <span>Scroll</span>
+            <span className={styles.scrollLine} />
+          </div>
         </div>
       </div>
 
