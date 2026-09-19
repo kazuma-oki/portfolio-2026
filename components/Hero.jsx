@@ -86,18 +86,32 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* 右7カラム：ビジュアル */}
+        {/* 右7カラム：空が流れ、人物は止まっているビジュアル */}
         <motion.div
           className={styles.visual}
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
         >
+          {/* 同じ画像を2枚つないで左から右へ流す。画像は左右端の色が揃えてあるので継ぎ目が出ない */}
+          <div className={styles.sky} aria-hidden="true">
+            {[0, 1].map((i) => (
+              <span
+                key={i}
+                style={{
+                  backgroundImage: `url(${asset(hero.sky)})`,
+                  aspectRatio: hero.skyRatio,
+                }}
+              />
+            ))}
+          </div>
+
           <Image
-            src={asset(hero.image)}
+            className={styles.person}
+            src={asset(hero.person)}
             alt={hero.imageAlt}
-            width={1600}
-            height={2400}
+            width={1199}
+            height={1799}
             priority
             sizes="(max-width: 1024px) 100vw, 58vw"
           />

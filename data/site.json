@@ -27,7 +27,10 @@
     "role": "Web Designer",
     "lead": "情報は、ただ存在するだけでは意味がない。\n伝え方ひとつで、人の理解も選択も変わる。\nその一歩手前を設計するのが、私のデザインです。",
     "image": "images/hero.webp",
-    "imageAlt": "青空に向かって手を伸ばす、黄色いドレスの人物"
+    "imageAlt": "青空に向かって手を伸ばす、黄色いドレスの人物",
+    "person": "images/hero-person.webp",
+    "sky": "images/sky-loop.webp",
+    "skyRatio": "2398 / 683"
   },
   "worksSection": {
     "eyebrow": "Works",
