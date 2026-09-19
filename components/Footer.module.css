@@ -18,8 +18,16 @@
 }
 .tagline { margin-top: 8px; }
 
+/* ナビとSNSのまとまり。SNSは常に右端 */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-m);
+}
+
 .navList {
   display: flex;
+  flex-wrap: wrap;
   gap: 32px;
 }
 
@@ -32,6 +40,8 @@
 .link:hover { color: var(--subtext); }
 
 .social {
+  flex: none;
+  margin-left: auto;
   display: flex;
   gap: 16px;
 }
@@ -48,16 +58,17 @@
   text-align: center;
 }
 
+/* タブレット以下は「ロゴの行」「ナビとSNSの行」の2段。
+   幅がどこであってもこの形のまま変わらない */
 @media (max-width: 1024px) {
   .footer { padding-block: 48px 24px; }
   .inner {
-    flex-wrap: wrap;
-    gap: var(--gap-s);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-m);
   }
-  .brand {
-    width: 100%;
-    margin-right: 0;
-  }
+  .brand { margin-right: 0; }
+  .meta { gap: var(--gap-s); }
   .navList { gap: 24px; }
   .copy { margin-top: 32px; }
 }
@@ -66,5 +77,4 @@
   .inner { gap: 20px; }
   .navList { gap: 16px; }
   .link { font-size: 14px; }
-  .social { margin-left: auto; }
 }

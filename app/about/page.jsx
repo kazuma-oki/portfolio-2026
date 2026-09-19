@@ -25,8 +25,8 @@ export default function AboutPage() {
               <Image
                 src={asset(about.image)}
                 alt={about.name}
-                width={320}
-                height={400}
+                width={880}
+                height={1173}
                 sizes="(max-width: 1024px) 100vw, 320px"
               />
             ) : (
@@ -44,20 +44,31 @@ export default function AboutPage() {
             </div>
           </FadeIn>
         </div>
+      </section>
 
-        <FadeIn className={styles.stats} as="ul">
-          {about.stats.map((s) => (
-            <li key={s.label} className={styles.stat}>
-              <span className={`${styles.statValue} en`}>{s.value}</span>
-              <span className={`${styles.statLabel} caption en`}>{s.label}</span>
-            </li>
-          ))}
-        </FadeIn>
+      {/* 経歴 */}
+      <section className={`section ${styles.careerSection}`}>
+        <div className="container">
+          <h2 className={`${styles.sectionHead} h3`}>経歴</h2>
+          <ol className={styles.career}>
+            {about.career.map((item, i) => (
+              <FadeIn as="li" key={item.title} className={styles.careerItem} delay={i * 70}>
+                <p className={`${styles.careerPeriod} caption en`}>{item.period}</p>
+                <div className={styles.careerBody}>
+                  <h3 className={styles.careerTitle}>{item.title}</h3>
+                  {item.text && (
+                    <p className={`${styles.careerText} body-s subtext`}>{item.text}</p>
+                  )}
+                </div>
+              </FadeIn>
+            ))}
+          </ol>
+        </div>
       </section>
 
       <section className={`section ${styles.skillSection}`}>
         <div className="container">
-          <h2 className={`${styles.skillHead} h3`}>できること</h2>
+          <h2 className={`${styles.sectionHead} h3`}>できること</h2>
           <ul className={styles.skills}>
             {about.skills.map((skill, i) => (
               <FadeIn as="li" key={skill.title} className={styles.skill} delay={i * 90}>

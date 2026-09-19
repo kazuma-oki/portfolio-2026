@@ -11,6 +11,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const isHome = pathname === "/";
 
   // スクロール80pxを超えたら背景をぼかす（設計図の「ヘッダーのスクロール固定」）
   useEffect(() => {
@@ -33,17 +34,32 @@ export default function Header() {
 
           <nav className={styles.nav} aria-label="メインナビゲーション">
             <ul className={styles.navList}>
-              {site.nav.filter((item) => item.href !== "/contact").map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={styles.navLink}
-                    aria-current={pathname.startsWith(item.href) ? "page" : undefined}
-                  >
-                    <span className={styles.navLabel}>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
+              {site.nav.filter((item) => item.href !== "/contact").map((item) => {
+                // TOPにいるときだけ、Works は一覧ページではなく
+                // 同じページの実績セクションへなめらかに移動する
+                const label = <span className={styles.navLabel}>{item.label}</span>;
+
+                if (isHome && item.href === "/works") {
+                  return (
+                    <li key={item.href}>
+                      <a href="#works" className={styles.navLink}>
+                        {label}
+                      </a>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={styles.navLink}
+                      aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

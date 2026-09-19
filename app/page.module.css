@@ -3,6 +3,8 @@
 .works {
   background: var(--surface);
   border-block: 1px solid var(--line);
+  /* ヘッダーの Works から飛んだとき、見出しがヘッダーに隠れないように */
+  scroll-margin-top: var(--header-h);
 }
 
 .worksInner { margin-top: 96px; }
@@ -14,8 +16,37 @@
 }
 
 /* ---------- About プレビュー ---------- */
-.skills {
+/* 左に写真と名前、右に短い紹介文 */
+.profile {
   margin-top: 96px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--gap-l);
+  align-items: start;
+}
+
+.profilePhoto {
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-card);
+}
+
+.profileName {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.profileText {
+  max-width: 34em;
+  font-size: calc(var(--u) * 0.94);
+  line-height: 2;
+}
+.profileText p + p { margin-top: 1.5em; }
+
+.skills {
+  margin-top: var(--section);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-m);
@@ -73,6 +104,13 @@
 
 @media (max-width: 1024px) {
   .worksInner { margin-top: 56px; }
+  .profile {
+    margin-top: 56px;
+    grid-template-columns: 1fr;
+    gap: var(--gap-m);
+  }
+  .profileVisual { max-width: 240px; }
+  .profileText { font-size: 15px; line-height: 1.95; }
   .skills {
     margin-top: 56px;
     grid-template-columns: 1fr;
@@ -90,6 +128,10 @@
 
 @media (max-width: 540px) {
   .worksInner { margin-top: 40px; }
+  .profile { margin-top: 40px; }
+  .profileVisual { max-width: 200px; }
+  .profileName { margin-top: 12px; font-size: 16px; }
+  .profileText { font-size: 14px; }
   .skills { margin-top: 40px; }
   .skillTitle { font-size: 17px; line-height: 28px; }
   .ctaInner { width: 100%; }

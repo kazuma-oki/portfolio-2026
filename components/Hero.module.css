@@ -1,8 +1,12 @@
-.stickyWrap { position: relative; }
-.reveal { display: none; }
+.stickyWrap {
+  position: relative;
+  --hero-pad: clamp(32px, 6vh, 64px);
+}
+.reveal,
+.scrollLayer,
+.scrollFloat { display: none; }
 
 .hero {
-  --hero-pad: clamp(32px, 6vh, 64px);
   position: relative;
   overflow: hidden;
   min-height: 560px;
@@ -138,17 +142,21 @@
 }
 
 .scroll {
-  grid-area: 2 / 1 / 3 / 2;
-  align-self: end;
   display: flex;
   align-items: center;
   gap: 12px;
   color: var(--subtext);
 }
 
+/* PC：グリッドの左カラム下段 */
+.scrollGrid {
+  grid-area: 2 / 1 / 3 / 2;
+  align-self: end;
+}
+
 /* 画面の高さが足りないときは無理に出さない */
 @media (max-height: 620px) {
-  .scroll { display: none; }
+  .scrollGrid { display: none; }
 }
 .scrollLine {
   display: block;
@@ -180,8 +188,9 @@
 @media (max-width: 1024px) {
   .stickyWrap { position: relative; }
 
+  .stickyWrap { --hero-pad: clamp(20px, 3vh, 32px); }
+
   .hero {
-    --hero-pad: clamp(20px, 3vh, 32px);
     position: sticky;
     top: 0;
     height: 100svh;
@@ -246,42 +255,80 @@
   .lead,
   .actions { display: none; }
 
-  /* スクロールできることが分かるように出す */
-  .scroll {
+  /* グリッド内のものは使わず、最前面のレイヤーに出す */
+  .scrollGrid { display: none; }
+
+  /* 写真にも紹介文にも隠れない層。
+     高さぶんは打ち消して、レイアウトを押し下げないようにしている */
+  .scrollLayer {
+    display: block;
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    margin-bottom: -100svh;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .scrollFloat {
     display: flex;
     position: absolute;
     left: var(--gutter);
     bottom: var(--hero-pad);
-    z-index: 2;
   }
 
-  /* 下から上がってくる紹介文の面 */
+  /* 下から上がってくる紹介文の面。
+     写真を覆いきるまでに1画面、そこから文章を出しきるまでに1.6画面ぶん使う */
   .reveal {
     --reveal-bg: rgba(247, 247, 245, 0.94);
-    display: flex;
+    display: block;
     position: relative;
     z-index: 1;
-    min-height: 100svh;
-    align-items: center;
+    height: 260svh;
     background: var(--reveal-bg);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
   }
 
+  /* 面が覆いきったあとは、文章を画面の真ん中に留める */
+  .revealInner {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
   .revealLead {
-    font-size: 17px;
-    line-height: 2.1;
+    font-size: 20px;
+    line-height: 2.25;
     letter-spacing: 0.04em;
-    white-space: pre-line;
     color: var(--text);
+  }
+  /* スクロールが進むごとに data-shown が付き、1行ずつ浮かび上がる */
+  .revealLine {
+    display: block;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+  }
+  .revealLine[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .revealLine {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
 /* ===== スマホ =====
    文字は画面幅で変えず、読みやすい大きさに固定する */
 @media (max-width: 540px) {
-  .hero { --hero-pad: clamp(18px, 2.8vh, 26px); }
-  .revealLead { font-size: 16px; line-height: 2.05; }
+  .stickyWrap { --hero-pad: clamp(18px, 2.8vh, 26px); }
+  .revealLead { font-size: 19px; line-height: 2.2; }
 }
 
 /* 横幅の狭い端末だけ、1行がはみ出さないよう落とす */

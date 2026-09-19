@@ -1,0 +1,136 @@
+/* 横に並ぶカード。1枚目の左端は本文の左端にそろえ、
+   はみ出したぶん（--peek）で隣のカードを覗かせる */
+.wrap {
+  --gap: 32px;
+  /* container の余白のうち、トラックが食い込む量。
+     PCは余白が広いので上限をかけ、覗く量を一定に保つ */
+  --peek: min(var(--gutter), 96px);
+  /* カードを縮めて次のカードを覗かせる量。余白が狭い画面で使う */
+  --shrink: 0px;
+  --per: 3;
+  position: relative;
+}
+
+.track {
+  display: flex;
+  gap: var(--gap);
+  /* container の内側から --peek ぶん外へ広げ、同じ量を内側の余白に戻す。
+     こうすると1枚目の左端は本文の左端のまま、右に続きが見える */
+  margin-inline: calc(var(--peek) * -1);
+  padding-inline: var(--peek);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: var(--peek);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.track::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 calc((100% - var(--gap) * (var(--per) - 1) - var(--shrink)) / var(--per));
+  scroll-snap-align: start;
+}
+
+/* 矢印を置くための見えない枠。
+   ::before でサムネイル（4:3）と同じ高さをつくり、その中央に矢印を置く */
+.rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+.rail::before {
+  content: "";
+  display: block;
+  width: calc((100% - var(--gap) * (var(--per) - 1) - var(--shrink)) / var(--per));
+  aspect-ratio: 4 / 3;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease),
+    opacity 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.arrow svg { width: 16px; height: 16px; }
+.arrow:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: var(--bg);
+}
+.arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* 実績が増えても収まるよう折り返す */
+.dots {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), width 0.2s var(--ease);
+}
+.dot[data-active="true"] {
+  width: 24px;
+  background: var(--accent-dark);
+}
+
+/* ドットは小さいので、押せる範囲は44pxぶん確保する */
+.dots li {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 44px;
+  margin-block: -18px;
+}
+@media (max-width: 1024px) {
+  .wrap {
+    --per: 2;
+    --gap: 24px;
+    /* 余白が狭いぶん、カードを少し縮めて覗く量をつくる */
+    --shrink: 48px;
+  }
+  .arrow { width: 40px; height: 40px; }
+}
+
+@media (max-width: 540px) {
+  .wrap {
+    --per: 1;
+    --gap: 16px;
+    --shrink: 28px;
+  }
+  .prev { left: 8px; }
+  .next { right: 8px; }
+  .dots { margin-top: 24px; }
+}

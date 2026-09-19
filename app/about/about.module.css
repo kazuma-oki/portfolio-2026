@@ -16,7 +16,7 @@
 }
 
 .placeholder {
-  aspect-ratio: 320 / 400;
+  aspect-ratio: 3 / 4;
   background: var(--surface);
   color: var(--subtext);
   display: flex;
@@ -40,31 +40,45 @@
 .body p { white-space: pre-line; }
 .body p + p { margin-top: 1.6em; }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--gap-m);
-  margin-top: var(--section);
-  padding-block: var(--gap-m);
-  border-block: 1px solid var(--line);
-}
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.statValue {
-  font-size: 40px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-.skillSection {
+/* ---------- 経歴 ---------- */
+.careerSection {
   margin-top: var(--section);
   border-top: 1px solid var(--line);
 }
-.skillHead { margin-bottom: var(--gap-l); }
+
+.sectionHead { margin-bottom: var(--gap-l); }
+
+.career {
+  display: flex;
+  flex-direction: column;
+}
+
+.careerItem {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--gap-m);
+  padding-block: 24px;
+  border-top: 1px solid var(--line);
+}
+.career li:last-child { border-bottom: 1px solid var(--line); }
+
+/* 年月がまだ決まっていない項目は空にしてある */
+.careerPeriod {
+  color: var(--text);
+  letter-spacing: 0.1em;
+}
+
+.careerTitle {
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+}
+.careerText { margin-top: 8px; }
+
+/* 直前の「経歴」がすでに下の余白を持っているので、ここでは足さない */
+.skillSection {
+  border-top: 1px solid var(--line);
+}
 
 .skills {
   display: grid;
@@ -96,16 +110,27 @@
     gap: var(--gap-m);
   }
   .visual { max-width: 320px; }
+  .careerItem {
+    grid-template-columns: 100px 1fr;
+    gap: var(--gap-s);
+  }
   .skills {
     grid-template-columns: 1fr;
     gap: var(--gap-s);
   }
-  .statValue { font-size: 32px; }
 }
 
 @media (max-width: 540px) {
-  .stats { gap: var(--gap-s); }
-  .statValue { font-size: 24px; }
+  /* 年月と内容を縦に積む */
+  .careerItem {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-block: 20px;
+  }
+  .careerTitle {
+    font-size: 17px;
+    line-height: 28px;
+  }
   .skillTitle {
     font-size: 18px;
     line-height: 28px;

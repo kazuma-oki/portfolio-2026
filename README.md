@@ -18,6 +18,7 @@ Next.js（App Router）+ Framer Motion で組み、GitHub Pages に静的書き�
    - 詳細ページのメイン画像：`<id>-main.webp`
    - 記事中に挟む画像（任意）：`<id>-full.webp`
 2. `data/works.json` の **配列の先頭** に1件ぶん追記する（先頭が一覧の左上に並ぶ）
+   - TOPは先頭から順に横に並ぶカルーセル。何件足してもTOPが縦に長くならない
 3. push する。GitHub Actions が自動でビルドして公開する
 
 手元で確認したいときは次のコマンド。
@@ -108,11 +109,23 @@ npm run preview   # out/ を本番と同じURL構成で配信（http://localhost
 |---|---|
 | ヒーローのコピー、肩書き | `hero` |
 | 各セクションの見出しと導入文 | `worksSection` / `aboutSection` / `cta` |
-| プロフィール本文・数字・スキル3つ | `about` |
-| Aboutの写真（今は「Photo」の枠） | `about.image` に `images/xxx.webp` を入れる |
+| TOPのAboutに出る短い紹介文 | `aboutSection.profile`（段落ごとの配列） |
+| Aboutページの本文 | `about.body` |
+| 経歴 | `about.career` |
+| できること3つ | `about.skills`（TOPとAboutの両方に出る） |
+| プロフィール写真 | `about.image`。元画像は `scripts/assets/` に置き、`python scripts/build-about-photo.py` で 3:4 のWebPを書き出す |
 | SNSリンク | `social` |
 
-**数字とスキルは仮の値**（`2001 Born` / `2025— Design` / `3 Projects`）。実態に合わせて書き換えてよい。
+### 経歴を足す・年月を埋める
+
+`about.career` は `period`（年月）・`title`（見出し）・`text`（説明、省略可）の3つ。
+
+```json
+{ "period": "2024.04", "title": "◯◯に入社", "text": "担当したことの説明。" }
+```
+
+**年月がまだ決まっていない項目は `period` を空文字にしてある**。決まったら埋める。
+上から順に表示されるので、並べ替えは配列の順番を入れ替えるだけでよい。
 
 ---
 
@@ -141,10 +154,16 @@ app/
   about/ contact/       各ページ
   globals.css           デザインの決まりごと
 components/             ヘッダー・カード・ボタンなどの部品
+  WorkCarousel.jsx      TOPの実績（横スライド。PC3枚 / タブレット2枚 / スマホ1枚）
+  Hero.jsx              ファーストビュー。スマホ・タブレットはスクロールで紹介文が1行ずつ出る
 data/works.json         ★実績データ（普段さわるのはここだけ）
 data/site.json          文言とサイト設定
 public/images/          画像
-scripts/flatten-rsc.mjs ビルド後の調整（先読みデータの配置）
+scripts/
+  build-about-photo.py  プロフィール写真を 3:4 のWebPにする
+  build-hero-assets.py  ヒーローの空と人物の画像をつくる
+  assets/               書き出しのもとになる元画像（公開はされない）
+  flatten-rsc.mjs       ビルド後の調整（先読みデータの配置）
 .github/workflows/      pushしたら自動で公開する設定
 ```
 
