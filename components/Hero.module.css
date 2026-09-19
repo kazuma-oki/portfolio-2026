@@ -1,3 +1,6 @@
+.stickyWrap { position: relative; }
+.reveal { display: none; }
+
 .hero {
   --hero-pad: clamp(32px, 6vh, 64px);
   position: relative;
@@ -171,15 +174,20 @@
   100% { transform: scaleX(0); transform-origin: right center; }
 }
 
-/* タブレット以下：写真をヒーロー全体に敷き、その上に文字を置く。
-   人物は写真の下寄りに来るので（上から34%までは空だけ）、
-   文字は上部に置けば重ならない */
+/* ===== タブレット以下 =====
+   写真は画面の横幅いっぱい、文字は余白のラインに合わせる。
+   スクロールすると写真が固定されたまま、下から紹介文の面が上がってくる */
 @media (max-width: 1024px) {
+  .stickyWrap { position: relative; }
+
   .hero {
     --hero-pad: clamp(20px, 3vh, 32px);
-    --veil-color: rgba(247, 247, 245, 0.5);
-    min-height: max(520px, var(--hero-h));
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 480px;
     align-items: stretch;
+    overflow: hidden;
   }
 
   .inner {
@@ -191,77 +199,89 @@
     gap: 0;
   }
 
-  /* 写真：左右は余白のラインに合わせ、上下はヘッダー下から下端まで */
+  /* 写真：コンテナの幅に縛られず、画面の端から端まで */
   .visual {
     position: absolute;
-    inset: 0;
-    order: 0;
-    width: auto;
+    top: var(--header-h);
+    bottom: 0;
+    left: calc(50% - 50vw);
+    width: 100vw;
     height: auto;
     min-height: 0;
     max-height: none;
     margin: 0;
-    border-radius: var(--r-card);
+    border-radius: 0;
     z-index: 0;
   }
   .visual::after { content: none; }
 
-  /* 空を上に見せて、人物を下へ送る */
+  /* 空を上に見せ、人物を下へ送る（人物は写真の上から38%以降にしかいない） */
   .person { object-position: center top; }
 
-  /* スクロールすると写真の上にかかるレイヤー */
-  .veil {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: var(--veil-color);
-    opacity: 0;
-    transition: opacity 0.5s var(--ease);
-    pointer-events: none;
-  }
-  .hero[data-scrolled="true"] .veil { opacity: 1; }
-
-  /* 文字は余白のラインからもう一段内側へ */
+  /* 文字は余白のラインに合わせる（インデントしない） */
   .text {
     position: relative;
     z-index: 2;
     align-self: auto;
     margin-top: 0;
-    padding-inline: calc(var(--u) * 1.5);
+    padding-inline: 0;
   }
 
-  /* ボタンは出さない */
+  /* ヒーロー内の紹介文とボタンは出さない（紹介文は下の面で見せる） */
+  .lead,
   .actions { display: none; }
 
-  /* 紹介文はスクロールしてから現れる（場所は取らない）。
-     読み込み時のアニメーションが要素に直接 opacity を書き込むため、
-     ここではそれより強く指定する */
-  .lead {
+  /* スクロールできることが分かるように出す */
+  .scroll {
+    display: flex;
     position: absolute;
     left: 0;
-    right: 0;
-    margin-top: calc(var(--u) * 6);
-    opacity: 0 !important;
-    transform: translateY(12px) !important;
-    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
-    pointer-events: none;
-  }
-  .hero[data-scrolled="true"] .lead {
-    opacity: 1 !important;
-    transform: none !important;
+    bottom: var(--hero-pad);
+    z-index: 2;
   }
 
-  .scroll { display: none; }
+  /* 下から上がってくる紹介文の面 */
+  .reveal {
+    --reveal-bg: rgba(247, 247, 245, 0.94);
+    display: flex;
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    align-items: center;
+    background: var(--reveal-bg);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .veil,
-    .lead { transition: none; }
+  .revealLead {
+    font-size: 17px;
+    line-height: 2.1;
+    letter-spacing: 0.04em;
+    white-space: pre-line;
+    color: var(--text);
   }
 }
 
+/* ===== スマホ =====
+   文字は画面幅で変えず、読みやすい大きさに固定する */
 @media (max-width: 540px) {
   .hero { --hero-pad: clamp(16px, 2.6vh, 24px); }
-  .title { margin-top: calc(var(--u) * 0.9); }
-  .name { margin-top: calc(var(--u) * 1.1); gap: 10px; }
+
+  .eyebrow { font-size: 13px; }
+  .title {
+    margin-top: 14px;
+    font-size: 32px;
+    line-height: 1.38;
+  }
+  .name {
+    margin-top: 18px;
+    font-size: 14px;
+    gap: 10px;
+  }
+  .revealLead { font-size: 16px; line-height: 2.05; }
+}
+
+/* 画面が小さいスマホだけ、はみ出さないよう少し詰める */
+@media (max-width: 360px) {
+  .title { font-size: 28px; }
 }

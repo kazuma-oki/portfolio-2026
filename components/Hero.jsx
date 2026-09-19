@@ -30,7 +30,8 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className={styles.hero} data-scrolled={scrolled ? "true" : undefined}>
+    <div className={styles.stickyWrap}>
+      <section className={styles.hero} data-scrolled={scrolled ? "true" : undefined}>
       <div className={`${styles.inner} container`}>
         {/* 左5カラム：テキスト */}
         <div className={styles.text}>
@@ -96,15 +97,14 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* 右7カラム：空が流れ、人物は止まっているビジュアル */}
+        {/* 空が流れ、人物は止まっているビジュアル。
+            スマホ・タブレットではCSSで画面の横幅いっぱいに広げる */}
         <motion.div
           className={styles.visual}
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
         >
-          {/* 空は2枚ぶんが1枚の画像になっている。要素はひとつだけにして、
-              半分（＝1枚ぶん）動かす。要素を並べないので境界に線が出ない */}
           <div
             className={styles.sky}
             aria-hidden="true"
@@ -113,8 +113,6 @@ export default function Hero() {
               aspectRatio: hero.skyRatio,
             }}
           />
-
-          <span className={styles.veil} aria-hidden="true" />
 
           <Image
             className={styles.person}
@@ -134,6 +132,15 @@ export default function Hero() {
           <span className={styles.scrollLine} />
         </div>
       </div>
-    </section>
+      </section>
+
+      {/* スマホ・タブレット用。スクロールすると写真が固定されたまま、
+          この面が下から重なって上がってくる */}
+      <section className={styles.reveal}>
+        <div className="container">
+          <p className={styles.revealLead}>{hero.lead}</p>
+        </div>
+      </section>
+    </div>
   );
 }
