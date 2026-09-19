@@ -114,11 +114,13 @@ export default function Hero() {
             sizes="(max-width: 1024px) 100vw, 58vw"
           />
         </motion.div>
-      </div>
 
-      <div className={`${styles.scroll} caption en`} aria-hidden="true">
-        <span>Scroll</span>
-        <span className={styles.scrollLine} />
+        {/* グリッドの左カラム下段に置く。絶対配置をやめたことで
+            本文と同じ左端に揃い、ボタンとも重ならない */}
+        <div className={`${styles.scroll} caption en`} aria-hidden="true">
+          <span>Scroll</span>
+          <span className={styles.scrollLine} />
+        </div>
       </div>
     </section>
   );
