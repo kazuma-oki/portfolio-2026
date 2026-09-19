@@ -195,8 +195,22 @@
     display: block;
     grid-template-columns: none;
     grid-template-rows: none;
-    padding-block: var(--hero-pad);
+    /* ヘッダーとの間をもう少し空ける */
+    padding-block: calc(var(--hero-pad) * 1.9) var(--hero-pad);
     gap: 0;
+  }
+
+  /* 文字の大きさは画面幅で変えず、スマホ基準の値で固定する */
+  .eyebrow { font-size: 14px; }
+  .title {
+    margin-top: 16px;
+    font-size: 42px;
+    line-height: 1.34;
+  }
+  .name {
+    margin-top: 22px;
+    font-size: 15px;
+    gap: 10px;
   }
 
   /* 写真：コンテナの幅に縛られず、画面の端から端まで */
@@ -266,23 +280,11 @@
 /* ===== スマホ =====
    文字は画面幅で変えず、読みやすい大きさに固定する */
 @media (max-width: 540px) {
-  .hero { --hero-pad: clamp(16px, 2.6vh, 24px); }
-
-  .eyebrow { font-size: 14px; }
-  .title {
-    margin-top: 14px;
-    font-size: 38px;
-    line-height: 1.34;
-  }
-  .name {
-    margin-top: 20px;
-    font-size: 15px;
-    gap: 10px;
-  }
+  .hero { --hero-pad: clamp(18px, 2.8vh, 26px); }
   .revealLead { font-size: 16px; line-height: 2.05; }
 }
 
-/* 画面が小さいスマホだけ、はみ出さないよう少し詰める */
-@media (max-width: 360px) {
-  .title { font-size: 34px; }
+/* 横幅の狭い端末だけ、1行がはみ出さないよう落とす */
+@media (max-width: 374px) {
+  .title { font-size: 36px; }
 }
