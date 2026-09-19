@@ -37,17 +37,35 @@ export default function WorkCarousel({ works }) {
 
   const slides = Array.from({ length: n * copies }, (_, i) => works[i % n]);
 
-  /** そのカードを画面の中央に置くためのスクロール位置 */
-  const leftFor = (el, t) => el.offsetLeft + el.offsetWidth / 2 - t.clientWidth / 2;
+  /**
+   * そのカードを画面の中央に置くためのスクロール位置。
+   * offsetLeft は整数に丸められてしまい、止まったあとに数値が合わず
+   * スナップに引き直される。余白・すき間・カード幅から正確に出す
+   */
+  const leftFor = (i, t) => {
+    const cs = getComputedStyle(t);
+    const pad = parseFloat(cs.paddingLeft);
+    const gap = parseFloat(cs.columnGap || cs.gap);
+    const w = parseFloat(getComputedStyle(t.children[0]).width);
+    if ([pad, gap, w].some(Number.isNaN)) {
+      const el = t.children[i];
+      return el.offsetLeft + el.offsetWidth / 2 - t.clientWidth / 2;
+    }
+    return pad + i * (w + gap) + w / 2 - t.clientWidth / 2;
+  };
 
   // scrollBy は Safari でスナップ位置がずれることがあるため、
   // 行き先を計算して scrollTo で指定する
   const goToIndex = useCallback((i, smooth) => {
     const t = trackRef.current;
-    const el = t && t.children[i];
-    if (!el) return;
+    if (!t || !t.children[i]) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    t.scrollTo({ left: leftFor(el, t), behavior: smooth && !reduce ? "smooth" : "auto" });
+    const glide = smooth && !reduce;
+    // 滑らせている途中にスナップが割り込むと、
+    // 中央より手前で止まってから引き戻されて「カクッ」と見える。
+    // 動かしている間だけスナップを外し、止まってから戻す
+    if (glide) t.setAttribute("data-gliding", "true");
+    t.scrollTo({ left: leftFor(i, t), behavior: glide ? "smooth" : "auto" });
   }, []);
 
   /** いま画面の中央にいちばん近いカード */
@@ -123,13 +141,12 @@ export default function WorkCarousel({ works }) {
       }
 
       const target = indexRef.current - shift * n;
-      const el = t.children[target];
-      if (!el) return;
+      if (!t.children[target]) return;
       // 位置を戻すのと、中央の入れ替えを、同じコマでまとめて行う
       t.setAttribute("data-jump", "true");
       // 飛ばしている間はスナップを切る（飛んだ先で引き戻されないように）
       t.style.scrollSnapType = "none";
-      t.scrollLeft = leftFor(el, t);
+      t.scrollLeft = leftFor(target, t);
       t.style.scrollSnapType = "";
       paint(target);
       indexRef.current = target;
@@ -137,22 +154,34 @@ export default function WorkCarousel({ works }) {
       setCenter(target);
     };
 
+    // 動きが止まったら、スナップを戻してから位置を整える
+    const settled = () => {
+      t.removeAttribute("data-gliding");
+      normalize();
+    };
+
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
       // scrollend が使えない環境ぶんの保険
       clearTimeout(timer);
-      timer = setTimeout(normalize, 180);
+      timer = setTimeout(settled, 180);
     };
+    // 指やホイールで触られたら、そこで滑走は終わり
+    const onTouch = () => t.removeAttribute("data-gliding");
     const onResize = () => goToIndex(indexRef.current, false);
 
     t.addEventListener("scroll", onScroll, { passive: true });
-    t.addEventListener("scrollend", normalize);
+    t.addEventListener("scrollend", settled);
+    t.addEventListener("pointerdown", onTouch, { passive: true });
+    t.addEventListener("wheel", onTouch, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(timer);
       t.removeEventListener("scroll", onScroll);
-      t.removeEventListener("scrollend", normalize);
+      t.removeEventListener("scrollend", settled);
+      t.removeEventListener("pointerdown", onTouch);
+      t.removeEventListener("wheel", onTouch);
       window.removeEventListener("resize", onResize);
     };
   }, [goToIndex, nearest, loop, n, startCopy]);
@@ -197,12 +226,15 @@ export default function WorkCarousel({ works }) {
               data-side={i === center ? undefined : i < center ? "left" : "right"}
               aria-hidden={spare ? "true" : undefined}
             >
-              <WorkCard
-                work={work}
-                priority={i === startIndex}
-                ratio={THUMB_RATIO}
-                tabIndex={spare ? -1 : undefined}
-              />
+              {/* 大きさを変えるのは内側だけ。外の枠（スナップの基準）は動かさない */}
+              <div className={styles.scaler}>
+                <WorkCard
+                  work={work}
+                  priority={i === startIndex}
+                  ratio={THUMB_RATIO}
+                  tabIndex={spare ? -1 : undefined}
+                />
+              </div>
             </li>
           );
         })}

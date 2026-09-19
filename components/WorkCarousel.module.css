@@ -27,31 +27,43 @@
 }
 .track::-webkit-scrollbar { display: none; }
 
+/* スナップが狙う位置は、この枠の「変形後の」大きさで決まる。
+   枠そのものを縮めると、拡大の途中で狙う位置まで動いてしまい、
+   中央の手前で止まってから引き戻されて「カクッ」と見える。
+   だから枠は動かさず、中身（.scaler）だけを縮める */
 .slide {
   flex: 0 0 var(--slide-w);
   scroll-snap-align: center;
-  /* 中央以外は少し小さく。縮めたぶんを中央側へずらして戻すので、
-     端で見切れているぶんの幅は変わらず、高さだけが低くなる。
-     transform-origin を左右で切り替えると、切り替わった瞬間に横へ飛ぶ。
-     軸は中央のままにして、ずらす量で同じ見え方をつくっている */
+}
+
+/* 中央以外は少し小さく。縮めたぶんを中央側へずらして戻すので、
+   端で見切れているぶんの幅は変わらず、高さだけが低くなる。
+   transform-origin を左右で切り替えると切り替わった瞬間に横へ飛ぶので、
+   軸は中央のままにして、ずらす量で同じ見え方をつくっている */
+.scaler {
   transform: scale(var(--scale));
   transition: transform 0.45s var(--ease-out);
 }
-.slide[data-side="left"] {
+.slide[data-side="left"] .scaler {
   transform: translateX(calc((1 - var(--scale)) * 50%)) scale(var(--scale));
 }
-.slide[data-side="right"] {
+.slide[data-side="right"] .scaler {
   transform: translateX(calc((1 - var(--scale)) * -50%)) scale(var(--scale));
 }
-.slide[data-center="true"] { transform: none; }
+.slide[data-center="true"] .scaler { transform: none; }
+
+/* 矢印で滑らせている間はスナップを外す。
+   入れたままだと途中で引き戻され、中央の手前で止まってから
+   「カクッ」と中央に寄って見える */
+.track[data-gliding="true"] { scroll-snap-type: none; }
 
 /* ループのために位置を戻す瞬間だけ、大きさの変化を止める。
    中央のカードが別の要素に入れ替わるので、animation が走ると
    一度縮んでから戻るように見えてしまう */
-.track[data-jump="true"] .slide { transition: none; }
+.track[data-jump="true"] .scaler { transition: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide { transition: none; }
+  .scaler { transition: none; }
 }
 
 /* 矢印を置くための見えない枠。
