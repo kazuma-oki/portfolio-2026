@@ -114,6 +114,9 @@
 .burger[aria-expanded="true"] span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
 
 @media (max-width: 1024px) {
+  /* 本文や実績と同じ余白のラインに揃える（中央寄せの制限を外す） */
+  .inner { max-width: none; }
+
   .logo { width: auto; font-size: 16px; }
   .nav,
   .cta { display: none; }

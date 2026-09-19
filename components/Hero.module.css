@@ -202,7 +202,8 @@
   /* 写真：コンテナの幅に縛られず、画面の端から端まで */
   .visual {
     position: absolute;
-    top: var(--header-h);
+    /* .hero 側で既にヘッダーぶん下げてあるので、ここは 0 でヘッダーの下端に接する */
+    top: 0;
     bottom: 0;
     left: calc(50% - 50vw);
     width: 100vw;
@@ -235,7 +236,7 @@
   .scroll {
     display: flex;
     position: absolute;
-    left: 0;
+    left: var(--gutter);
     bottom: var(--hero-pad);
     z-index: 2;
   }
@@ -267,15 +268,15 @@
 @media (max-width: 540px) {
   .hero { --hero-pad: clamp(16px, 2.6vh, 24px); }
 
-  .eyebrow { font-size: 13px; }
+  .eyebrow { font-size: 14px; }
   .title {
     margin-top: 14px;
-    font-size: 32px;
-    line-height: 1.38;
+    font-size: 38px;
+    line-height: 1.34;
   }
   .name {
-    margin-top: 18px;
-    font-size: 14px;
+    margin-top: 20px;
+    font-size: 15px;
     gap: 10px;
   }
   .revealLead { font-size: 16px; line-height: 2.05; }
@@ -283,5 +284,5 @@
 
 /* 画面が小さいスマホだけ、はみ出さないよう少し詰める */
 @media (max-width: 360px) {
-  .title { font-size: 28px; }
+  .title { font-size: 34px; }
 }
