@@ -24,8 +24,32 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  /* 掴んで動かせることの手がかり。JSが動かないときはこれだけが残る */
+  cursor: grab;
 }
 .track::-webkit-scrollbar { display: none; }
+.track[data-dragging="true"] { cursor: grabbing; }
+
+/* 掴んで動かしている間だけ、文字が選ばれないようにする。
+   常時切ると作品名を選べなくなってしまう */
+.track[data-dragging="true"],
+.track[data-dragging="true"] * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ブラウザ標準の画像ドラッグ（半透明の複製がついてくるもの）を止める。
+   継承しないので、画像とリンクそれぞれに指定する */
+.track img,
+.track a {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* 追従する丸が出ている間だけ、標準のカーソルを隠す。
+   リンクには UA が cursor: pointer を当ててくるので * にも指定する */
+.track[data-cursor="on"],
+.track[data-cursor="on"] * { cursor: none; }
 
 /* スナップが狙う位置は、この枠の「変形後の」大きさで決まる。
    枠そのものを縮めると、拡大の途中で狙う位置まで動いてしまい、
@@ -52,10 +76,11 @@
 }
 .slide[data-center="true"] .scaler { transform: none; }
 
-/* 矢印で滑らせている間はスナップを外す。
+/* 滑らせている間と掴んでいる間はスナップを外す。
    入れたままだと途中で引き戻され、中央の手前で止まってから
    「カクッ」と中央に寄って見える */
-.track[data-gliding="true"] { scroll-snap-type: none; }
+.track[data-gliding="true"],
+.track[data-dragging="true"] { scroll-snap-type: none; }
 
 /* ループのために位置を戻す瞬間だけ、大きさの変化を止める。
    中央のカードが別の要素に入れ替わるので、animation が走ると
@@ -64,6 +89,46 @@
 
 @media (prefers-reduced-motion: reduce) {
   .scaler { transition: none; }
+}
+
+/* マウスについてくる丸。画面に対して置くので position: fixed。
+   中の文字は「Drag」／カードの上では「View」に変わる */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  will-change: transform;
+}
+.cursor[data-on="true"] { opacity: 1; }
+
+/* 丸そのもの。transform は位置に使っているので、大きさは内側で変える */
+.cursor span {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-radius: var(--r-pill);
+  background: var(--accent-dark);
+  color: var(--bg);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  transition: transform 0.25s var(--ease-out);
+}
+/* 押している間は少し縮む */
+.track[data-dragging="true"] ~ .cursor span { transform: scale(0.82); }
+
+/* 指やペンでは出さない */
+@media (hover: none) {
+  .cursor { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .cursor span { transition: none; }
 }
 
 /* 矢印を置くための見えない枠。

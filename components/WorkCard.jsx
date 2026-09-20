@@ -6,7 +6,14 @@ import styles from "./WorkCard.module.css";
 export default function WorkCard({ work, priority = false, ratio = "1 / 1", tabIndex }) {
   return (
     <article className={styles.card}>
-      <Link href={`/works/${work.id}`} className={styles.link} tabIndex={tabIndex}>
+      {/* draggable={false} がないと、掴んで動かしたときに
+          ブラウザ標準の画像ドラッグ（半透明の複製）が始まってしまう */}
+      <Link
+        href={`/works/${work.id}`}
+        className={styles.link}
+        tabIndex={tabIndex}
+        draggable={false}
+      >
         <div className={styles.thumb} style={{ aspectRatio: ratio }}>
           <Image
             src={asset(work.thumb)}
@@ -14,6 +21,7 @@ export default function WorkCard({ work, priority = false, ratio = "1 / 1", tabI
             width={1600}
             height={1600}
             priority={priority}
+            draggable={false}
             sizes="(max-width: 540px) 320px, (max-width: 1024px) 700px, 380px"
           />
         </div>

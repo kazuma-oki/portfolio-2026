@@ -7,6 +7,10 @@ import styles from "./WorkCarousel.module.css";
 const THUMB_RATIO = "1 / 1";
 // 大きさが変わりきるまでの時間（CSS の transition とそろえる）
 const GROW_MS = 500;
+// これ以上動いたら「掴んで動かした」とみなし、クリックを止める
+const DRAG_SLOP = 6;
+// これより速く払ったら、最寄りではなく1枚先へ送る（px/ミリ秒）
+const FLICK_SPEED = 0.4;
 
 // サーバー側では useLayoutEffect が動かないので、そこだけ useEffect にする
 const useBeforePaint = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -28,9 +32,13 @@ export default function WorkCarousel({ works }) {
   const startCopy = (copies - 1) / 2;
   const startIndex = startCopy * n;
 
+  const wrapRef = useRef(null);
   const trackRef = useRef(null);
+  const cursorRef = useRef(null);
   const indexRef = useRef(startIndex);
   const changedAt = useRef(0);
+  // 追従する丸に出す文字。null のときは出さない
+  const [cursorLabel, setCursorLabel] = useState(null);
   const [center, setCenter] = useState(startIndex);
   // 位置を戻している最中。この1コマだけ大きさの変化を止める
   const [jump, setJump] = useState(false);
@@ -186,6 +194,156 @@ export default function WorkCarousel({ works }) {
     };
   }, [goToIndex, nearest, loop, n, startCopy]);
 
+  /* マウスで掴んでスライドさせる。
+     指とペンは今までどおりブラウザ標準のスクロールにまかせる */
+  useEffect(() => {
+    const t = trackRef.current;
+    if (!t || !loop) return undefined;
+
+    let drag = null;
+    // 掴んで動かしたあとの1回ぶんのクリックを止めるための印
+    let moved = false;
+
+    const onDown = (e) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      // 矢印やドットの上では始めない
+      if (e.target.closest("button")) return;
+      moved = false;
+      drag = {
+        x: e.clientX,
+        left: t.scrollLeft,
+        far: 0,
+        lastX: e.clientX,
+        lastT: e.timeStamp,
+        v: 0,
+        held: false,
+      };
+      t.removeAttribute("data-gliding");
+    };
+
+    const onMove = (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      drag.far = Math.max(drag.far, Math.abs(dx));
+
+      /* 掴むのは、実際に動かしはじめてから。
+         押した時点で setPointerCapture すると click の宛先まで
+         トラックに付け替わってしまい、カードのリンクが開かなくなる */
+      if (!drag.held && drag.far > DRAG_SLOP) {
+        drag.held = true;
+        t.setPointerCapture(e.pointerId);
+        t.setAttribute("data-dragging", "true");
+      }
+      if (!drag.held) return;
+
+      const dt = e.timeStamp - drag.lastT;
+      if (dt > 0) drag.v = (e.clientX - drag.lastX) / dt;
+      drag.lastX = e.clientX;
+      drag.lastT = e.timeStamp;
+      t.scrollLeft = drag.left - dx;
+    };
+
+    const onUp = (e) => {
+      if (!drag) return;
+      const { held, v } = drag;
+      drag = null;
+      // 動かしていないなら、ただのクリック。位置も触らない
+      if (!held) return;
+
+      moved = true;
+      if (t.hasPointerCapture && t.hasPointerCapture(e.pointerId)) {
+        t.releasePointerCapture(e.pointerId);
+      }
+      // 勢いよく払ったら1枚先へ。そうでなければ最寄りへ
+      const flick = Math.abs(v) > FLICK_SPEED ? (v < 0 ? 1 : -1) : 0;
+      // 先に行き先を決めてから data-dragging を外す。
+      // 逆にするとスナップが一瞬効いて引っかかる
+      goToIndex(nearest() + flick, true);
+      t.removeAttribute("data-dragging");
+    };
+
+    // 掴んで動かしただけで作品ページへ飛ばないように
+    const onClick = (e) => {
+      if (!moved) return;
+      moved = false;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    // draggable={false} で足りない環境ぶんの保険
+    const onDragStart = (e) => e.preventDefault();
+
+    t.addEventListener("pointerdown", onDown);
+    t.addEventListener("pointermove", onMove);
+    t.addEventListener("pointerup", onUp);
+    t.addEventListener("pointercancel", onUp);
+    t.addEventListener("click", onClick, true);
+    t.addEventListener("dragstart", onDragStart);
+    return () => {
+      t.removeEventListener("pointerdown", onDown);
+      t.removeEventListener("pointermove", onMove);
+      t.removeEventListener("pointerup", onUp);
+      t.removeEventListener("pointercancel", onUp);
+      t.removeEventListener("click", onClick, true);
+      t.removeEventListener("dragstart", onDragStart);
+    };
+  }, [goToIndex, nearest, loop]);
+
+  /* マウスについてくる丸。指・ペンのときは出さない */
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const t = trackRef.current;
+    if (!wrap || !t || !loop) return undefined;
+
+    let frame = 0;
+    let pos = null;
+
+    const draw = () => {
+      frame = 0;
+      const el = cursorRef.current;
+      if (el && pos) el.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+    };
+
+    const onMove = (e) => {
+      if (e.pointerType !== "mouse") return;
+      // 矢印・ドット・トラックの外では標準のカーソルに戻す
+      const inside = t.contains(e.target) && !e.target.closest("button");
+      if (!inside) {
+        if (t.hasAttribute("data-cursor")) {
+          t.removeAttribute("data-cursor");
+          setCursorLabel(null);
+        }
+        return;
+      }
+      pos = { x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(draw);
+      t.setAttribute("data-cursor", "on");
+
+      /* 中央のカードは「開く」対象なので View。
+         両隣と見切れているものは、中央へ持ってくるために動かす場所なので Drag。
+         カードが並びの全体を覆っているので、「カードの上か」で分けると
+         View しか出てこなくなる */
+      const slide = e.target.closest("li");
+      const onCenter = slide && slide.dataset.center === "true";
+      setCursorLabel(t.hasAttribute("data-dragging") || !onCenter ? "Drag" : "View");
+    };
+
+    const onLeave = () => {
+      t.removeAttribute("data-cursor");
+      setCursorLabel(null);
+    };
+
+    wrap.addEventListener("pointermove", onMove);
+    wrap.addEventListener("pointerleave", onLeave);
+    window.addEventListener("blur", onLeave);
+    return () => {
+      cancelAnimationFrame(frame);
+      wrap.removeEventListener("pointermove", onMove);
+      wrap.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("blur", onLeave);
+    };
+  }, [loop]);
+
   // 入れ替えたつぎのコマで、大きさの変化を戻す
   useEffect(() => {
     if (!jump) return undefined;
@@ -206,7 +364,7 @@ export default function WorkCarousel({ works }) {
   };
 
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} ref={wrapRef}>
       <ul
         className={styles.track}
         ref={trackRef}
@@ -239,6 +397,18 @@ export default function WorkCarousel({ works }) {
           );
         })}
       </ul>
+
+      {/* マウスについてくる丸。標準のカーソルはこれが出ている間だけ隠す */}
+      {loop && (
+        <div
+          className={styles.cursor}
+          ref={cursorRef}
+          data-on={cursorLabel ? "true" : undefined}
+          aria-hidden="true"
+        >
+          <span className="en">{cursorLabel}</span>
+        </div>
+      )}
 
       {loop && (
         <div className={styles.rail}>
