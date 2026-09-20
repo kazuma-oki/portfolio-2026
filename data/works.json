@@ -1,5 +1,726 @@
 [
   {
+    "id": "article-instagram-tool",
+    "title": "Instagramキャンペーンツール 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2026",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "Instagramのキャンペーンツール5社を比較する記事のサムネイル。",
+    "thumb": "images/works/article-instagram-tool.webp",
+    "mainImage": "images/works/article-instagram-tool.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「【最新版】Instagramキャンペーンツール5社比較 ― 機能・料金・目的別の選び方」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "Instagramのブランドカラーにならった紫からピンクのグラデーションを背景に敷き、雲の形に白く抜いたフレームの中に見出しを置いて読みやすくしました。下部には5社ぶんのカードを並べ、「5社比較」という中身が絵でも伝わるようにしています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2026年 春"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dl-sns-trend-news",
+    "title": "SNSトレンドニュース DLページサムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2026",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "SNSの最新情報をまとめた資料のダウンロードページ用サムネイル。",
+    "thumb": "images/works/dl-sns-trend-news.webp",
+    "mainImage": "images/works/dl-sns-trend-news.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "X・Instagram・TikTok・LINEなど各SNSの最新情報をまとめた資料の、ダウンロードページ用サムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "ダウンロードページの先頭に置かれる画像です。どのSNSを扱っているかが一目で分かり、資料を手に取ってもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "扱う媒体が多いことが伝わるよう、虫眼鏡を中心に各SNSのアイコンを円環状に配置しました。文字は左、図版は右にまとめ、青と白を基調にしたうえで、サブコピーだけ黄色のリボンで目立たせています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2026年 春"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "webinar-x-algorithm",
+    "title": "Xアルゴリズム攻略セミナー 告知サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2026",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "Xのアルゴリズムをテーマにした無料セミナーの告知サムネイル。",
+    "thumb": "images/works/webinar-x-algorithm.webp",
+    "mainImage": "images/works/webinar-x-algorithm.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "「X（Twitter）アルゴリズム攻略セミナー ― おすすめ表示に載る投稿設計」の告知用サムネイルです。日時・開催場所・解説者を下部にまとめています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "セミナーの告知として使われる画像です。テーマと対象者、開催概要が一目で伝わり、申し込みにつながることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "紺と金を基調に、他のサムネイルより硬めの印象にまとめました。左上に「2026年4月最新」の帯を置いて情報の鮮度を示し、開催日時・場所・解説者は下部の白い帯に分けて、告知として必要な情報がまとめて読めるようにしています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2026年 春"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "article-line-miniapp",
+    "title": "LINEミニアプリ 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2026",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "LINEミニアプリの活用例を解説する記事のサムネイル。",
+    "thumb": "images/works/article-line-miniapp.webp",
+    "mainImage": "images/works/article-line-miniapp.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「LINEミニアプリとは？ ― できることやメリット、販促・プロモーション活用例を解説」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "LINEの緑を主役にしつつ、背景は明るいグレーにして文字を読みやすくしました。右側にはスマートフォンの上に店舗・カート・拡声器・ユーザーの3Dアイコンを並べ、「販促に使える」という記事の内容を絵で示しています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2026年 冬（1月〜）"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wp-x-mentions",
+    "title": "X発話数増加 ホワイトペーパー表紙",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2026",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "Xの発話数を増やす提案フレームワークをまとめた資料の表紙。",
+    "thumb": "images/works/wp-x-mentions.webp",
+    "mainImage": "images/works/wp-x-mentions.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "ホワイトペーパー「今すぐ使えるX（Twitter）発話数増加の提案フレームワーク」の表紙です。「KPIとして発話数を設定するクライアントへ」という対象を冒頭に置いています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "資料のダウンロードページや紹介記事で表示される表紙です。中身の想像がついて、ダウンロードにつながることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "青と白の対角の構図で、左に文字・右に図版を分けました。見出しは白い帯で一行ずつ抜き、「増加」だけをオレンジと上向き矢印にして主題を目立たせています。右側はスマートフォンのまわりに吹き出しを飛ばし、発話が広がる様子を表しました。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2026年 冬（1月〜）"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wp-x-algorithm",
+    "title": "Xアルゴリズム ホワイトペーパー表紙",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "Xの最新アルゴリズムへの対応をまとめた資料の表紙。",
+    "thumb": "images/works/wp-x-algorithm.webp",
+    "mainImage": "images/works/wp-x-algorithm.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "ホワイトペーパー「X（Twitter）のリーチ激減を防ぐ！ 最新アルゴリズムで認知を獲得する3原則」の表紙です。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "資料のダウンロードページや紹介記事で表示される表紙です。中身の想像がついて、ダウンロードにつながることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "Xのダークモードの画面を模した黒基調のレイアウトに、水色のふちをつけました。タイムラインのカードを左右に配置し、中央を空けてそこに見出しを置くことで、実際の画面に重なっているような見え方にしています。「3原則」だけ黄色にして、何が得られるかが分かるようにしました。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 冬"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "article-genai-cost",
+    "title": "画像生成の導入費用 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "画像生成機能の導入費用を解説する記事のサムネイル。",
+    "thumb": "images/works/article-genai-cost.webp",
+    "mainImage": "images/works/article-genai-cost.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「画像コンテンツを生み出す機能の導入費用は？」のサムネイルです。キャンペーン担当者を想定した読者向けの記事になっています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "費用の話は硬くなりやすいので、線画のイラストと緑を使って親しみやすい印象にしました。悩む人と答える人を左右に配置し、中央のホワイトボードで費用が上がっていくグラフを見せることで、記事の問いが絵でも伝わるようにしています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 冬"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lenscare-campaign-wireframe",
+    "title": "コンタクトレンズケア用品 キャンペーン画面設計",
+    "category": "画面設計",
+    "tag": "実務",
+    "year": "2025",
+    "role": "画面設計 / デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "コンタクトレンズケア用品ブランドのキャンペーンで、購入商品を選ぶ画面の設計。",
+    "thumb": "images/works/lenscare-campaign-wireframe.webp",
+    "mainImage": "images/works/lenscare-campaign-wireframe.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "コンタクトレンズケア用品ブランドのキャンペーンサイトのうち、応募者が購入した商品を選ぶ画面の設計です。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "応募のはじめに置かれる画面です。自分が買った商品を迷わず選べて、次の手順へ進んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "商品をカルーセルで見せ、選んでいるものだけを手前に大きく出しました。左右に半分だけのぞく商品と、矢印ボタン、下のドットを添えることで、横にも選択肢があることが分かるようにしています。進むボタンと戻るボタンは色を大きく変え、押し間違いを防ぐようにしました。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 冬"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "note-party-report",
+    "title": "社内Note パーティーレポート サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "業務提携を記念したパーティーのレポート記事サムネイル。",
+    "thumb": "images/works/note-party-report.webp",
+    "mainImage": "images/works/note-party-report.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "社内で運営しているNoteの記事「Days×n2p 提携記念パーティーレポート」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "Noteの記事一覧やSNSでシェアされたときに表示される画像です。いつ・何があった記事なのかが一目で分かることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "当日の写真を右半分にそのまま使い、左半分は青一色にして文字を置きました。日付・タイトル・記事の種類を黒い帯で3段に分け、写真の上に文字を重ねずに読めるようにしています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 冬"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "article-photo-campaign",
+    "title": "写真投稿キャンペーン 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "写真投稿キャンペーンの成功事例をまとめた記事のサムネイル。",
+    "thumb": "images/works/article-photo-campaign.webp",
+    "mainImage": "images/works/article-photo-campaign.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「Instagram写真投稿キャンペーン成功事例11選 ― 効果と成功ポイントを徹底解説」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "ピンクでまとめ、Instagramの世界観に寄せました。「11選」の数字を大きく出して事例数が一目で分かるようにし、右側にはカメラとスマートフォン、投稿写真を重ねて、写真を投稿するキャンペーンであることを絵で示しています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜夏"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "snack-campaign-wireframe",
+    "title": "スナック菓子ブランド キャンペーン応募フォーム設計",
+    "category": "画面設計",
+    "tag": "実務",
+    "year": "2025",
+    "role": "画面設計 / デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "スナック菓子ブランドのキャンペーンで、当選者が情報を入力する応募フォームの設計。",
+    "thumb": "images/works/snack-campaign-wireframe.webp",
+    "mainImage": "images/works/snack-campaign-wireframe.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "スナック菓子ブランドのキャンペーンサイトのうち、応募フォームの画面設計です。発送情報の入力からレシート画像のアップロード、確認、完了までの4手順で構成しています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "応募の最後にあたる画面です。入力の途中で離脱せず、最後まで進んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "上部に4つの手順を並べ、いま何番目にいるかが分かるようにしました。ブランドの赤を背景に、入力欄だけを白く抜いて、どこに何を書くのかが迷わず分かるようにしています。必須の項目にはラベルを添えました。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜夏"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "snack-campaign-banner",
+    "title": "スナック菓子ブランド キャンペーンバナー",
+    "category": "バナー",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "スナック菓子ブランドのX（Twitter）キャンペーン告知バナー。",
+    "thumb": "images/works/snack-campaign-banner.webp",
+    "mainImage": "images/works/snack-campaign-banner.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "スナック菓子ブランドのX（Twitter）キャンペーンの告知バナーです。フォローとポストで応募できることと、賞品・期間を1枚に収めています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "キャンペーンサイトやSNSで表示される告知画像です。何がもらえて、いつまでに、どうすれば応募できるのかが一目で分かることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "左の帯にブランドロゴと開催期間、右にキービジュアルを置きました。下部は応募方法と賞品の帯にあて、賞品の金額をいちばん大きな文字にしています。ブランドの赤と黒を基調に、キービジュアルの上へ置くコピーは白く縁取って読めるようにしました。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜夏"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "carshare-banners",
+    "title": "カーシェアサービス SNSバナー集",
+    "category": "バナー",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "カーシェアサービスの公式X向けに毎月制作しているバナー。",
+    "thumb": "images/works/carshare-banners.webp",
+    "mainImage": "images/works/carshare-banners.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "カーシェアサービスの公式X（Twitter）アカウントに投稿するバナーを、毎月制作しています。注意喚起・豆知識・クイズ・アカウント案内など、投稿の目的に合わせて型を変えています。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "タイムラインを流し見している人の目に留まり、投稿を読んでもらうための画像です。毎月出すものなので、1枚ずつの新しさよりも、続けて見たときにブランドのものだと分かることを大事にしています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "ブランドの黄色と青を全体の枠に使い、どの投稿でも同じ見た目で始まるようにしました。中の構成は目的ごとに変えていて、注意喚起は人物のイラストと手順、クイズは問いを大きく、豆知識は図解を主役にしています。下部のロゴの位置はすべて揃えました。"
+          }
+        ]
+      },
+      {
+        "heading": "バナー集",
+        "blocks": [
+          {
+            "text": "毎月つくったものを、ここに足していきます。いまは、これまでに制作したものをまとめた1枚を置いています。"
+          },
+          {
+            "gallery": [
+              {
+                "src": "images/works/carshare-banners.webp",
+                "alt": "カーシェアサービスの公式X向けバナー6点"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜（毎月継続中）"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "article-interactive-campaign",
+    "title": "対話型キャンペーン 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "対話型キャンペーンの課題を事例ごとに解説する記事のサムネイル。",
+    "thumb": "images/works/article-interactive-campaign.webp",
+    "mainImage": "images/works/article-interactive-campaign.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「ユーザーごとに新たな体験を組み立てる 対話型キャンペーン ― ありがちな課題を事例ごとに解説！」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "青一色を背景に、白い線で回路図のような通り道を描きました。左には診断・クイズ・アンケートなど扱う手法のタグを並べ、右にはQ&Aの画面を置いて、記事が扱う範囲が一目で分かるようにしています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜夏"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "article-image-composite",
+    "title": "画像合成キャンペーン 記事サムネイル",
+    "category": "サムネイル",
+    "tag": "実務",
+    "year": "2025",
+    "role": "デザイン",
+    "tools": [],
+    "url": "",
+    "summary": "画像ジェネレーターを使ったキャンペーンを解説する記事のサムネイル。",
+    "thumb": "images/works/article-image-composite.webp",
+    "mainImage": "images/works/article-image-composite.webp",
+    "sections": [
+      {
+        "heading": "概要",
+        "blocks": [
+          {
+            "text": "オウンドメディアの記事「画像ジェネレーター活用でUGC爆増!? 画像合成・生成キャンペーン完全攻略ガイド」のサムネイルです。"
+          }
+        ]
+      },
+      {
+        "heading": "目的",
+        "blocks": [
+          {
+            "text": "記事一覧や検索結果、SNSでシェアされたときに表示される画像です。記事の主題が一目で伝わり、読んでもらえることを目的としています。"
+          }
+        ]
+      },
+      {
+        "heading": "デザインのこだわり",
+        "blocks": [
+          {
+            "text": "薄紫のグリッドを背景に敷き、「合成」「生成」の文字を選択範囲のような枠で囲って、画像を編集している画面に見立てました。右側には実際の操作画面を模したスマートフォンを2台重ね、何ができるキャンペーンなのかを絵で示しています。"
+          }
+        ]
+      },
+      {
+        "heading": "制作時期",
+        "blocks": [
+          {
+            "text": "2025年 春〜夏"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "greenloop",
     "title": "Green Loop",
     "category": "Website",

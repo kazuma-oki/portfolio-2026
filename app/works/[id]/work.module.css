@@ -102,6 +102,23 @@
   background: var(--surface);
 }
 
+/* 同じ大きさの画像を並べる。数が増えても折り返して収まる */
+.gallery {
+  margin-top: var(--gap-m);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gap-s);
+}
+.gallery li {
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--surface);
+}
+.gallery :global(img) {
+  width: 100%;
+  height: auto;
+}
+
 /* 右カラム：スクロールに追従する情報 */
 .side {
   position: sticky;

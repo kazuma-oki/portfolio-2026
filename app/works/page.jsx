@@ -8,8 +8,15 @@ export const metadata = {
 };
 
 export default function WorksPage() {
-  // データに実在するカテゴリだけをフィルターに出す
-  const categories = ["All", ...new Set(works.map((w) => w.category))];
+  // フィルターの並びはここで決める。データに1件もない分類は出さない
+  const order = ["Website", "サムネイル", "バナー", "画面設計"];
+  const present = new Set(works.map((w) => w.category));
+  const categories = [
+    "All",
+    ...order.filter((c) => present.has(c)),
+    // 並びに書き忘れた分類があっても落とさない
+    ...[...present].filter((c) => !order.includes(c)),
+  ];
 
   return (
     <>

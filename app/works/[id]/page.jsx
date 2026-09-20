@@ -48,9 +48,28 @@ function RichText({ text = "" }) {
   });
 }
 
-/** text / list / sub / image の4種類を描き分ける */
+/** text / list / sub / image / gallery を描き分ける */
 function Block({ block }) {
   if (block.sub) return <p className={styles.sub}>{block.sub}</p>;
+
+  // 同じ大きさの画像を並べる。バナー集のように増えていくものに使う
+  if (block.gallery) {
+    return (
+      <ul className={styles.gallery}>
+        {block.gallery.map((item, i) => (
+          <li key={i}>
+            <Image
+              src={asset(item.src)}
+              alt={item.alt || ""}
+              width={1600}
+              height={1600}
+              sizes="(max-width: 540px) 320px, (max-width: 1024px) 700px, 380px"
+            />
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   if (block.list) {
     return (
@@ -144,22 +163,20 @@ export default async function WorkDetail({ params }) {
 
         <aside className={styles.side}>
           <dl className={styles.info}>
-            <div>
-              <dt className="caption">Category</dt>
-              <dd>{work.category}</dd>
-            </div>
-            <div>
-              <dt className="caption">Year</dt>
-              <dd>{work.year}</dd>
-            </div>
-            <div>
-              <dt className="caption">Role</dt>
-              <dd>{work.role}</dd>
-            </div>
-            <div>
-              <dt className="caption">Tools</dt>
-              <dd>{work.tools ? work.tools.join(" / ") : ""}</dd>
-            </div>
+            {/* 中身のない項目は出さない */}
+            {[
+              ["Category", work.category],
+              ["Year", work.year],
+              ["Role", work.role],
+              ["Tools", work.tools && work.tools.length ? work.tools.join(" / ") : ""],
+            ]
+              .filter(([, value]) => value)
+              .map(([label, value]) => (
+                <div key={label}>
+                  <dt className="caption">{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
           </dl>
           {work.url && (
             <Button href={work.url} external variant="ghost">

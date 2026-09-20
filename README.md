@@ -20,6 +20,7 @@ Next.js（App Router）+ Framer Motion で組み、GitHub Pages に静的書き�
    - 一覧・TOPのカルーセル・詳細ページのどれも正方形で表示するので、1作品につき1枚でよい
    - 記事中に挟む画像（任意）は `public/images/works/<id>-full.webp` に直接置く
 2. `data/works.json` の **配列の先頭** に1件ぶん追記する（先頭が一覧の左上に並ぶ）
+   - TOPのカルーセルに出るのは**先頭8件まで**。残りは「View all」から一覧へ
    - TOPは横に流れるカルーセル。必ず1枚が画面の中央にきて、左右にループする。
      何件足してもTOPが縦に長くならない
 3. push する。GitHub Actions が自動でビルドして公開する
@@ -55,15 +56,18 @@ npm run preview   # out/ を本番と同じURL構成で配信（http://localhost
 
 | キー | 役割 |
 |---|---|
-| `id` | URLになる英数字（`/works/<id>/`） |
-| `category` | 一覧のフィルターにも使う。2種類以上になると自動でフィルターが表示される |
-| `year` / `role` / `tools` / `url` | 詳細ページ右側の情報欄 |
+| `id` | URLになる英数字（`/works/<id>/`）。画像のファイル名とそろえる |
+| `category` | 一覧のフィルターにも使う。**Website / サムネイル / バナー / 画面設計** の4つ |
+| `tag` | カードと詳細に出る小さな印。`実務` / `自主制作` / `仮想` |
+| `year` / `role` / `tools` / `url` | 詳細ページ右側の情報欄。**空にすればその行は出ない** |
 | `summary` | 一覧カードと詳細の冒頭に出る一行 |
 | `sections` | 詳細ページの本文 |
 
+分類を増やしたいときは `app/works/page.jsx` の `order` に、並べたい位置で足す。
+
 ### `sections` の中身
 
-`heading`（見出し）と `blocks`（中身）の組み合わせ。ブロックは4種類。
+`heading`（見出し）と `blocks`（中身）の組み合わせ。ブロックは5種類。
 
 ```json
 {
@@ -72,12 +76,29 @@ npm run preview   # out/ を本番と同じURL構成で配信（http://localhost
     { "text": "段落。改行したいときは \n を入れる。" },
     { "sub": "太字の小見出し" },
     { "list": ["箇条書き1", "箇条書き2"] },
-    { "image": "images/works/newwork-full.webp", "alt": "全体デザイン" }
+    { "image": "images/works/newwork-full.webp", "alt": "全体デザイン" },
+    { "gallery": [
+        { "src": "images/works/banner-01.webp", "alt": "1枚目の説明" },
+        { "src": "images/works/banner-02.webp", "alt": "2枚目の説明" }
+      ] }
   ]
 }
 ```
 
 `text` と `list` の中では `[表示したい文字](URL)` と書くとリンクになる。
+
+`image` は1枚を大きく、`gallery` は同じ大きさで並べる。枚数が増えると自動で折り返す。
+
+### バナー集に1枚足す
+
+「カーシェアサービス SNSバナー集」のように、あとから増えていく作品用の作り。
+
+1. 正方形の画像を `scripts/assets/works/` に置き、`python scripts/build-works-images.py` を実行する
+2. `data/works.json` の `carshare-banners` →「バナー集」の `gallery` に1行足す
+
+```json
+{ "src": "images/works/carshare-banner-01.webp", "alt": "熱中症予防の注意喚起バナー" }
+```
 
 ---
 
