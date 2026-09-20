@@ -119,10 +119,14 @@ export default function WorkDetail({
             id={item.id}
             className={`${styles.back} caption en`}
           />
-          <p className={`${styles.meta} caption`}>
-            <span>{item.category}</span>
-            <span aria-hidden="true">/</span>
-            <span>{item.year}</span>
+          {/* 分類と年は塗りの帯、種別（実務／仮想）は線の枠。
+              見た目を変えることで、2つの情報の違いが分かるようにしている */}
+          <p className={styles.meta}>
+            <span className="badge">
+              <span>{item.category}</span>
+              <span aria-hidden="true">/</span>
+              <span>{item.year}</span>
+            </span>
             <span className={styles.tag}>{item.tag}</span>
           </p>
           <h1 className={`${styles.title} h1`}>{item.title}</h1>

@@ -1,6 +1,8 @@
+/* 実績どうしの間隔。縦と横を同じにしている（カード側で行送りの余りを
+   切っているので、見た目の間隔もこの数値と一致する） */
 .grid {
   display: grid;
-  gap: 32px;
+  gap: 40px;
 }
 .grid[data-columns="3"] { grid-template-columns: repeat(3, 1fr); }
 .grid[data-columns="2"] { grid-template-columns: repeat(2, 1fr); }

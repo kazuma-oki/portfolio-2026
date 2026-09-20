@@ -21,31 +21,51 @@
 }
 .link:hover .thumb :global(img) { transform: scale(1.02); }
 
+/* 間隔は「実績どうし > 画像↔文字のまとまり > まとまりの中 > 行間」の順に
+   小さくなるよう設計している。ここの margin は行送りの余り（half-leading）を
+   差し引いた数値なので、見た目の間隔とは一致しない。
+   PC: 40 > 26 > 16 > 9.8（見た目） */
+
 .meta {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
+  /* 帯の見た目は globals.css の .badge。ここでは位置だけ決める */
+  margin-top: 26px;
 }
 
 .title {
-  margin-top: 4px;
-  font-size: 20px;
-  line-height: 30px;
-  font-weight: 500;
+  margin-top: 11px;   /* + 上の行送りの余り 5px = 見た目 16px */
+  font-size: 22px;
+  line-height: 32px;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .summary {
-  margin-top: 8px;
+  margin-top: 6px;    /* + 上下の行送りの余り 10px = 見た目 16px */
+  /* 行送りの下の余りを切る。これがないと実績どうしの縦の間隔だけが
+     約5px広く見え、横（40px）と揃わない */
+  margin-bottom: -5px;
   max-width: 420px;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 @media (max-width: 1024px) {
-  .title { font-size: 18px; line-height: 28px; }
+  /* 説明文が消えるので、下の余りを切るのは題名の役目になる */
+  .meta { margin-top: 20px; }
+  .title {
+    margin-top: 7px;
+    margin-bottom: -5px;
+    font-size: 20px;
+    line-height: 30px;
+  }
   .summary { display: none; }
 }
 
 @media (max-width: 540px) {
-  .title { font-size: 16px; line-height: 26px; }
-  .meta { margin-top: 12px; }
+  .meta { margin-top: 16px; }
+  .title {
+    margin-top: 5px;
+    font-size: 18px;
+    line-height: 28px;
+  }
 }

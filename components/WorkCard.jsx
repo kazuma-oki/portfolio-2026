@@ -31,13 +31,13 @@ export default function WorkCard({
             sizes="(max-width: 540px) 320px, (max-width: 1024px) 700px, 380px"
           />
         </div>
-        <p className={`${styles.meta} caption`}>
+        <p className={`${styles.meta} badge`}>
           <span>{work.category}</span>
           <span aria-hidden="true">/</span>
           <span>{work.year}</span>
         </p>
         <h3 className={styles.title}>{work.title}</h3>
-        {work.summary && <p className={`${styles.summary} body-s subtext`}>{work.summary}</p>}
+        {work.summary && <p className={`${styles.summary} subtext`}>{work.summary}</p>}
       </Link>
     </article>
   );
