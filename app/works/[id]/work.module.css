@@ -34,8 +34,12 @@
   max-width: 44em;
 }
 
+/* 実績の画像は正方形。本文の幅いっぱいだと縦に長すぎるので、
+   大きさに上限をつけて中央に置く */
 .kv {
-  aspect-ratio: 16 / 10;
+  width: min(100%, 760px);
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
   overflow: hidden;
   border-radius: var(--r-card);
   background: var(--surface);
@@ -159,7 +163,6 @@
 @media (max-width: 540px) {
   .head { padding-top: calc(var(--header-h) + 32px); }
   .title { font-size: 28px; line-height: 40px; }
-  .kv { aspect-ratio: 4 / 3; }
   .sectionTitle { font-size: 18px; line-height: 28px; }
   .nextLink {
     flex-wrap: wrap;

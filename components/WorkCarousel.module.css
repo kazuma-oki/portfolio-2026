@@ -67,7 +67,7 @@
 }
 
 /* 矢印を置くための見えない枠。
-   ::before で中央のカードのサムネイル（4:3）と同じ高さをつくり、その中央に矢印を置く */
+   ::before で中央のカードのサムネイル（正方形）と同じ高さをつくり、その中央に矢印を置く */
 .rail {
   position: absolute;
   top: 0;
@@ -80,7 +80,7 @@
   display: block;
   width: var(--slide-w);
   margin-inline: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
 }
 
 /* 中央のカードの左右の辺にまたがる位置に置く */

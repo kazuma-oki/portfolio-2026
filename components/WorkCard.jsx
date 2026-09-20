@@ -3,7 +3,7 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import styles from "./WorkCard.module.css";
 
-export default function WorkCard({ work, priority = false, ratio = "4 / 3", tabIndex }) {
+export default function WorkCard({ work, priority = false, ratio = "1 / 1", tabIndex }) {
   return (
     <article className={styles.card}>
       <Link href={`/works/${work.id}`} className={styles.link} tabIndex={tabIndex}>
@@ -11,10 +11,10 @@ export default function WorkCard({ work, priority = false, ratio = "4 / 3", tabI
           <Image
             src={asset(work.thumb)}
             alt=""
-            width={974}
-            height={730}
+            width={1600}
+            height={1600}
             priority={priority}
-            sizes="(max-width: 540px) 358px, (max-width: 1024px) 320px, 282px"
+            sizes="(max-width: 540px) 320px, (max-width: 1024px) 700px, 380px"
           />
         </div>
         <p className={`${styles.meta} caption`}>

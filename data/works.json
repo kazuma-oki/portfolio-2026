@@ -5,8 +5,8 @@
     "category": "Website",
     "tag": "仮想",
     "date": "2025/4/8",
-    "thumb": "images/works/greenloop-thumb.webp",
-    "mainImage": "images/works/greenloop-main.webp",
+    "thumb": "images/works/greenloop.webp",
+    "mainImage": "images/works/greenloop.webp",
     "sections": [
       {
         "heading": "作品URL",
@@ -89,8 +89,7 @@
       "CSS"
     ],
     "url": "https://kazu451.github.io/greenloop/",
-    "summary": "環境×テクノロジーをテーマにした架空企業のコーポレートサイト。",
-    "kv": "images/works/greenloop-main.webp"
+    "summary": "環境×テクノロジーをテーマにした架空企業のコーポレートサイト。"
   },
   {
     "id": "portfolio",
@@ -98,8 +97,8 @@
     "category": "Website",
     "tag": "自主制作",
     "date": "2025/3/30",
-    "thumb": "images/works/portfolio-thumb.webp",
-    "mainImage": "images/works/portfolio-main.webp",
+    "thumb": "images/works/portfolio.webp",
+    "mainImage": "images/works/portfolio.webp",
     "sections": [
       {
         "heading": "概要",
@@ -175,8 +174,7 @@
       "Canva"
     ],
     "url": "",
-    "summary": "インターン応募のために制作した自身のポートフォリオサイト。",
-    "kv": "images/works/portfolio-main.webp"
+    "summary": "インターン応募のために制作した自身のポートフォリオサイト。"
   },
   {
     "id": "kaiza",
@@ -184,8 +182,8 @@
     "category": "Website",
     "tag": "仮想",
     "date": "2025/3/30",
-    "thumb": "images/works/kaiza-thumb.webp",
-    "mainImage": "images/works/kaiza-main.webp",
+    "thumb": "images/works/kaiza.webp",
+    "mainImage": "images/works/kaiza.webp",
     "sections": [
       {
         "heading": "作品URL",
@@ -280,7 +278,6 @@
       "Canva"
     ],
     "url": "https://kaiza-inc.studio.site",
-    "summary": "人材マッチングを手がける架空企業のコーポレートサイト。",
-    "kv": "images/works/kaiza-main.webp"
+    "summary": "人材マッチングを手がける架空企業のコーポレートサイト。"
   }
 ]

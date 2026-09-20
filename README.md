@@ -13,10 +13,12 @@ Next.js（App Router）+ Framer Motion で組み、GitHub Pages に静的書き�
 
 さわるのは **`data/works.json`** だけ。
 
-1. 画像を `public/images/works/` に置く
-   - 一覧サムネイル：`<id>-thumb.webp`
-   - 詳細ページのメイン画像：`<id>-main.webp`
-   - 記事中に挟む画像（任意）：`<id>-full.webp`
+1. 画像を用意する
+   - **正方形の画像**を `scripts/assets/works/<id>.png` に置き、
+     `python scripts/build-works-images.py` を実行する。
+     1600×1600 のWebPが `public/images/works/<id>.webp` に書き出される
+   - 一覧・TOPのカルーセル・詳細ページのどれも正方形で表示するので、1作品につき1枚でよい
+   - 記事中に挟む画像（任意）は `public/images/works/<id>-full.webp` に直接置く
 2. `data/works.json` の **配列の先頭** に1件ぶん追記する（先頭が一覧の左上に並ぶ）
    - TOPは横に流れるカルーセル。必ず1枚が画面の中央にきて、左右にループする。
      何件足してもTOPが縦に長くならない
@@ -43,8 +45,8 @@ npm run preview   # out/ を本番と同じURL構成で配信（http://localhost
   "tools": ["Figma", "HTML", "CSS"],
   "url": "https://example.com",
   "summary": "一覧と詳細の冒頭に出る一行紹介。",
-  "thumb": "images/works/newwork-thumb.webp",
-  "mainImage": "images/works/newwork-main.webp",
+  "thumb": "images/works/newwork.webp",
+  "mainImage": "images/works/newwork.webp",
   "sections": [
     { "heading": "概要", "blocks": [{ "text": "どんな作品かの説明。" }] }
   ]
@@ -140,6 +142,7 @@ npm run preview   # out/ を本番と同じURL構成で配信（http://localhost
 | 書体 | 欧文 Inter / 和文 Noto Sans JP |
 | コンテンツ幅 | 1200px（タブレット 672 / モバイル 358） |
 | 角丸 | カード20px / 入力12px / ボタンは丸 |
+| 実績の画像 | 正方形（1600×1600のWebP） |
 
 和文は字間を広め（`0.04em`）、欧文の見出しは詰める（`-0.02em`）。国内外のポートフォリオを実測して決めた値。
 
@@ -162,6 +165,7 @@ data/works.json         ★実績データ（普段さわるのはここだけ�
 data/site.json          文言とサイト設定
 public/images/          画像
 scripts/
+  build-works-images.py 実績の画像を正方形のWebPにする
   build-about-photo.py  プロフィール写真を 3:4 のWebPにする
   build-hero-assets.py  ヒーローの空と人物の画像をつくる
   assets/               書き出しのもとになる元画像（公開はされない）

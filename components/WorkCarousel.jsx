@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import WorkCard from "./WorkCard";
 import styles from "./WorkCarousel.module.css";
 
-const THUMB_RATIO = "4 / 3";
+const THUMB_RATIO = "1 / 1";
 // 大きさが変わりきるまでの時間（CSS の transition とそろえる）
 const GROW_MS = 500;
 

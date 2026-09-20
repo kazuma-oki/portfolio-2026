@@ -8,7 +8,7 @@ import styles from "./WorkGrid.module.css";
  * ホバー中のカード以外を薄くする（CYAN の実装から学んだ演出）。
  * columns で列数、ratio でサムネイルの比率を切り替える。
  */
-export default function WorkGrid({ works, columns = 3, ratio = "4 / 3" }) {
+export default function WorkGrid({ works, columns = 3, ratio = "1 / 1" }) {
   const [hovered, setHovered] = useState(null);
 
   return (

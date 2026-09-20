@@ -120,10 +120,10 @@ export default async function WorkDetail({ params }) {
           <Image
             src={asset(work.mainImage || work.thumb)}
             alt={work.title}
-            width={974}
-            height={730}
+            width={1600}
+            height={1600}
             priority
-            sizes="(max-width: 1024px) 100vw, 1200px"
+            sizes="(max-width: 1024px) 100vw, 760px"
           />
         </div>
       </FadeIn>
