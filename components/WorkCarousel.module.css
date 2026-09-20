@@ -109,15 +109,22 @@
 .cursor span {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  margin: -36px 0 0 -36px;
+  align-content: center;
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
   border-radius: var(--r-pill);
   background: var(--accent-dark);
   color: var(--bg);
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.5;
   letter-spacing: 0.08em;
+  text-align: center;
   transition: transform 0.25s var(--ease-out);
+}
+.cursor em {
+  display: block;
+  font-style: normal;
 }
 /* 押している間は少し縮む */
 .track[data-dragging="true"] ~ .cursor span { transform: scale(0.82); }
@@ -179,37 +186,56 @@
 .prev { left: calc(50% - var(--slide-w) / 2 - 22px); }
 .next { right: calc(50% - var(--slide-w) / 2 - 22px); }
 
-/* いま何枚目を見ているかの目印。実績が増えても収まるよう折り返す */
-.dots {
-  margin-top: 28px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+/* いまの位置を示すバー。掴んで動かせる。
+   件数が増えてもツマミが細くなるだけで、点々のように折り返さない */
+.bar {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  /* 線は細いが、掴める範囲は上下に広げて44px確保する */
+  height: 44px;
+  margin: 20px auto 0;
+  display: grid;
+  align-items: center;
+  cursor: pointer;
+  /* 指で掴んでいる間、ページが動かないように */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
+.bar[data-dragging="true"] { cursor: grabbing; }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: 0;
+/* 下地の線 */
+.barTrack {
+  grid-area: 1 / 1;
+  height: 2px;
   border-radius: var(--r-pill);
   background: var(--line);
-  cursor: pointer;
-  transition: background-color 0.2s var(--ease), width 0.2s var(--ease);
-}
-.dot[data-active="true"] {
-  width: 24px;
-  background: var(--accent-dark);
 }
 
-/* ドットは小さいので、押せる範囲は44pxぶん確保する */
-.dots li {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 44px;
-  margin-block: -18px;
+/* いまの位置。幅と位置はJSが実寸で書き込む */
+.barThumb {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: 28px;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--accent-dark);
+  transition: height 0.2s var(--ease);
+  will-change: transform;
+}
+.bar:hover .barThumb,
+.bar:focus-visible .barThumb,
+.bar[data-dragging="true"] .barThumb { height: 6px; }
+
+.bar:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 4px;
+  border-radius: var(--r-pill);
+}
+
+@media (max-width: 540px) {
+  .bar { margin-top: 16px; }
 }
 
 /* ===== タブレット・スマホ =====
@@ -231,5 +257,4 @@
     --gap: 12px;
     --side: calc(var(--gutter) + 20px);
   }
-  .dots { margin-top: 24px; }
 }

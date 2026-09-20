@@ -11,6 +11,12 @@ const GROW_MS = 500;
 const DRAG_SLOP = 6;
 // これより速く払ったら、最寄りではなく1枚先へ送る（px/ミリ秒）
 const FLICK_SPEED = 0.4;
+// ホイールがこれだけたまったら1枚送る
+const WHEEL_STEP = 40;
+// 1枚送ったあと、つぎを受け付けるまで待つ時間
+const WHEEL_WAIT = 300;
+// バーのツマミの最小幅。これより細いと掴めない
+const THUMB_MIN = 28;
 
 // サーバー側では useLayoutEffect が動かないので、そこだけ useEffect にする
 const useBeforePaint = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -35,6 +41,8 @@ export default function WorkCarousel({ works }) {
   const wrapRef = useRef(null);
   const trackRef = useRef(null);
   const cursorRef = useRef(null);
+  const barRef = useRef(null);
+  const thumbRef = useRef(null);
   const indexRef = useRef(startIndex);
   const changedAt = useRef(0);
   // 追従する丸に出す文字。null のときは出さない
@@ -46,20 +54,56 @@ export default function WorkCarousel({ works }) {
   const slides = Array.from({ length: n * copies }, (_, i) => works[i % n]);
 
   /**
-   * そのカードを画面の中央に置くためのスクロール位置。
+   * 並びの寸法。カードの幅・すき間・左の余白を実寸で返す。
    * offsetLeft は整数に丸められてしまい、止まったあとに数値が合わず
-   * スナップに引き直される。余白・すき間・カード幅から正確に出す
+   * スナップに引き直されるので、計算はすべてここから出す
    */
-  const leftFor = (i, t) => {
+  const metrics = (t) => {
     const cs = getComputedStyle(t);
     const pad = parseFloat(cs.paddingLeft);
     const gap = parseFloat(cs.columnGap || cs.gap);
     const w = parseFloat(getComputedStyle(t.children[0]).width);
-    if ([pad, gap, w].some(Number.isNaN)) {
-      const el = t.children[i];
+    if ([pad, gap, w].some(Number.isNaN)) return null;
+    return { pad, gap, w, step: w + gap };
+  };
+
+  /** そのカード（実数でも可）を画面の中央に置くためのスクロール位置 */
+  const leftFor = (i, t) => {
+    const m = metrics(t);
+    if (!m) {
+      const el = t.children[Math.round(i)];
       return el.offsetLeft + el.offsetWidth / 2 - t.clientWidth / 2;
     }
-    return pad + i * (w + gap) + w / 2 - t.clientWidth / 2;
+    return m.pad + i * m.step + m.w / 2 - t.clientWidth / 2;
+  };
+
+  /** いま何枚目にいるか（実数）。件数で割った余りなので 0〜件数 */
+  const posNow = (t) => {
+    const m = metrics(t);
+    if (!m) return 0;
+    const raw = (t.scrollLeft - leftFor(0, t)) / m.step;
+    /* scrollLeft は整数に丸められるので、ぴったり止まっていても
+       17.999 のような値になることがある。そのまま余りを取ると
+       ツマミが反対の端へ回り込んでしまうため、ほぼ整数なら整数として扱う */
+    const near = Math.round(raw);
+    const fixed = Math.abs(raw - near) < 0.01 ? near : raw;
+    return ((fixed % n) + n) % n;
+  };
+
+  /** 画面に主に出ているカードの枚数（CSSの区切りとそろえる） */
+  const perView = () => {
+    if (typeof window === "undefined") return 3;
+    if (window.matchMedia("(max-width: 1024px)").matches) return 1;
+    return 3;
+  };
+
+  /** 主表示のカードが占める横幅の範囲に、その x があるか */
+  const inMainArea = (t, clientX) => {
+    const m = metrics(t);
+    if (!m) return false;
+    const per = perView();
+    const half = (per * m.w + (per - 1) * m.gap) / 2;
+    return Math.abs(clientX - window.innerWidth / 2) <= half;
   };
 
   // scrollBy は Safari でスナップ位置がずれることがあるため、
@@ -75,6 +119,24 @@ export default function WorkCarousel({ works }) {
     if (glide) t.setAttribute("data-gliding", "true");
     t.scrollTo({ left: leftFor(i, t), behavior: glide ? "smooth" : "auto" });
   }, []);
+
+  /**
+   * バーのツマミを、いまのスクロール位置に合わせて置き直す。
+   * 毎コマ React を描き直すとカード54枚ぶん作り直すことになるので、
+   * ここだけは DOM を直に書き換える
+   */
+  const paintThumb = useCallback(() => {
+    const t = trackRef.current;
+    const bar = barRef.current;
+    const thumb = thumbRef.current;
+    if (!t || !bar || !thumb) return;
+    const barW = bar.clientWidth;
+    if (!barW) return;
+    const thumbW = Math.max(THUMB_MIN, barW / n);
+    const p = posNow(t);
+    thumb.style.width = `${thumbW}px`;
+    thumb.style.transform = `translateX(${(barW - thumbW) * (p / n)}px)`;
+  }, [n]);
 
   /** いま画面の中央にいちばん近いカード */
   const nearest = useCallback(() => {
@@ -98,7 +160,8 @@ export default function WorkCarousel({ works }) {
     goToIndex(startIndex, false);
     indexRef.current = startIndex;
     setCenter(startIndex);
-  }, [goToIndex, startIndex]);
+    paintThumb();
+  }, [goToIndex, paintThumb, startIndex]);
 
   useEffect(() => {
     const t = trackRef.current;
@@ -125,6 +188,7 @@ export default function WorkCarousel({ works }) {
 
     const update = () => {
       frame = 0;
+      paintThumb();
       const i = nearest();
       if (i !== indexRef.current) changedAt.current = performance.now();
       indexRef.current = i;
@@ -176,7 +240,10 @@ export default function WorkCarousel({ works }) {
     };
     // 指やホイールで触られたら、そこで滑走は終わり
     const onTouch = () => t.removeAttribute("data-gliding");
-    const onResize = () => goToIndex(indexRef.current, false);
+    const onResize = () => {
+      goToIndex(indexRef.current, false);
+      paintThumb();
+    };
 
     t.addEventListener("scroll", onScroll, { passive: true });
     t.addEventListener("scrollend", settled);
@@ -192,7 +259,7 @@ export default function WorkCarousel({ works }) {
       t.removeEventListener("wheel", onTouch);
       window.removeEventListener("resize", onResize);
     };
-  }, [goToIndex, nearest, loop, n, startCopy]);
+  }, [goToIndex, nearest, paintThumb, loop, n, startCopy]);
 
   /* マウスで掴んでスライドさせる。
      指とペンは今までどおりブラウザ標準のスクロールにまかせる */
@@ -289,6 +356,112 @@ export default function WorkCarousel({ works }) {
     };
   }, [goToIndex, nearest, loop]);
 
+  /* ホイールで送る。効くのは主表示のカードの上だけ。
+     全域で効かせると、カーソルがカルーセルの上にある間ページが進まなくなる
+     （ループするので「端まで行ったら解放」も使えない） */
+  useEffect(() => {
+    const t = trackRef.current;
+    if (!t || !loop) return undefined;
+
+    let acc = 0;
+    let until = 0;
+
+    const onWheel = (e) => {
+      if (!inMainArea(t, e.clientX)) return; // ページの縦スクロールにまかせる
+      e.preventDefault();
+
+      const now = e.timeStamp;
+      if (now < until) return;
+
+      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      acc += d;
+      if (Math.abs(acc) < WHEEL_STEP) return;
+
+      const dir = acc > 0 ? 1 : -1;
+      acc = 0;
+      until = now + WHEEL_WAIT;
+      goToIndex(indexRef.current + dir, true);
+    };
+
+    t.addEventListener("wheel", onWheel, { passive: false });
+    return () => t.removeEventListener("wheel", onWheel);
+  }, [goToIndex, loop]);
+
+  /* バーを掴んで動かす。マウスも指も同じ処理 */
+  useEffect(() => {
+    const bar = barRef.current;
+    const t = trackRef.current;
+    if (!bar || !t || !loop) return undefined;
+
+    let grab = null;
+
+    /** バー上の x から、何枚目にいるかを出して、そこへ動かす */
+    const seek = (clientX) => {
+      const rect = bar.getBoundingClientRect();
+      const barW = rect.width;
+      const thumbW = Math.max(THUMB_MIN, barW / n);
+      const travel = barW - thumbW;
+      if (travel <= 0) return;
+      const x = Math.min(travel, Math.max(0, clientX - rect.left - grab.offset));
+      const p = (x / travel) * n;
+      t.scrollLeft = leftFor(startCopy * n + p, t);
+    };
+
+    const onDown = (e) => {
+      const rect = bar.getBoundingClientRect();
+      const barW = rect.width;
+      const thumbW = Math.max(THUMB_MIN, barW / n);
+      const thumbX = (barW - thumbW) * (posNow(t) / n);
+      const hit = e.clientX - rect.left;
+      // ツマミの上なら掴んだ場所を保つ。外なら押したところが中心にくる
+      const onThumb = hit >= thumbX && hit <= thumbX + thumbW;
+      grab = { offset: onThumb ? hit - thumbX : thumbW / 2 };
+
+      bar.setPointerCapture(e.pointerId);
+      bar.setAttribute("data-dragging", "true");
+      t.setAttribute("data-dragging", "true");
+      t.removeAttribute("data-gliding");
+      seek(e.clientX);
+      e.preventDefault();
+    };
+
+    const onMove = (e) => {
+      if (!grab) return;
+      seek(e.clientX);
+    };
+
+    const onUp = (e) => {
+      if (!grab) return;
+      grab = null;
+      if (bar.hasPointerCapture && bar.hasPointerCapture(e.pointerId)) {
+        bar.releasePointerCapture(e.pointerId);
+      }
+      bar.removeAttribute("data-dragging");
+      // 先に行き先を決めてから外す。逆にするとスナップが一瞬効いて引っかかる
+      goToIndex(nearest(), true);
+      t.removeAttribute("data-dragging");
+    };
+
+    const onKey = (e) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      e.preventDefault();
+      goToIndex(indexRef.current + (e.key === "ArrowRight" ? 1 : -1), true);
+    };
+
+    bar.addEventListener("pointerdown", onDown);
+    bar.addEventListener("pointermove", onMove);
+    bar.addEventListener("pointerup", onUp);
+    bar.addEventListener("pointercancel", onUp);
+    bar.addEventListener("keydown", onKey);
+    return () => {
+      bar.removeEventListener("pointerdown", onDown);
+      bar.removeEventListener("pointermove", onMove);
+      bar.removeEventListener("pointerup", onUp);
+      bar.removeEventListener("pointercancel", onUp);
+      bar.removeEventListener("keydown", onKey);
+    };
+  }, [goToIndex, nearest, loop, n, startCopy]);
+
   /* マウスについてくる丸。指・ペンのときは出さない */
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -320,12 +493,18 @@ export default function WorkCarousel({ works }) {
       t.setAttribute("data-cursor", "on");
 
       /* 中央のカードは「開く」対象なので View。
-         両隣と見切れているものは、中央へ持ってくるために動かす場所なので Drag。
-         カードが並びの全体を覆っているので、「カードの上か」で分けると
-         View しか出てこなくなる */
+         それ以外は動かす場所なので Drag。
+         ホイールが効くのは主表示のカードの上だけなので、
+         そこだけ「or scroll」を添える（効かない場所で書くと嘘になる） */
       const slide = e.target.closest("li");
       const onCenter = slide && slide.dataset.center === "true";
-      setCursorLabel(t.hasAttribute("data-dragging") || !onCenter ? "Drag" : "View");
+      if (!t.hasAttribute("data-dragging") && onCenter) {
+        setCursorLabel(["View"]);
+      } else if (inMainArea(t, e.clientX)) {
+        setCursorLabel(["Drag", "or scroll"]);
+      } else {
+        setCursorLabel(["Drag"]);
+      }
     };
 
     const onLeave = () => {
@@ -352,16 +531,6 @@ export default function WorkCarousel({ works }) {
   }, [jump]);
 
   const move = (dir) => goToIndex(indexRef.current + dir, true);
-
-  /** ドット：同じ作品のうち、いまの位置からいちばん近いものへ */
-  const goToDot = (k) => {
-    const cur = indexRef.current;
-    const base = Math.floor(cur / n) * n + k;
-    const target = [base - n, base, base + n]
-      .filter((x) => x >= 0 && x < n * copies)
-      .reduce((a, b) => (Math.abs(b - cur) < Math.abs(a - cur) ? b : a));
-    goToIndex(target, true);
-  };
 
   return (
     <div className={styles.wrap} ref={wrapRef}>
@@ -406,7 +575,11 @@ export default function WorkCarousel({ works }) {
           data-on={cursorLabel ? "true" : undefined}
           aria-hidden="true"
         >
-          <span className="en">{cursorLabel}</span>
+          <span className="en">
+            {(cursorLabel || []).map((line, i) => (
+              <em key={i}>{line}</em>
+            ))}
+          </span>
         </div>
       )}
 
@@ -435,21 +608,23 @@ export default function WorkCarousel({ works }) {
         </div>
       )}
 
+      {/* いまの位置を示すバー。掴んで動かせる。
+          点々と違い、件数が増えてもツマミが細くなるだけで折り返さない */}
       {loop && (
-        <ul className={styles.dots}>
-          {works.map((work, k) => (
-            <li key={work.id}>
-              <button
-                type="button"
-                className={styles.dot}
-                data-active={k === center % n ? "true" : undefined}
-                aria-label={`${work.title}を中央に表示`}
-                aria-current={k === center % n ? "true" : undefined}
-                onClick={() => goToDot(k)}
-              />
-            </li>
-          ))}
-        </ul>
+        <div
+          className={styles.bar}
+          ref={barRef}
+          role="slider"
+          tabIndex={0}
+          aria-label="制作実績の位置"
+          aria-valuemin={1}
+          aria-valuemax={n}
+          aria-valuenow={(center % n) + 1}
+          aria-valuetext={works[center % n].title}
+        >
+          <span className={styles.barTrack} aria-hidden="true" />
+          <span className={styles.barThumb} ref={thumbRef} aria-hidden="true" />
+        </div>
       )}
     </div>
   );
