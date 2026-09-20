@@ -86,7 +86,9 @@
 .scaler {
   --shift: calc((1 - var(--scale)) * 50% * var(--anchor));
   transform: scale(var(--scale));
-  transition: transform 0.45s var(--ease-out);
+  /* 大きさはスクロール位置に合わせてJSが毎コマ書き込む。
+     時間差のアニメを入れると、指を払ったときに追いつかずカクつく。
+     ここの値はJSが動く前と、画面から遠いカードのための控え */
 }
 .slide[data-side="left"] .scaler {
   transform: translateX(var(--shift)) scale(var(--scale));
@@ -101,11 +103,6 @@
    「カクッ」と中央に寄って見える */
 .track[data-gliding="true"],
 .track[data-dragging="true"] { scroll-snap-type: none; }
-
-/* ループのために位置を戻す瞬間だけ、大きさの変化を止める。
-   中央のカードが別の要素に入れ替わるので、animation が走ると
-   一度縮んでから戻るように見えてしまう */
-.track[data-jump="true"] .scaler { transition: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .scaler { transition: none; }

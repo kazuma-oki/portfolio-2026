@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import WorkCard from "./WorkCard";
 import styles from "./WorkCarousel.module.css";
 
@@ -17,6 +17,8 @@ const WHEEL_STEP = 40;
 const WHEEL_WAIT = 300;
 // バーのツマミの最小幅。これより細いと掴めない
 const THUMB_MIN = 28;
+// 大きさを直に書き込む範囲（中央から前後何枚まで）
+const SCALE_WINDOW = 3;
 
 // サーバー側では useLayoutEffect が動かないので、そこだけ useEffect にする
 const useBeforePaint = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -45,26 +47,70 @@ export default function WorkCarousel({ works }) {
   const thumbRef = useRef(null);
   const indexRef = useRef(startIndex);
   const changedAt = useRef(0);
+  // 並びの寸法。画面の大きさが変わるまで変わらないので覚えておく
+  const sizeRef = useRef(null);
+  // いま「中央」の印をつけてあるカード。書き換える範囲を絞るために持つ
+  const paintedRef = useRef(startIndex);
+  // いま大きさを直に書き込んであるカード
+  const scaledRef = useRef(new Set());
   // 追従する丸に出す文字。null のときは出さない
   const [cursorLabel, setCursorLabel] = useState(null);
   const [center, setCenter] = useState(startIndex);
   // 位置を戻している最中。この1コマだけ大きさの変化を止める
   const [jump, setJump] = useState(false);
 
-  const slides = Array.from({ length: n * copies }, (_, i) => works[i % n]);
+  /* カードの並び。中央がどれかは JS が属性で書き換えるので、
+     ここでは組み立て直さない。毎コマ54枚ぶん作り直すと、
+     ちょうど拡大が始まるコマが重くなってカクつく */
+  const slideNodes = useMemo(
+    () =>
+      Array.from({ length: n * copies }, (_, i) => {
+        // 前後に置いた控え。読み上げとタブ移動からは外す
+        const spare = loop && Math.floor(i / n) !== startCopy;
+        return (
+          <li
+            key={i}
+            className={styles.slide}
+            data-center={i === startIndex ? "true" : undefined}
+            data-side={i === startIndex ? undefined : i < startIndex ? "left" : "right"}
+            aria-hidden={spare ? "true" : undefined}
+          >
+            {/* 大きさを変えるのは内側だけ。外の枠（スナップの基準）は動かさない */}
+            <div className={styles.scaler}>
+              <WorkCard
+                work={works[i % n]}
+                priority={i === startIndex}
+                ratio={THUMB_RATIO}
+                tabIndex={spare ? -1 : undefined}
+              />
+            </div>
+          </li>
+        );
+      }),
+    [works, n, copies, loop, startCopy, startIndex]
+  );
 
   /**
-   * 並びの寸法。カードの幅・すき間・左の余白を実寸で返す。
+   * 並びの寸法。カードの幅・すき間・左の余白・見えている幅を実寸で返す。
    * offsetLeft は整数に丸められてしまい、止まったあとに数値が合わず
-   * スナップに引き直されるので、計算はすべてここから出す
+   * スナップに引き直されるので、計算はすべてここから出す。
+   *
+   * getComputedStyle は重い。スクロール中は毎コマ呼ばれる道なので、
+   * 一度測ったら覚えておき、画面の大きさが変わったときだけ測り直す
    */
   const metrics = (t) => {
+    if (sizeRef.current) return sizeRef.current;
     const cs = getComputedStyle(t);
     const pad = parseFloat(cs.paddingLeft);
     const gap = parseFloat(cs.columnGap || cs.gap);
     const w = parseFloat(getComputedStyle(t.children[0]).width);
     if ([pad, gap, w].some(Number.isNaN)) return null;
-    return { pad, gap, w, step: w + gap };
+    const ws = getComputedStyle(t.parentElement.parentElement);
+    const scale = parseFloat(ws.getPropertyValue("--scale")) || 0.9;
+    const anchor = parseFloat(ws.getPropertyValue("--anchor")) || -1;
+    const m = { pad, gap, w, step: w + gap, port: t.clientWidth, scale, anchor };
+    sizeRef.current = m;
+    return m;
   };
 
   /** そのカード（実数でも可）を画面の中央に置くためのスクロール位置 */
@@ -74,14 +120,57 @@ export default function WorkCarousel({ works }) {
       const el = t.children[Math.round(i)];
       return el.offsetLeft + el.offsetWidth / 2 - t.clientWidth / 2;
     }
-    return m.pad + i * m.step + m.w / 2 - t.clientWidth / 2;
+    return m.pad + i * m.step + m.w / 2 - m.port / 2;
+  };
+
+  /** いま何枚目にいるか（実数。端数はカードとカードの途中を表す） */
+  const posRaw = (t) => {
+    const m = metrics(t);
+    if (!m) return 0;
+    return (t.scrollLeft - leftFor(0, t)) / m.step;
+  };
+
+  /**
+   * カードの大きさを、スクロール位置に合わせてその場で決める。
+   *
+   * 「中央になったら0.45秒かけて大きくなる」という作りだと、
+   * 指を払って何枚も送ったときに拡大が追いつかず、
+   * 大きさが行ったり来たりしてカクカク見える。
+   * 中央からの距離で大きさを決めれば、指の動きにそのままついてくる。
+   *
+   * 触るのは画面に出ている前後3枚だけ。外に出たものはCSSの値に戻す
+   */
+  const paintScale = (p) => {
+    const t = trackRef.current;
+    const m = metrics(t);
+    if (!t || !m) return;
+    const last = t.children.length - 1;
+    const mid = Math.round(p);
+    const next = new Set();
+    for (let i = Math.max(0, mid - SCALE_WINDOW); i <= Math.min(last, mid + SCALE_WINDOW); i += 1) {
+      const el = t.children[i].firstElementChild;
+      if (!el) continue;
+      const d = i - p;
+      const near = Math.min(1, Math.abs(d));
+      const sc = 1 - (1 - m.scale) * near;
+      // 縮めたぶん、決めた側の辺が動かないようにずらす（CSSと同じ考え方）
+      const shift = d === 0 ? 0 : -Math.sign(d) * m.anchor * (1 - sc) * 50;
+      el.style.transform = `translateX(${shift}%) scale(${sc})`;
+      next.add(i);
+    }
+    scaledRef.current.forEach((i) => {
+      if (next.has(i)) return;
+      const el = t.children[i] && t.children[i].firstElementChild;
+      if (el) el.style.transform = "";
+    });
+    scaledRef.current = next;
   };
 
   /** いま何枚目にいるか（実数）。件数で割った余りなので 0〜件数 */
   const posNow = (t) => {
     const m = metrics(t);
     if (!m) return 0;
-    const raw = (t.scrollLeft - leftFor(0, t)) / m.step;
+    const raw = posRaw(t);
     /* scrollLeft は整数に丸められるので、ぴったり止まっていても
        17.999 のような値になることがある。そのまま余りを取ると
        ツマミが反対の端へ回り込んでしまうため、ほぼ整数なら整数として扱う */
@@ -134,25 +223,24 @@ export default function WorkCarousel({ works }) {
     if (!barW) return;
     const thumbW = Math.max(THUMB_MIN, barW / n);
     const p = posNow(t);
-    thumb.style.width = `${thumbW}px`;
+    // 幅は画面の大きさが変わらない限り同じ。毎コマ書くと無駄に作り直しが走る
+    const px = `${thumbW}px`;
+    if (thumb.style.width !== px) thumb.style.width = px;
     thumb.style.transform = `translateX(${(barW - thumbW) * (p / n)}px)`;
   }, [n]);
 
-  /** いま画面の中央にいちばん近いカード */
+  /**
+   * いま画面の中央にいちばん近いカード。
+   * 全部のカードの位置を読んで比べると、54枚ぶんのレイアウト計算が
+   * 毎コマ走ってスクロールが引っかかる。並びは等間隔なので割り算で出す
+   */
   const nearest = useCallback(() => {
     const t = trackRef.current;
-    const port = t.scrollLeft + t.clientWidth / 2;
-    let best = 0;
-    let bestD = Infinity;
-    for (let i = 0; i < t.children.length; i += 1) {
-      const el = t.children[i];
-      const d = Math.abs(el.offsetLeft + el.offsetWidth / 2 - port);
-      if (d < bestD) {
-        bestD = d;
-        best = i;
-      }
-    }
-    return best;
+    const m = metrics(t);
+    if (!m) return indexRef.current;
+    const raw = (t.scrollLeft - leftFor(0, t)) / m.step;
+    return Math.min(t.children.length - 1, Math.max(0, Math.round(raw)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 最初は真ん中の組の先頭を中央に置く。描画前にやるので動いて見えない
@@ -161,6 +249,8 @@ export default function WorkCarousel({ works }) {
     indexRef.current = startIndex;
     setCenter(startIndex);
     paintThumb();
+    if (trackRef.current) paintScale(posRaw(trackRef.current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goToIndex, paintThumb, startIndex]);
 
   useEffect(() => {
@@ -172,27 +262,42 @@ export default function WorkCarousel({ works }) {
 
     /* どれを中央として見せるかを、その場で書き換える。
        React の描き直しを待つと画面の更新に間に合わず、
-       入れ替わった瞬間だけ小さいまま映ってしまう */
-    const paint = (i) => {
-      for (let k = 0; k < t.children.length; k += 1) {
-        const el = t.children[k];
-        if (k === i) {
-          el.setAttribute("data-center", "true");
-          el.removeAttribute("data-side");
-        } else {
-          el.removeAttribute("data-center");
-          el.setAttribute("data-side", k < i ? "left" : "right");
-        }
+       入れ替わった瞬間だけ小さいまま映ってしまう。
+
+       全部を書き換えると、変わっていないカードまで大きさの変化が
+       かかり直してスクロールが引っかかる。
+       中央が i から j へ動いたとき、印が変わるのは i〜j のあいだだけ */
+    const mark = (k, i) => {
+      const el = t.children[k];
+      if (!el) return;
+      if (k === i) {
+        el.setAttribute("data-center", "true");
+        el.removeAttribute("data-side");
+      } else {
+        el.removeAttribute("data-center");
+        el.setAttribute("data-side", k < i ? "left" : "right");
       }
+    };
+
+    const paint = (i) => {
+      const was = paintedRef.current;
+      const lo = Math.min(was, i);
+      const hi = Math.max(was, i);
+      for (let k = lo; k <= hi; k += 1) mark(k, i);
+      paintedRef.current = i;
     };
 
     const update = () => {
       frame = 0;
+      paintScale(posRaw(t));
       paintThumb();
       const i = nearest();
-      if (i !== indexRef.current) changedAt.current = performance.now();
-      indexRef.current = i;
-      setCenter(i);
+      if (i !== indexRef.current) {
+        changedAt.current = performance.now();
+        indexRef.current = i;
+        paint(i);
+        setCenter(i);
+      }
     };
 
     // 指が止まったら真ん中の組へ戻す。同じ並びなので見た目は変わらない。
@@ -241,8 +346,16 @@ export default function WorkCarousel({ works }) {
     // 指やホイールで触られたら、そこで滑走は終わり
     const onTouch = () => t.removeAttribute("data-gliding");
     const onResize = () => {
+      sizeRef.current = null;
+      // 書き込んであった大きさをいったんCSSに戻してから測り直す
+      scaledRef.current.forEach((i) => {
+        const el = t.children[i] && t.children[i].firstElementChild;
+        if (el) el.style.transform = "";
+      });
+      scaledRef.current = new Set();
       goToIndex(indexRef.current, false);
       paintThumb();
+      paintScale(posRaw(t));
     };
 
     t.addEventListener("scroll", onScroll, { passive: true });
@@ -544,29 +657,7 @@ export default function WorkCarousel({ works }) {
         role={loop ? "region" : undefined}
         aria-label={loop ? "制作実績（横にスクロールできます）" : undefined}
       >
-        {slides.map((work, i) => {
-          // 前後に置いた控え。読み上げとタブ移動からは外す
-          const spare = loop && Math.floor(i / n) !== startCopy;
-          return (
-            <li
-              key={i}
-              className={styles.slide}
-              data-center={i === center ? "true" : undefined}
-              data-side={i === center ? undefined : i < center ? "left" : "right"}
-              aria-hidden={spare ? "true" : undefined}
-            >
-              {/* 大きさを変えるのは内側だけ。外の枠（スナップの基準）は動かさない */}
-              <div className={styles.scaler}>
-                <WorkCard
-                  work={work}
-                  priority={i === startIndex}
-                  ratio={THUMB_RATIO}
-                  tabIndex={spare ? -1 : undefined}
-                />
-              </div>
-            </li>
-          );
-        })}
+        {slideNodes}
       </ul>
 
       {loop && (
