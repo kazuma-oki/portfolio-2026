@@ -21,55 +21,75 @@
 }
 .link:hover .thumb :global(img) { transform: scale(1.02); }
 
-/* 間隔は「実績どうし > 画像↔文字のまとまり > まとまりの中 > 説明の行間」の順に
-   小さくなるよう設計している。何がひとかたまりかを間隔で示すため。
-   PCでの見た目： 40 > 26 > 16 > 10.5
+/* ------------------------------------------------------------------
+   文字の大きさ
+   3つとも基準単位 --u の倍数で決める。画面幅を変えたときに
+   同じ割合で拡大・縮小させるため（どれか1つだけ固定pxにすると、
+   幅を変えたときにバランスが崩れる）
+      題名 1.25u ／ 説明 0.85u ／ 分類 0.8u
+   ------------------------------------------------------------------ */
 
-   ここに書く margin は、文字の行送りの余り（half-leading）を差し引いた数値。
-   見た目の間隔とは一致しないので、変えるときは実測で確かめること */
+/* ------------------------------------------------------------------
+   間隔
+   「実績どうし > 画像↔文字のまとまり > まとまりの中 > 説明の行間」の
+   順に小さくして、何がひとかたまりかを示す。
+   PCでの見た目： 40 > 26 > 16 > 16 > 8.2
 
+   margin に書いてある em は、文字の行送りの余り（half-leading）を
+   打ち消すためのもの。行送りは文字の大きさに連れて変わるので、
+   em で引くことでどの画面幅でも見た目の間隔が一定になる。
+     題名の余り = (1.5em - 1em) / 2 = 0.25em
+     説明の余り = (1.6em - 1em) / 2 = 0.3em
+   ------------------------------------------------------------------ */
+
+/* 分類と年。個別ページの「実務」と同じ、線で囲った丸い帯にする。
+   枠があるぶん行送りの余りが効かないので、margin はそのまま見た目の間隔 */
 .meta {
   display: flex;
-  gap: 8px;
-  margin-top: 22px;   /* + 下の余り 4.2 = 見た目 26 */
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  margin-top: 26px;
+  padding: 3px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-family: var(--font-en);
+  font-size: calc(var(--u) * 0.8);
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--subtext);
 }
 
 .title {
-  margin-top: 7px;    /* + 上下の余り 9.2 = 見た目 16 */
-  font-size: 20px;
-  line-height: 30px;
+  margin-top: calc(16px - 0.25em);
+  font-size: calc(var(--u) * 1.25);
+  line-height: 1.5;
   font-weight: 500;
   letter-spacing: 0.02em;
 }
 
 .summary {
-  margin-top: 6px;    /* + 上下の余り 10.3 = 見た目 16 */
+  /* 題名の余り 0.25em は説明の文字に換算すると 0.25 * (1.25/0.85) = 0.3676em */
+  margin-top: calc(16px - 0.6676em);
   /* 行送りの下の余りを切る。これがないと実績どうしの縦の間隔だけが
-     約5px広く見え、横（40px）と揃わない */
-  margin-bottom: -5px;
+     広く見え、横（40px）と揃わない */
+  margin-bottom: -0.3em;
   max-width: 420px;
-  font-size: calc(var(--u) * 0.94);
-  /* 行間 10.5。題名との間隔（16）より狭くして、説明文がひとかたまりに見えるようにする */
-  line-height: 1.7;
+  font-size: calc(var(--u) * 0.85);
+  line-height: 1.6;
 }
 
 @media (max-width: 1024px) {
   /* 説明文が消えるので、下の余りを切るのは題名の役目になる */
-  .meta { margin-top: 16px; }
+  .meta { margin-top: 20px; }
   .title {
-    margin-top: 3px;
-    margin-bottom: -5px;
-    font-size: 18px;
-    line-height: 28px;
+    margin-top: calc(12px - 0.25em);
+    margin-bottom: -0.25em;
   }
   .summary { display: none; }
 }
 
 @media (max-width: 540px) {
-  .meta { margin-top: 12px; }
-  .title {
-    margin-top: 1px;
-    font-size: 16px;
-    line-height: 26px;
-  }
+  .meta { margin-top: 16px; }
+  .title { margin-top: calc(10px - 0.25em); }
 }

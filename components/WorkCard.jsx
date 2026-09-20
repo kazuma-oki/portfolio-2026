@@ -31,7 +31,7 @@ export default function WorkCard({
             sizes="(max-width: 540px) 320px, (max-width: 1024px) 700px, 380px"
           />
         </div>
-        <p className={`${styles.meta} caption`}>
+        <p className={styles.meta}>
           <span>{work.category}</span>
           <span aria-hidden="true">/</span>
           <span>{work.year}</span>
