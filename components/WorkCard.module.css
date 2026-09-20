@@ -21,51 +21,55 @@
 }
 .link:hover .thumb :global(img) { transform: scale(1.02); }
 
-/* 間隔は「実績どうし > 画像↔文字のまとまり > まとまりの中 > 行間」の順に
-   小さくなるよう設計している。ここの margin は行送りの余り（half-leading）を
-   差し引いた数値なので、見た目の間隔とは一致しない。
-   PC: 40 > 26 > 16 > 9.8（見た目） */
+/* 間隔は「実績どうし > 画像↔文字のまとまり > まとまりの中 > 説明の行間」の順に
+   小さくなるよう設計している。何がひとかたまりかを間隔で示すため。
+   PCでの見た目： 40 > 26 > 16 > 10.5
+
+   ここに書く margin は、文字の行送りの余り（half-leading）を差し引いた数値。
+   見た目の間隔とは一致しないので、変えるときは実測で確かめること */
 
 .meta {
-  /* 帯の見た目は globals.css の .badge。ここでは位置だけ決める */
-  margin-top: 26px;
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;   /* + 下の余り 4.2 = 見た目 26 */
 }
 
 .title {
-  margin-top: 11px;   /* + 上の行送りの余り 5px = 見た目 16px */
-  font-size: 22px;
-  line-height: 32px;
-  font-weight: 600;
+  margin-top: 7px;    /* + 上下の余り 9.2 = 見た目 16 */
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 500;
   letter-spacing: 0.02em;
 }
 
 .summary {
-  margin-top: 6px;    /* + 上下の行送りの余り 10px = 見た目 16px */
+  margin-top: 6px;    /* + 上下の余り 10.3 = 見た目 16 */
   /* 行送りの下の余りを切る。これがないと実績どうしの縦の間隔だけが
      約5px広く見え、横（40px）と揃わない */
   margin-bottom: -5px;
   max-width: 420px;
-  font-size: 14px;
+  font-size: calc(var(--u) * 0.94);
+  /* 行間 10.5。題名との間隔（16）より狭くして、説明文がひとかたまりに見えるようにする */
   line-height: 1.7;
 }
 
 @media (max-width: 1024px) {
   /* 説明文が消えるので、下の余りを切るのは題名の役目になる */
-  .meta { margin-top: 20px; }
+  .meta { margin-top: 16px; }
   .title {
-    margin-top: 7px;
+    margin-top: 3px;
     margin-bottom: -5px;
-    font-size: 20px;
-    line-height: 30px;
+    font-size: 18px;
+    line-height: 28px;
   }
   .summary { display: none; }
 }
 
 @media (max-width: 540px) {
-  .meta { margin-top: 16px; }
+  .meta { margin-top: 12px; }
   .title {
-    margin-top: 5px;
-    font-size: 18px;
-    line-height: 28px;
+    margin-top: 1px;
+    font-size: 16px;
+    line-height: 26px;
   }
 }

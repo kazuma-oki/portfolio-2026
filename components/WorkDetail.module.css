@@ -18,21 +18,10 @@
   color: var(--text);
 }
 .tag {
-  padding: 4px 12px;
+  padding: 3px 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
-  font-family: var(--font-en);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.04em;
-  color: var(--subtext);
-}
-
-@media (max-width: 1024px) {
-  .tag { font-size: 13px; line-height: 18px; padding: 4px 10px; }
-}
-@media (max-width: 540px) {
-  .tag { font-size: 12px; line-height: 17px; padding: 3px 10px; }
+  font-size: 12px;
 }
 
 .title {

@@ -151,23 +151,6 @@ button { font: inherit; color: inherit; }
 
 .subtext { color: var(--subtext); }
 
-/* 分類と年を示す帯。実績の一覧・TOPのカルーセル・個別ページで共通に使う。
-   display は inline-flex ではなく flex にする（行ボックスに入ると
-   まわりに余計な行送りが付き、間隔の設計が狂うため） */
-.badge {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: var(--r-pill);
-  background: var(--text);
-  color: var(--bg);
-  font-family: var(--font-en);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.04em;
-}
 
 @media (max-width: 1024px) {
   body { font-size: 15px; line-height: 28px; }
@@ -176,7 +159,6 @@ button { font: inherit; color: inherit; }
   .h3 { font-size: 24px; line-height: 36px; }
   .body-s { font-size: 14px; line-height: 24px; }
   .caption { font-size: 14px; line-height: 22px; }
-  .badge { font-size: 13px; line-height: 18px; padding: 4px 10px; }
 }
 
 @media (max-width: 540px) {
@@ -185,7 +167,6 @@ button { font: inherit; color: inherit; }
   .h2 { font-size: 20px; line-height: 32px; }
   .h3 { font-size: 18px; line-height: 28px; }
   .caption { font-size: 12px; line-height: 20px; }
-  .badge { font-size: 12px; line-height: 17px; padding: 3px 10px; }
 }
 
 /* ---------- layout ---------- */
