@@ -27,7 +27,7 @@ export default function WorksPage() {
         count={works.length}
       />
       <section className="container" style={{ paddingBottom: "var(--section)" }}>
-        <WorksBrowser works={works} categories={categories} />
+        <WorksBrowser works={works} categories={categories} storageKey="/works" />
       </section>
     </>
   );

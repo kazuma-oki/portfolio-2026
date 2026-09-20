@@ -1,30 +1,17 @@
-"use client";
-
-import { useState } from "react";
 import WorkCard from "./WorkCard";
 import styles from "./WorkGrid.module.css";
 
 /**
- * ホバー中のカード以外を薄くする（CYAN の実装から学んだ演出）。
  * columns で列数、ratio でサムネイルの比率を切り替える。
+ * data-work-id は、個別ページから戻ってきたときに
+ * WorksBrowser がその実績を画面中央へ送るための目印。
  */
-export default function WorkGrid({ works, columns = 3, ratio = "1 / 1" }) {
-  const [hovered, setHovered] = useState(null);
-
+export default function WorkGrid({ works, columns = 3, ratio = "1 / 1", basePath = "/works" }) {
   return (
-    <ul
-      className={styles.grid}
-      data-columns={columns}
-      onMouseLeave={() => setHovered(null)}
-    >
+    <ul className={styles.grid} data-columns={columns}>
       {works.map((work, i) => (
-        <li
-          key={work.id}
-          className={styles.item}
-          data-dim={hovered !== null && hovered !== work.id ? "true" : undefined}
-          onMouseEnter={() => setHovered(work.id)}
-        >
-          <WorkCard work={work} priority={i === 0} ratio={ratio} />
+        <li key={work.id} className={styles.item} data-work-id={work.id}>
+          <WorkCard work={work} priority={i === 0} ratio={ratio} basePath={basePath} />
         </li>
       ))}
     </ul>

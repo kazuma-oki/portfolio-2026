@@ -3,13 +3,19 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import styles from "./WorkCard.module.css";
 
-export default function WorkCard({ work, priority = false, ratio = "1 / 1", tabIndex }) {
+export default function WorkCard({
+  work,
+  priority = false,
+  ratio = "1 / 1",
+  tabIndex,
+  basePath = "/works",
+}) {
   return (
     <article className={styles.card}>
       {/* draggable={false} がないと、掴んで動かしたときに
           ブラウザ標準の画像ドラッグ（半透明の複製）が始まってしまう */}
       <Link
-        href={`/works/${work.id}`}
+        href={`${basePath}/${work.id}`}
         className={styles.link}
         tabIndex={tabIndex}
         draggable={false}
