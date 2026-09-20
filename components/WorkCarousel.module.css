@@ -1,15 +1,13 @@
 /* 必ず1枚が画面の中央にくる横並び。両隣は少し小さくして中央を引き立てる */
 .wrap {
   --gap: 32px;
-  /* 中央に置くカードの幅。PCは3枚ぶんが本文の幅にちょうど収まる大きさ。
+  /* 中央に置くカードの幅。
+     「3枚＋すき間4つ」で本文の幅ぴったりになる大きさにしてある。
+     こうすると見切れているカードの内側の辺が、本文の左右の境界線に
+     ちょうど乗り、すき間もすべて同じ幅になる。
      スナップ対象の幅に % を使うと iOS Safari で効かないので、実寸で持つ */
-  --slide-w: calc((min(var(--content), 100vw - var(--gutter) * 2) - var(--gap) * 2) / 3);
+  --slide-w: calc((min(var(--content), 100vw - var(--gutter) * 2) - var(--gap) * 4) / 3);
   --scale: 0.9;
-  /* 縮めるとき、どちらの辺を動かさないか。
-     -1 = 外側の辺（PC）／1 = 中央寄りの辺（タブレット・スマホ）
-     PCは3枚が横に並ぶので、外側を固定しないと本文の左右のラインから内へ寄り、
-     さらに「見切れ↔左」と「左↔中央」で間隔が食い違ってしまう */
-  --anchor: -1;
   position: relative;
 }
 
@@ -65,22 +63,28 @@
   scroll-snap-align: center;
 }
 
-/* 中央以外は少し小さく。縮めると両側の辺が内へ寄るので、
-   ずらして片方の辺を元の位置に戻している（どちらを戻すかは --anchor）。
-   transform-origin を左右で切り替えると切り替わった瞬間に横へ飛ぶので、
-   軸は中央のままにして、ずらす量で同じ見え方をつくっている */
+/* 中央以外は少し小さく。ただし縮めるのは高さだけ。
+   横にも縮めると、縮んだぶん辺が動いてしまい
+   「見切れ↔左」と「左↔中央」のすき間が必ず食い違う。
+   高さだけなら、辺の位置は並びのとおりのまま変わらない */
 .scaler {
-  --shift: calc((1 - var(--scale)) * 50% * var(--anchor));
-  transform: scale(var(--scale));
+  transform: scaleY(var(--scale));
   transition: transform 0.45s var(--ease-out);
 }
-.slide[data-side="left"] .scaler {
-  transform: translateX(var(--shift)) scale(var(--scale));
-}
-.slide[data-side="right"] .scaler {
-  transform: translateX(calc(var(--shift) * -1)) scale(var(--scale));
-}
 .slide[data-center="true"] .scaler { transform: none; }
+
+/* そのままだと中身まで縦に潰れてしまうので、比率を戻す。
+   画像ははみ出したぶんが枠で切られ、上下が少し切れた見え方になる。
+   文字は形が変わらないだけで、位置は縮んだぶん詰まる */
+.scaler img,
+.scaler p,
+.scaler h3 {
+  transform: scaleY(calc(1 / var(--scale)));
+  transition: transform 0.45s var(--ease-out);
+}
+.slide[data-center="true"] .scaler img,
+.slide[data-center="true"] .scaler p,
+.slide[data-center="true"] .scaler h3 { transform: none; }
 
 /* 滑らせている間と掴んでいる間はスナップを外す。
    入れたままだと途中で引き戻され、中央の手前で止まってから
@@ -248,9 +252,6 @@
    中央の1枚だけを見せ、両サイドに次と前を少しのぞかせる */
 @media (max-width: 1024px) {
   .wrap {
-    /* 1枚表示。両サイドは少ししか見えないので、
-       中央寄りの辺を固定しないと覗いているぶんが消えてしまう */
-    --anchor: 1;
     --gap: 24px;
     /* 中央のカードの左右にあける幅。ここから gap を引いたぶんが隣の見える幅 */
     --side: calc(var(--gutter) + 40px);
