@@ -82,7 +82,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior はここに置かない。置くとページ遷移や
+     ブラウザの戻るボタンでの位置の復元まで流れてしまう。
+     なめらかに動かしたい箇所は components/HashLink.jsx で指定する */
   -webkit-text-size-adjust: 100%;
 }
 
@@ -232,7 +234,6 @@ button { font: inherit; color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   .fade-in,
   .fade-in.is-visible {
     opacity: 1;

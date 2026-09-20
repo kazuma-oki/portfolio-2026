@@ -43,14 +43,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    // data-scroll-behavior は Next.js への合図。これが無いと、ページ遷移のたびに走る
-    // 「先頭へ戻す」処理が globals.css の scroll-behavior: smooth に引きずられて
-    // アニメーションしてしまう（＝画面が上に流れながら次のページが出る）
-    <html
-      lang="ja"
-      data-scroll-behavior="smooth"
-      className={`${inter.variable} ${noto.variable}`}
-    >
+    <html lang="ja" className={`${inter.variable} ${noto.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           本文へスキップ

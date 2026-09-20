@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import site from "@/data/site.json";
 import Drawer from "./Drawer";
+import HashLink from "./HashLink";
 import styles from "./Header.module.css";
 
 export default function Header() {
@@ -26,9 +27,19 @@ export default function Header() {
 
   return (
     <>
-      <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+      {/* ドロワーを開いている間は背景を消す。ヘッダーはドロワーより上に
+          重ねてあるので、そのままだと白いパネルの上に帯が乗ってしまう */}
+      <header
+        className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
+        data-drawer={open ? "open" : undefined}
+      >
         <div className={styles.inner}>
-          <Link href="/" className={`${styles.logo} en`} aria-label={`${site.logo} ホーム`}>
+          <Link
+            href="/"
+            className={`${styles.logo} en`}
+            aria-label={`${site.logo} ホーム`}
+            onClick={() => setOpen(false)}
+          >
             {site.logo}
           </Link>
 
@@ -42,9 +53,9 @@ export default function Header() {
                 if (isHome && item.href === "/works") {
                   return (
                     <li key={item.href}>
-                      <a href="#works" className={styles.navLink}>
+                      <HashLink hash="works" className={styles.navLink}>
                         {label}
-                      </a>
+                      </HashLink>
                     </li>
                   );
                 }

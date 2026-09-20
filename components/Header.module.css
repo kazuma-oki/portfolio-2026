@@ -1,13 +1,22 @@
 .header {
   position: fixed;
   inset: 0 0 auto 0;
-  z-index: 80;
+  /* ドロワー（90）より上。閉じる×を白いパネルの上に出すため */
+  z-index: 100;
   height: var(--header-h);
   display: flex;
   align-items: center;
   transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease),
     backdrop-filter 0.3s var(--ease);
   border-bottom: 1px solid transparent;
+}
+
+/* ドロワーを開いている間は帯を消す（白いパネルの上に重なってしまうため） */
+.header[data-drawer="open"] {
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
 }
 
 /* スクロール後：背景をぼかして下線を出す */

@@ -38,9 +38,7 @@ export default function WorksBrowser({ works, categories, storageKey, basePath =
     setFocus(saved);
   }, [storageKey, works, categories]);
 
-  // ② 絞り込みが反映されたあと、その実績を画面中央へ送る。
-  //    behavior を省くと globals.css の scroll-behavior: smooth が効いて
-  //    上から下へ流れてしまうので、instant を明示する
+  // ② 絞り込みが反映されたあと、その実績を画面中央へ送る（instant ＝ 一段で移動）
   useBeforePaint(() => {
     if (!focus) return;
     const put = () => {
