@@ -42,6 +42,9 @@ export default function Drawer({ open, onClose }) {
           {items.map((item) => {
             // TOPにいるときだけ Works は同じページの実績セクションへ
             const toWorks = isHome && item.href === "/works";
+            // Home は経路がちょうど "/" のときだけ。startsWith だと全ページで当たる
+            const current =
+              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
               <li key={item.href}>
                 {toWorks ? (
@@ -59,6 +62,7 @@ export default function Drawer({ open, onClose }) {
                   <Link
                     href={item.href}
                     className={`${styles.link} en`}
+                    aria-current={current ? "page" : undefined}
                     tabIndex={open ? 0 : -1}
                     onClick={onClose}
                   >
