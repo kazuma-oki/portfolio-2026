@@ -264,16 +264,16 @@
 
   /* 写真にも紹介文にも隠れない層。
      絶対配置なので、高さを持ってもレイアウトを押し下げない。
-     この箱の高さぶんだけ Scroll が画面に貼り付き、
-     文章が出きったところで貼り付けをやめてそのまま流れていく
-     （実績セクションまで連れていかないため） */
+     TOPのかたまり（写真＋紹介文の面）と同じ範囲に広げてあるので、
+     Scroll はTOPが固定されているあいだずっと画面に貼り付き、
+     TOPが流れ去るときに一緒に上へ流れていく */
   .scrollLayer {
     display: block;
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    height: calc(100svh + var(--reveal-h) * 0.78);
     pointer-events: none;
     z-index: 5;
   }
