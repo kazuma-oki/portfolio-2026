@@ -38,14 +38,16 @@ export default function WorksBrowser({ works, categories, storageKey, basePath =
     setFocus(saved);
   }, [storageKey, works, categories]);
 
-  // ② 絞り込みが反映されたあと、その実績を画面中央へ送る（behavior を指定しない＝一瞬で移動）
+  // ② 絞り込みが反映されたあと、その実績を画面中央へ送る。
+  //    behavior を省くと globals.css の scroll-behavior: smooth が効いて
+  //    上から下へ流れてしまうので、instant を明示する
   useBeforePaint(() => {
     if (!focus) return;
     const put = () => {
       const grid = gridRef.current;
       const el = grid && grid.querySelector(`[data-work-id="${focus}"]`);
-      if (el) el.scrollIntoView({ block: "center" });
-      else window.scrollTo(0, 0);
+      if (el) el.scrollIntoView({ block: "center", behavior: "instant" });
+      else window.scrollTo({ top: 0, behavior: "instant" });
     };
     put();
     // フォントの差し替えなどで高さが動いた場合に備え、次のフレームで一度だけ入れ直す
