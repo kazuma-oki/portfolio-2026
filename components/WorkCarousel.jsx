@@ -534,6 +534,8 @@ export default function WorkCarousel({ works }) {
 
   return (
     <div className={styles.wrap} ref={wrapRef}>
+      {/* 本文の幅を測るための箱。カードの幅をここから出す（.module.css の 100cqw） */}
+      <div className={styles.stage}>
       <ul
         className={styles.track}
         ref={trackRef}
@@ -567,22 +569,6 @@ export default function WorkCarousel({ works }) {
         })}
       </ul>
 
-      {/* マウスについてくる丸。標準のカーソルはこれが出ている間だけ隠す */}
-      {loop && (
-        <div
-          className={styles.cursor}
-          ref={cursorRef}
-          data-on={cursorLabel ? "true" : undefined}
-          aria-hidden="true"
-        >
-          <span className="en">
-            {(cursorLabel || []).map((line, i) => (
-              <em key={i}>{line}</em>
-            ))}
-          </span>
-        </div>
-      )}
-
       {loop && (
         <div className={styles.rail}>
           <button
@@ -605,6 +591,23 @@ export default function WorkCarousel({ works }) {
               <path d="M6 2l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           </button>
+        </div>
+      )}
+      </div>
+
+      {/* マウスについてくる丸。標準のカーソルはこれが出ている間だけ隠す */}
+      {loop && (
+        <div
+          className={styles.cursor}
+          ref={cursorRef}
+          data-on={cursorLabel ? "true" : undefined}
+          aria-hidden="true"
+        >
+          <span className="en">
+            {(cursorLabel || []).map((line, i) => (
+              <em key={i}>{line}</em>
+            ))}
+          </span>
         </div>
       )}
 
