@@ -4,10 +4,15 @@
   z-index: 90;
   visibility: hidden;
   pointer-events: none;
+  /* visibility は途中の状態を持たないので、そのままだと閉じる動きが
+     見えないまま消えてしまう。閉じ終わってから隠す */
+  transition: visibility 0s linear 0.4s;
 }
 .open {
   visibility: visible;
   pointer-events: auto;
+  /* 開くときは待たずに見せる */
+  transition: visibility 0s;
 }
 
 .overlay {
