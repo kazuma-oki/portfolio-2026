@@ -1,8 +1,13 @@
 /* 実績どうしの間隔。縦と横を同じにしている（カード側で行送りの余りを
-   切っているので、見た目の間隔もこの数値と一致する） */
+   切っているので、見た目の間隔もこの数値と一致する）。
+   固定pxにするとカードだけが画面幅で伸び縮みして大小関係が崩れるので、
+   包みの幅に対する割合で指定し、カード幅の一定割合になるようにしている。
+     3列：gap = 0.17W / (3 + 0.17*2) = 0.0509W → カード幅の17%
+     2列：gap = 0.13W / (2 + 0.13)   = 0.061W  → カード幅の13%
+     1列：gap = 0.13W                          → カード幅の13% */
 .grid {
   display: grid;
-  gap: 60px;
+  gap: 5.09cqw;
 }
 .grid[data-columns="3"] { grid-template-columns: repeat(3, 1fr); }
 .grid[data-columns="2"] { grid-template-columns: repeat(2, 1fr); }
@@ -12,7 +17,7 @@
   .grid[data-columns="3"],
   .grid[data-columns="2"] {
     grid-template-columns: repeat(2, 1fr);
-    gap: 48px;
+    gap: 6.1cqw;
   }
 }
 
@@ -21,6 +26,6 @@
   .grid[data-columns="3"],
   .grid[data-columns="2"] {
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 13cqw;
   }
 }

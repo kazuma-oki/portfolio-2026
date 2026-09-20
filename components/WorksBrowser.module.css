@@ -25,7 +25,11 @@
   color: var(--bg);
 }
 
-.grid { margin-top: var(--gap-l); }
+/* 中の gap をこの幅に対する割合で決められるようにする（WorkGrid.module.css） */
+.grid {
+  container-type: inline-size;
+  margin-top: var(--gap-l);
+}
 .grid[data-nofilter="true"] { margin-top: 0; }
 
 @media (max-width: 540px) {
