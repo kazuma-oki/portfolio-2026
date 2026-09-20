@@ -57,8 +57,7 @@
   letter-spacing: -0.01em;
 }
 
-/* ヘッダーのナビと同じ見せ方。下線が中央から伸びる。
-   いま開いているページにも同じ下線を出す */
+/* ホバーの下線。中央から伸びる（ヘッダーのナビと同じ見せ方） */
 .link::after {
   content: "";
   position: absolute;
@@ -71,9 +70,29 @@
   transform-origin: center;
   transition: transform 0.3s var(--ease);
 }
-.link:hover::after,
-.link[aria-current="page"]::after {
+/* いま開いているページには出さない。下線は「これから選ぶところ」の合図に絞る */
+.link:not([aria-current="page"]):hover::after {
   transform: scaleX(1);
+}
+
+/* いま開いているページは太字＋左の小さな三角で示す。
+   下線にすると、他をホバーしたときに下線が2本出てどちらが現在地か
+   分からなくなるため、ホバーとは別の見せ方にしている。
+   三角は文字の左の余白にぶら下げるので、項目の頭はそろったまま */
+.link[aria-current="page"] {
+  font-weight: 600;
+}
+.link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent currentColor;
+  transform: translateY(-50%);
 }
 
 /* パネルの下端。SNSのアイコンとタグライン */
