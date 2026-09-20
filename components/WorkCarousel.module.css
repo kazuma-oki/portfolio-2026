@@ -5,6 +5,11 @@
      スナップ対象の幅に % を使うと iOS Safari で効かないので、実寸で持つ */
   --slide-w: calc((min(var(--content), 100vw - var(--gutter) * 2) - var(--gap) * 2) / 3);
   --scale: 0.9;
+  /* 縮めるとき、どちらの辺を動かさないか。
+     -1 = 外側の辺（PC）／1 = 中央寄りの辺（タブレット・スマホ）
+     PCは3枚が横に並ぶので、外側を固定しないと本文の左右のラインから内へ寄り、
+     さらに「見切れ↔左」と「左↔中央」で間隔が食い違ってしまう */
+  --anchor: -1;
   position: relative;
 }
 
@@ -60,19 +65,20 @@
   scroll-snap-align: center;
 }
 
-/* 中央以外は少し小さく。縮めたぶんを中央側へずらして戻すので、
-   端で見切れているぶんの幅は変わらず、高さだけが低くなる。
+/* 中央以外は少し小さく。縮めると両側の辺が内へ寄るので、
+   ずらして片方の辺を元の位置に戻している（どちらを戻すかは --anchor）。
    transform-origin を左右で切り替えると切り替わった瞬間に横へ飛ぶので、
    軸は中央のままにして、ずらす量で同じ見え方をつくっている */
 .scaler {
+  --shift: calc((1 - var(--scale)) * 50% * var(--anchor));
   transform: scale(var(--scale));
   transition: transform 0.45s var(--ease-out);
 }
 .slide[data-side="left"] .scaler {
-  transform: translateX(calc((1 - var(--scale)) * 50%)) scale(var(--scale));
+  transform: translateX(var(--shift)) scale(var(--scale));
 }
 .slide[data-side="right"] .scaler {
-  transform: translateX(calc((1 - var(--scale)) * -50%)) scale(var(--scale));
+  transform: translateX(calc(var(--shift) * -1)) scale(var(--scale));
 }
 .slide[data-center="true"] .scaler { transform: none; }
 
@@ -242,6 +248,9 @@
    中央の1枚だけを見せ、両サイドに次と前を少しのぞかせる */
 @media (max-width: 1024px) {
   .wrap {
+    /* 1枚表示。両サイドは少ししか見えないので、
+       中央寄りの辺を固定しないと覗いているぶんが消えてしまう */
+    --anchor: 1;
     --gap: 24px;
     /* 中央のカードの左右にあける幅。ここから gap を引いたぶんが隣の見える幅 */
     --side: calc(var(--gutter) + 40px);
