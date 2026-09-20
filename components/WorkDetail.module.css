@@ -50,12 +50,15 @@
   object-fit: cover;
 }
 
-.body {
-  display: grid;
-  grid-template-columns: 7fr 4fr;
-  gap: 80px;
-  padding-block: var(--section);
+/* 見出し・画像・本文・制作情報を、同じ幅の1本にそろえて中央に置く。
+   2カラムだと本文が画面の中央から外れて読みにくかった。
+   760px は .kv と同じ幅なので、画像と本文の左端がそろう */
+.column {
+  width: min(100%, 760px);
+  margin-inline: auto;
 }
+
+.body { padding-block: var(--section); }
 
 .section + .section {
   margin-top: var(--gap-l);
@@ -72,11 +75,15 @@
 
 .paragraph + .paragraph,
 .list + .paragraph,
-.paragraph + .list,
-.sub + .list { margin-top: 16px; }
+.paragraph + .list { margin-top: 16px; }
+
+/* 小見出しと、その下の本文はひとかたまり。
+   段落どうし（16px）より狭くして、まとまりが分かるようにする */
+.sub + .paragraph,
+.sub + .list { margin-top: 8px; }
 
 .sub {
-  margin-top: 24px;
+  margin-top: 28px;
   font-weight: 700;
 }
 
@@ -119,14 +126,9 @@
   height: auto;
 }
 
-/* 右カラム：スクロールに追従する情報 */
-.side {
-  position: sticky;
-  top: calc(var(--header-h) + 40px);
-  align-self: start;
-}
-
+/* 制作情報。本文の一番下に置く */
 .info {
+  margin-top: 16px;
   border-top: 1px solid var(--line);
   margin-bottom: var(--gap-m);
 }
@@ -144,6 +146,14 @@
   margin: 0;
   font-size: 15px;
   line-height: 24px;
+}
+
+.strong { font-weight: 600; }
+
+/* 入れ子の箇条書き */
+.list .list {
+  margin-top: 8px;
+  list-style: circle;
 }
 
 /* 次の作品へ */
@@ -170,11 +180,6 @@
   .head { padding-top: calc(var(--header-h) + 48px); }
   .title { font-size: 40px; line-height: 56px; }
   .meta { margin-top: 32px; }
-  .body {
-    grid-template-columns: 1fr;
-    gap: var(--gap-l);
-  }
-  .side { position: static; }
 }
 
 @media (max-width: 540px) {

@@ -6,9 +6,9 @@ import Button from "@/components/Button";
 import BackToList from "@/components/BackToList";
 import styles from "./WorkDetail.module.css";
 
-/** [表示文字](URL) をリンクに、改行を <br> にする */
+/** [表示文字](URL) をリンクに、**強調** を太字に、改行を <br> にする */
 function RichText({ text = "" }) {
-  const parts = text.split(/(\[[^\]]+\]\([^)\s]+\))/g);
+  const parts = text.split(/(\[[^\]]+\]\([^)\s]+\)|\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     const m = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
     if (m) {
@@ -16,6 +16,14 @@ function RichText({ text = "" }) {
         <a key={i} href={m[2]} target="_blank" rel="noopener noreferrer" className={styles.link}>
           {m[1]}
         </a>
+      );
+    }
+    const b = part.match(/^\*\*([^*]+)\*\*$/);
+    if (b) {
+      return (
+        <strong key={i} className={styles.strong}>
+          {b[1]}
+        </strong>
       );
     }
     const lines = part.split("\n");
@@ -26,6 +34,20 @@ function RichText({ text = "" }) {
       </span>
     ));
   });
+}
+
+/** 箇条書き。項目が { text, list } なら下位の箇条書きを入れ子にする */
+function Items({ items }) {
+  return (
+    <ul className={styles.list}>
+      {items.map((li, i) => (
+        <li key={i}>
+          <RichText text={typeof li === "string" ? li : li.text} />
+          {typeof li !== "string" && li.list && <Items items={li.list} />}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 /** text / list / sub / image / gallery を描き分ける */
@@ -51,17 +73,7 @@ function Block({ block }) {
     );
   }
 
-  if (block.list) {
-    return (
-      <ul className={styles.list}>
-        {block.list.map((li, i) => (
-          <li key={i}>
-            <RichText text={li} />
-          </li>
-        ))}
-      </ul>
-    );
-  }
+  if (block.list) return <Items items={block.list} />;
 
   if (block.image) {
     return (
@@ -112,6 +124,7 @@ export default function WorkDetail({
     <>
       <header className={styles.head}>
         <div className="container">
+          <div className={styles.column}>
           <BackToList
             href={basePath}
             label={backLabel}
@@ -127,6 +140,7 @@ export default function WorkDetail({
           </p>
           <h1 className={`${styles.title} h1`}>{item.title}</h1>
           {item.summary && <p className={`${styles.summary} body-s subtext`}>{item.summary}</p>}
+          </div>
         </div>
       </header>
 
@@ -144,7 +158,7 @@ export default function WorkDetail({
       </FadeIn>
 
       <div className={`${styles.body} container`}>
-        <div className={styles.main}>
+        <div className={styles.column}>
           {item.sections.map((section, i) => (
             <FadeIn as="section" key={i} className={styles.section}>
               <h2 className={styles.sectionTitle}>{section.heading}</h2>
@@ -155,38 +169,39 @@ export default function WorkDetail({
               </div>
             </FadeIn>
           ))}
-        </div>
 
-        <aside className={styles.side}>
-          <dl className={styles.info}>
-            {/* 中身のない項目は出さない */}
-            {[
-              ["Category", item.category],
-              ["Year", item.year],
-              ["Role", item.role],
-              ["Tools", item.tools && item.tools.length ? item.tools.join(" / ") : ""],
-            ]
-              .filter(([, value]) => value)
-              .map(([label, value]) => (
-                <div key={label}>
-                  <dt className="caption">{label}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-          </dl>
-          {item.url && (
-            <Button href={item.url} external variant="ghost">
-              Visit site
-            </Button>
+          {/* 制作情報。本文の一番下に置く */}
+          {item.info && item.info.length > 0 && (
+            <FadeIn as="section" className={styles.section}>
+              <h2 className={styles.sectionTitle}>制作情報</h2>
+              <dl className={styles.info}>
+                {item.info.map((row) => (
+                  <div key={row.label}>
+                    <dt className="caption">{row.label}</dt>
+                    <dd>
+                      <RichText text={row.value} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              {item.url && (
+                <Button href={item.url} external variant="ghost">
+                  Visit site
+                </Button>
+              )}
+            </FadeIn>
           )}
-        </aside>
+        </div>
       </div>
 
       {/* 1件しかないときは次の行き先がないので出さない */}
       {next && (
         <section className={styles.next}>
           <div className="container">
-            <Link href={`${basePath}/${next.id}`} className={styles.nextLink}>
+            <Link
+              href={`${basePath}/${next.id}`}
+              className={`${styles.nextLink} ${styles.column}`}
+            >
               <span className={`${styles.nextLabel} caption en`}>{nextLabel}</span>
               <span className={`${styles.nextTitle} h3`}>{next.title}</span>
               <span className={`${styles.nextArrow} en`} aria-hidden="true">
