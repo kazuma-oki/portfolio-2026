@@ -27,8 +27,7 @@ export default function Home() {
           />
 
           <FadeIn className={styles.worksInner} delay={80}>
-            {/* TOPは入口なので先頭8件まで。続きは「View all」へ */}
-            <WorkCarousel works={works.slice(0, 8)} />
+            <WorkCarousel works={works} />
           </FadeIn>
 
           <FadeIn className={styles.headAction} delay={120}>

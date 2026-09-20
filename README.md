@@ -20,7 +20,6 @@ Next.js（App Router）+ Framer Motion で組み、GitHub Pages に静的書き�
    - 一覧・TOPのカルーセル・詳細ページのどれも正方形で表示するので、1作品につき1枚でよい
    - 記事中に挟む画像（任意）は `public/images/works/<id>-full.webp` に直接置く
 2. `data/works.json` の **配列の先頭** に1件ぶん追記する（先頭が一覧の左上に並ぶ）
-   - TOPのカルーセルに出るのは**先頭8件まで**。残りは「View all」から一覧へ
    - TOPは横に流れるカルーセル。必ず1枚が画面の中央にきて、左右にループする。
      何件足してもTOPが縦に長くならない
 3. push する。GitHub Actions が自動でビルドして公開する
