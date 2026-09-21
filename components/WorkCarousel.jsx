@@ -554,11 +554,8 @@ export default function WorkCarousel({ works }) {
       if (!frame) frame = requestAnimationFrame(draw);
       t.setAttribute("data-cursor", "on");
 
-      /* 中央のカードは「開く」対象なので View。
-         それ以外は動かす場所なので Drag（送れるのはドラッグと左右ボタンだけ） */
-      const slide = e.target.closest("li");
-      const onCenter = slide && slide.dataset.center === "true";
-      setCursorLabel(!t.hasAttribute("data-dragging") && onCenter ? ["View"] : ["Drag"]);
+      // 掴んで送ることも、押して開くこともできる（バナーの面と同じ見せ方）
+      setCursorLabel(["Drag or", "Click"]);
     };
 
     const onLeave = () => {
@@ -639,6 +636,11 @@ export default function WorkCarousel({ works }) {
             {(cursorLabel || []).map((line, i) => (
               <em key={i}>{line}</em>
             ))}
+            {/* 左右に送れることを示す山形 */}
+            <i className={styles.arrows}>
+              <b />
+              <b />
+            </i>
           </span>
         </div>
       )}

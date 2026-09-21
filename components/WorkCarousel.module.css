@@ -140,12 +140,13 @@
 
 /* 丸そのもの。transform は位置に使っているので、大きさは内側で変える */
 .cursor span {
+  position: relative;
   display: grid;
   place-items: center;
   align-content: center;
-  width: 72px;
-  height: 72px;
-  margin: -36px 0 0 -36px;
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
   border-radius: var(--r-pill);
   /* 少し透かしている。左右のボタンに重なったとき、
      丸の下にボタンがあることが分かるようにするため
@@ -162,6 +163,25 @@
   display: block;
   font-style: normal;
 }
+
+/* 送れる向きの印。丸のふちの内側に置く（バナーの面と同じ形） */
+.arrows {
+  position: absolute;
+  inset: 0;
+}
+.arrows b {
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -3px;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.72);
+  border-right: 1.2px solid rgba(255, 255, 255, 0.72);
+}
+/* 右 */
+.arrows b:nth-child(1) { right: 9px; transform: rotate(45deg); }
+/* 左 */
+.arrows b:nth-child(2) { left: 9px; transform: rotate(-135deg); }
 /* 押している間は少し縮む */
 .wrap:has(.track[data-dragging="true"]) .cursor span { transform: scale(0.82); }
 
