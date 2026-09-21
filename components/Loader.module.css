@@ -14,7 +14,7 @@
 
 /* 背景の空。画像は「1枚ぶん×2」でできているので、
    半分だけ動かすと元の位置に戻り、継ぎ目なく流れ続ける。
-   TOPは130秒だが、ローディングは1.5秒しか出ないので、
+   TOPは130秒だが、ローディングは2.6秒しか出ないので、
    その間に動きが分かる速さにしている */
 .sky {
   position: absolute;
@@ -25,7 +25,7 @@
   background-size: 100% 100%;
   background-repeat: no-repeat;
   will-change: transform;
-  animation: sky-flow 22s linear infinite;
+  animation: sky-flow 32s linear infinite;
 }
 
 @keyframes sky-flow {
