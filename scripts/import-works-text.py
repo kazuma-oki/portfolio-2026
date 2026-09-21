@@ -56,6 +56,12 @@ KEEP_IMAGES = {
             "alt": "カーシェアサービスの公式X向けバナー6点",
         }],
     }),
+    "kaiza": ("工夫したポイント", {
+        "image": "images/works/kaiza-full.webp",
+        "alt": "Ka!zaコーポレートサイトの全ページ。上から順にファーストビュー、事業内容、会社概要、新着情報",
+        "width": 1400,
+        "height": 6606,
+    }),
     "greenloop": ("工夫したポイント", {
         "image": "images/works/greenloop-full.webp",
         "alt": "Green Loop コーポレートサイトの全体デザイン",

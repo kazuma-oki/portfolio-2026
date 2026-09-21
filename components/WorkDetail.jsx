@@ -81,8 +81,8 @@ function Block({ block }) {
         <Image
           src={asset(block.image)}
           alt={block.alt || ""}
-          width={1059}
-          height={2400}
+          width={block.width || 1059}
+          height={block.height || 2400}
           sizes="(max-width: 1024px) 100vw, 800px"
         />
       </figure>
