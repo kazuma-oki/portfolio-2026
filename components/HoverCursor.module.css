@@ -1,0 +1,46 @@
+/* マウスについてくる丸。TOPのカルーセルと同じ見た目にそろえてある */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  will-change: transform;
+}
+.cursor[data-on="true"] { opacity: 1; }
+
+/* 丸そのもの。transform は位置に使っているので、大きさは内側で変える */
+.cursor span {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-radius: var(--r-pill);
+  background: rgba(17, 17, 17, 0.78);
+  color: var(--bg);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transition: transform 0.25s var(--ease-out);
+}
+.cursor em {
+  display: block;
+  font-style: normal;
+}
+/* 押している間は少し縮む */
+.cursor[data-pressed="true"] span { transform: scale(0.82); }
+
+/* 指やペンでは出さない */
+@media (hover: none) {
+  .cursor { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .cursor span { transition: none; }
+}

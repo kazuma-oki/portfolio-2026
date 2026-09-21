@@ -10,6 +10,9 @@
   position: relative;
   overflow: hidden;
   height: calc(var(--u) * 36);
+  /* 広い画面で伸び続けないように。本文が止まるところで面も止める */
+  max-width: calc(var(--u) * 80);
+  margin-inline: auto;
   border-radius: var(--r-card);
   background: #ecece9;
   cursor: grab;
@@ -21,10 +24,12 @@
 .view:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 3px; }
 .view[data-dragging="true"] { cursor: grabbing; }
 
-/* 追従する丸が出ている間は、標準のカーソルを消す。
+/* 丸が代わりになるので、面の上では標準のカーソルを消す。
    ボタンには UA が cursor: pointer を当ててくるので * にも指定する */
-.view[data-cursor="on"],
-.view[data-cursor="on"] * { cursor: none; }
+@media (hover: hover) {
+  .view,
+  .view * { cursor: none; }
+}
 
 .canvas {
   position: absolute;
@@ -32,7 +37,7 @@
   left: 0;
   /* カード1枚の高さ。これを1として、位置も幅もすべてこの倍数で置く。
      画面の広さが変わっても倍数は変わらないので、並びは相似のまま */
-  --zoom: 1.62;
+  --zoom: 1.95;
   --h: calc(var(--u) * 36 * var(--zoom) / var(--ch));
   width: calc(var(--h) * var(--cw));
   height: calc(var(--h) * var(--ch));
@@ -66,57 +71,27 @@
 }
 
 .hint {
-  margin-top: var(--gap-s);
+  /* 面と同じ幅にそろえる。広い画面で面が止まっても右端が合う */
+  max-width: calc(var(--u) * 80);
+  margin: var(--gap-s) auto 0;
   text-align: right;
 }
 
-/* ---- マウスについてくる丸（カルーセルと同じ見せ方） ---- */
-.cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s var(--ease);
-  will-change: transform;
-}
-.cursor[data-on="true"] { opacity: 1; }
-
-.cursor span {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  width: 72px;
-  height: 72px;
-  margin: -36px 0 0 -36px;
-  border-radius: var(--r-pill);
-  background: rgba(17, 17, 17, 0.78);
-  color: var(--bg);
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: 0.08em;
-  text-align: center;
-  transition: transform 0.25s var(--ease-out);
-}
-.cursor em {
-  display: block;
-  font-style: normal;
-}
-/* 押している間は少し縮む */
-.wrap:has(.view[data-dragging="true"]) .cursor span { transform: scale(0.82); }
-
-/* 指やペンでは出さない。あわせて上下はページのスクロールにまかせる */
+/* 指やペンでは、上下はページのスクロールにまかせる */
 @media (hover: none) {
-  .cursor { display: none; }
   .view { touch-action: pan-y; }
   /* 縦には動かさないので、中身がちょうど収まる高さにする */
   .canvas { --zoom: 1; }
 }
 
+/* 1024px以下は3行。狭いので縦には動かさず、ちょうど収まる大きさにする
+   （中身を大きくするとカードが画面を占めすぎて、何枚あるか分からなくなる） */
 @media (max-width: 1024px) {
   .view { height: calc(var(--u) * 33); }
-  .canvas { --h: calc(var(--u) * 33 * var(--zoom) / var(--ch)); }
+  .canvas {
+    --zoom: 1;
+    --h: calc(var(--u) * 33 * var(--zoom) / var(--ch));
+  }
 }
 
 @media (max-width: 540px) {
@@ -126,7 +101,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card,
-  .cursor,
-  .cursor span { transition: none; }
+  .card { transition: none; }
 }

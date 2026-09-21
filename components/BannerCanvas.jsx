@@ -4,10 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
 import BannerLightbox from "./BannerLightbox";
+import HoverCursor from "./HoverCursor";
 import styles from "./BannerCanvas.module.css";
 
 // バナーどうしの間。カードの高さを1としたときの比
-const GAP = 0.06;
+const GAP = 0.14;
 // これ以上動いたら「掴んで動かした」とみなし、拡大を開かない（カルーセルと同じ値）
 const DRAG_SLOP = 6;
 // 行ごとに左右をずらす量。格子に見えないように、けれど散らかりすぎないように
@@ -64,11 +65,10 @@ function layout(items, rows) {
 export default function BannerCanvas({ banners, label = "バナー" }) {
   const viewRef = useRef(null);
   const canvasRef = useRef(null);
-  const cursorRef = useRef(null);
 
   const [rows, setRows] = useState(4);
-  // 追従する丸に出す文字。null のときは出さない
-  const [cursorLabel, setCursorLabel] = useState(null);
+  // 掴んでいる間は追従する丸を少し縮める
+  const [pressed, setPressed] = useState(false);
   const [openAt, setOpenAt] = useState(null);
 
   const plan = useMemo(() => layout(banners, rows), [banners, rows]);
@@ -169,6 +169,7 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
       };
       view.setPointerCapture(e.pointerId);
       view.dataset.dragging = "true";
+      setPressed(true);
     };
 
     const onMove = (e) => {
@@ -191,6 +192,7 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
       if (!d || d.id !== e.pointerId) return;
       dragRef.current = null;
       delete view.dataset.dragging;
+      setPressed(false);
       if (view.hasPointerCapture(e.pointerId)) view.releasePointerCapture(e.pointerId);
 
       if (d.moved > DRAG_SLOP) {
@@ -220,38 +222,11 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
     };
   }, [apply]);
 
-  /* マウスについてくる丸。カルーセルと同じ見せ方 */
-  useEffect(() => {
-    const view = viewRef.current;
-    if (!view) return;
-
-    let frame = 0;
-    let pos = null;
-
-    const draw = () => {
-      frame = 0;
-      const el = cursorRef.current;
-      if (el && pos) el.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-    };
-
-    const onMove = (e) => {
-      if (e.pointerType !== "mouse") return;
-      pos = { x: e.clientX, y: e.clientY };
-      if (!frame) frame = requestAnimationFrame(draw);
-      const onCard = !!e.target.closest(`.${styles.card}`);
-      setCursorLabel(onCard ? ["CLICK TO", "ZOOM"] : ["DRAG"]);
-    };
-
-    const onLeave = () => setCursorLabel(null);
-
-    view.addEventListener("pointermove", onMove);
-    view.addEventListener("pointerleave", onLeave);
-    return () => {
-      cancelAnimationFrame(frame);
-      view.removeEventListener("pointermove", onMove);
-      view.removeEventListener("pointerleave", onLeave);
-    };
-  }, []);
+  /* 丸に出す文字。バナーの上なら「押すと拡大」、すき間なら「掴んで動かす」 */
+  const labelFor = useCallback(
+    (e) => (e.target.closest(`.${styles.card}`) ? ["CLICK TO", "ZOOM"] : ["DRAG"]),
+    []
+  );
 
   /* 面にフォーカスがあるときは矢印キーでも動かせるようにする */
   const onKeyDown = (e) => {
@@ -283,7 +258,6 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
       <div
         className={styles.view}
         ref={viewRef}
-        data-cursor={cursorLabel ? "on" : undefined}
         tabIndex={0}
         role="group"
         aria-label={`${label}（掴んで動かせます）`}
@@ -326,21 +300,16 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
         </div>
       </div>
 
-      <div
-        className={styles.cursor}
-        ref={cursorRef}
-        data-on={cursorLabel ? "true" : undefined}
-        aria-hidden="true"
-      >
-        <span className="en">
-          {(cursorLabel || []).map((line, i) => (
-            <em key={i}>{line}</em>
-          ))}
-        </span>
-      </div>
+      {/* 拡大している間は、下の面の丸は出さない */}
+      <HoverCursor
+        areaRef={viewRef}
+        labelFor={labelFor}
+        pressed={pressed}
+        hidden={openAt != null}
+      />
 
       <p className={`${styles.hint} caption`}>
-        ドラッグで動かし、バナーを押すと拡大します（全{banners.length}点）
+        ドラッグで動かし、バナーを押すと拡大します
       </p>
 
       <BannerLightbox

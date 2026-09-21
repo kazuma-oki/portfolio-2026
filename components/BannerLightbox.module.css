@@ -10,6 +10,9 @@
   /* 後ろをグレーで伏せる。うっすら透けるので、どのページを見ていたかは分かる */
   background: rgba(24, 24, 24, 0.62);
   backdrop-filter: blur(2px);
+  /* 横に払って送るぶんを自分で扱う。ここは後ろも動かないので、
+     ブラウザのパンに横取りされる（そのとき指の操作が取り消される）のを止める */
+  touch-action: none;
 }
 
 .panel {
@@ -24,15 +27,23 @@
   display: grid;
   justify-items: center;
   gap: 12px;
-  max-width: min(92vw, 1100px);
-  max-height: 86vh;
 }
-.figure :global(img) {
+
+/* 画像そのものを入れる枠。送りの領域はこの中だけに重ねる */
+.frame {
+  position: relative;
+  display: block;
+}
+
+.slide { display: block; }
+
+.slide :global(img) {
+  display: block;
   width: auto;
   height: auto;
   max-width: min(92vw, 1100px);
   /* 枚数の表示ぶんを残して、画像だけで画面を埋めきらないようにする */
-  max-height: calc(86vh - 32px);
+  max-height: calc(86vh - 56px);
   border-radius: var(--r-card);
   background: var(--surface);
 }
@@ -42,12 +53,32 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- 画像の左半分・右半分。押すと前後へ送る ---- */
+.half {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 50%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.halfPrev { left: 0; }
+.halfNext { right: 0; }
+
+/* マウスのときは丸が前後どちらかを示すので、標準のカーソルは消す */
+@media (hover: hover) {
+  .half { cursor: none; }
+}
+
 /* ---- 閉じる ---- */
 .close {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 2;
+  z-index: 3;
   display: grid;
   place-items: center;
   width: 48px;
@@ -74,11 +105,11 @@
 .close span { transform: rotate(45deg); }
 .close span::after { transform: rotate(-90deg); }
 
-/* ---- 前後の送り ---- */
+/* ---- 前後の送りボタン（指のとき用） ---- */
 .arrow {
   position: absolute;
   top: 50%;
-  z-index: 2;
+  z-index: 3;
   display: grid;
   place-items: center;
   width: 48px;
@@ -91,15 +122,22 @@
   color: #fff;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), opacity 0.2s var(--ease);
 }
 .arrow:hover,
 .arrow:focus-visible { background: rgba(255, 255, 255, 0.16); border-color: #fff; }
 .prev { left: 0; }
 .next { right: 0; }
 
+/* マウスのときは画像を押して送るので、ボタンは出さない。
+   ただしキーボードで辿り着いたときだけは見えるようにする */
+@media (hover: hover) {
+  .arrow { opacity: 0; pointer-events: none; }
+  .arrow:focus-visible { opacity: 1; pointer-events: auto; }
+}
+
 @media (max-width: 1024px) {
-  .figure :global(img) { max-height: calc(80vh - 32px); }
+  .slide :global(img) { max-height: calc(80vh - 56px); }
   /* 画像の左右に置く余地がないので、下にまとめる */
   .arrow { top: auto; bottom: 0; margin-top: 0; }
   .prev { left: 50%; transform: translateX(-56px); }
