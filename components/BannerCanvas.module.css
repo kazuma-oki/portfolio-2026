@@ -70,6 +70,37 @@
   transform: scale(1.03);
 }
 
+/* 指のときだけ出す、左右に動かせることを示す印 */
+.edge {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  border-radius: var(--r-pill);
+  background: rgba(17, 17, 17, 0.62);
+  pointer-events: none;
+}
+.edge::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 1.4px solid #fff;
+  border-right: 1.4px solid #fff;
+}
+.edge[data-side="left"] { left: 10px; }
+.edge[data-side="left"]::before { margin: -4px 0 0 -2px; transform: rotate(-135deg); }
+.edge[data-side="right"] { right: 10px; }
+.edge[data-side="right"]::before { margin: -4px 0 0 -6px; transform: rotate(45deg); }
+
+@media (hover: hover) {
+  .edge { display: none; }
+}
+
 .hint {
   /* 面と同じ幅にそろえる。広い画面で面が止まっても右端が合う */
   max-width: calc(var(--u) * 80);

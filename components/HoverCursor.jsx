@@ -11,7 +11,7 @@ import styles from "./HoverCursor.module.css";
  * TOPのカルーセルにある同じ見た目の丸をそろえたもので、
  * バナーの面と、その拡大表示の両方から使っている。
  */
-export default function HoverCursor({ areaRef, labelFor, pressed = false, hidden = false }) {
+export default function HoverCursor({ areaRef, labelFor, pressed = false, hidden = false, arrows }) {
   const ref = useRef(null);
   const [label, setLabel] = useState(null);
   // 毎回新しい関数が来ても購読をやり直さずに済むよう、ref 越しに見る
@@ -64,6 +64,15 @@ export default function HoverCursor({ areaRef, labelFor, pressed = false, hidden
         {(label || []).map((line, i) => (
           <em key={i}>{line}</em>
         ))}
+        {/* 動かせる向きを小さな山形で示す。all は上下左右、x は左右だけ */}
+        {arrows && (
+          <i className={styles.arrows} data-dir={arrows}>
+            <b />
+            <b />
+            <b />
+            <b />
+          </i>
+        )}
       </span>
     </div>
   );

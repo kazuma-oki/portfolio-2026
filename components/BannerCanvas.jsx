@@ -120,10 +120,14 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
     return () => ro.disconnect();
   }, [apply]);
 
-  /* 行数が変わると中身の大きさも変わる。真ん中から見えるように置き直す */
+  /* 行数が変わると中身の大きさも変わるので置き直す。
+     縦は真ん中に置くと、ちょうど1行ぶんが隠れて「上にも続きがある」ことが
+     伝わらないので、カード半分ぶんだけずらして上の行をのぞかせる */
   useEffect(() => {
     const { minX, minY } = limits();
-    posRef.current = { x: minX / 2, y: minY / 2 };
+    const canvas = canvasRef.current;
+    const h = canvas ? canvas.offsetHeight / plan.height : 0;
+    posRef.current = { x: minX / 2, y: Math.max(minY, -h * 0.55) };
     apply();
   }, [plan, apply, limits]);
 
@@ -222,11 +226,8 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
     };
   }, [apply]);
 
-  /* 丸に出す文字。バナーの上なら「押すと拡大」、すき間なら「掴んで動かす」 */
-  const labelFor = useCallback(
-    (e) => (e.target.closest(`.${styles.card}`) ? ["CLICK TO", "ZOOM"] : ["DRAG"]),
-    []
-  );
+  /* 丸に出す文字。掴んで動かすことも、押して拡大することもできる */
+  const labelFor = useCallback(() => ["Drag or", "Click"], []);
 
   /* 面にフォーカスがあるときは矢印キーでも動かせるようにする */
   const onKeyDown = (e) => {
@@ -298,6 +299,10 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
             </button>
           ))}
         </div>
+
+        {/* 指のときは丸が出ないので、左右に動かせることをここで示す */}
+        <span className={styles.edge} data-side="left" aria-hidden="true" />
+        <span className={styles.edge} data-side="right" aria-hidden="true" />
       </div>
 
       {/* 拡大している間は、下の面の丸は出さない */}
@@ -306,6 +311,8 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
         labelFor={labelFor}
         pressed={pressed}
         hidden={openAt != null}
+        /* 4行のときは上下にも動く。3行のときは中身がちょうど収まるので左右だけ */
+        arrows={plan.rows > 3 ? "all" : "x"}
       />
 
       <p className={`${styles.hint} caption`}>
