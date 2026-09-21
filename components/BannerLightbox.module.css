@@ -1,32 +1,27 @@
-/* バナーの拡大表示 */
+/* バナーやワイヤーフレームの拡大表示 */
 
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 150;
-  display: grid;
-  place-items: center;
-  padding: clamp(16px, 4vw, 48px);
+  overflow: hidden;
   /* 後ろをグレーで伏せる。うっすら透けるので、どのページを見ていたかは分かる */
   background: rgba(24, 24, 24, 0.62);
   backdrop-filter: blur(2px);
-  /* 横に払って送るぶんを自分で扱う。ここは後ろも動かないので、
-     ブラウザのパンに横取りされる（そのとき指の操作が取り消される）のを止める */
-  touch-action: none;
 }
 
-.panel {
-  position: relative;
+/* 縦に送れる層。ここだけが動く */
+.scroller {
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
-  width: 100%;
-  height: 100%;
+  padding: clamp(16px, 4vw, 48px);
 }
 
 .figure {
   display: grid;
   justify-items: center;
-  gap: 12px;
 }
 
 /* 画像そのものを入れる枠。送りの領域はこの中だけに重ねる */
@@ -42,13 +37,18 @@
   width: auto;
   height: auto;
   max-width: min(92vw, 1100px);
-  /* 枚数の表示ぶんを残して、画像だけで画面を埋めきらないようにする */
-  max-height: calc(86vh - 56px);
+  max-height: 86vh;
   border-radius: var(--r-card);
   background: var(--surface);
 }
 
-.caption {
+/* 何枚目か。送っても動かないよう、外側に置いている */
+.count {
+  position: absolute;
+  top: clamp(16px, 4vw, 48px);
+  left: clamp(16px, 4vw, 48px);
+  z-index: 3;
+  margin: 0;
   color: rgba(255, 255, 255, 0.86);
   font-variant-numeric: tabular-nums;
 }
@@ -82,8 +82,8 @@
 /* ---- 閉じる ---- */
 .close {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: clamp(16px, 4vw, 48px);
+  right: clamp(16px, 4vw, 48px);
   z-index: 3;
   display: grid;
   place-items: center;
@@ -132,8 +132,8 @@
 }
 .arrow:hover,
 .arrow:focus-visible { background: rgba(255, 255, 255, 0.16); border-color: #fff; }
-.prev { left: 0; }
-.next { right: 0; }
+.prev { left: clamp(16px, 4vw, 48px); }
+.next { right: clamp(16px, 4vw, 48px); }
 
 /* マウスのときは画像を押して送るので、ボタンは出さない。
    ただしキーボードで辿り着いたときだけは見えるようにする */
@@ -142,10 +142,25 @@
   .arrow:focus-visible { opacity: 1; pointer-events: auto; }
 }
 
+/* ---- 丈の長い画像（ワイヤーフレーム）---- */
+/* 画面に収めきると幅が数十pxまで縮んで読めないので、
+   幅を優先して、縦に送りながら見てもらう */
+.overlay[data-tall="true"] .scroller {
+  align-items: start;
+  overflow-y: auto;
+  /* 縦になぞるぶんは送りに渡し、横だけ自分で受け取る */
+  touch-action: pan-y;
+  padding-bottom: 72px;
+}
+.overlay[data-tall="true"] .slide :global(img) {
+  max-width: min(92vw, 520px);
+  max-height: none;
+}
+
 @media (max-width: 1024px) {
   .slide :global(img) { max-height: calc(80vh - 56px); }
   /* 画像の左右に置く余地がないので、下にまとめる */
-  .arrow { top: auto; bottom: 0; margin-top: 0; }
+  .arrow { top: auto; bottom: clamp(16px, 4vw, 48px); margin-top: 0; }
   .prev { left: 50%; transform: translateX(-56px); }
   .next { right: 50%; transform: translateX(56px); }
 }

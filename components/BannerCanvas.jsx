@@ -24,6 +24,20 @@ function rowsFor(width) {
 }
 
 /**
+ * ワイヤーフレームのように丈がまちまちなものは、幅をそろえて1列に並べる。
+ * 上端はすべて 0。単位は「カードの幅＝1」。
+ */
+function layoutStrip(items) {
+  let x = 0;
+  const cards = items.map((b) => {
+    const card = { ...b, x, y: 0 };
+    x += 1 + GAP;
+    return card;
+  });
+  return { cards, width: x - GAP, height: 1, rows: 1, strip: true };
+}
+
+/**
  * バナーを行に詰める。高さは全部そろっているので、幅だけを見て順に置けばよい。
  * 戻り値の座標はすべて「カードの高さ＝1」を単位にした比。
  * 実際の大きさは CSS の --h が決めるので、画面幅が変わっても並びは変わらない。
@@ -62,7 +76,10 @@ function layout(items, rows) {
  * マウスのときは上下左右、指のときは左右だけ動かし、
  * 上下になぞったぶんはページのスクロールにまかせる。
  */
-export default function BannerCanvas({ banners, label = "バナー" }) {
+export default function BannerCanvas({ banners, mode = "rows" }) {
+  const strip = mode === "strip";
+  // 1列に並べるのはワイヤーフレーム。呼び方を変える
+  const label = strip ? "画像" : "バナー";
   const viewRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -71,7 +88,10 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
   const [pressed, setPressed] = useState(false);
   const [openAt, setOpenAt] = useState(null);
 
-  const plan = useMemo(() => layout(banners, rows), [banners, rows]);
+  const plan = useMemo(
+    () => (strip ? layoutStrip(banners) : layout(banners, rows)),
+    [banners, rows, strip]
+  );
 
   // いまの位置と、慣性のための速さ
   const posRef = useRef({ x: 0, y: 0 });
@@ -127,9 +147,11 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
     const { minX, minY } = limits();
     const canvas = canvasRef.current;
     const h = canvas ? canvas.offsetHeight / plan.height : 0;
-    posRef.current = { x: minX / 2, y: Math.max(minY, -h * 0.55) };
+    posRef.current = strip
+      ? { x: 0, y: 0 }
+      : { x: minX / 2, y: Math.max(minY, -h * 0.55) };
     apply();
-  }, [plan, apply, limits]);
+  }, [plan, apply, limits, strip]);
 
   /* 掴んで動かす */
   useEffect(() => {
@@ -267,6 +289,7 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
         <div
           className={styles.canvas}
           ref={canvasRef}
+          data-mode={mode}
           style={{
             "--rows": plan.rows,
             "--cw": plan.width,
@@ -279,11 +302,11 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
               key={card.id}
               className={styles.card}
               data-index={i}
-              style={{ "--x": card.x, "--y": card.y, "--w": card.ratio }}
+              style={{ "--x": card.x, "--y": card.y, "--w": card.ratio, "--ratio": card.ratio }}
               /* マウスや指のときは掴み終わりで開く。
                  ここはキーボードで押したとき（detail が 0）だけ */
               onClick={(e) => { if (e.detail === 0) open(i, e.currentTarget); }}
-              aria-label={`${card.title} を拡大する`}
+              aria-label={`${card.title}の${label}を拡大する`}
             >
               <Image
                 src={asset(card.src)}
@@ -312,11 +335,11 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
         pressed={pressed}
         hidden={openAt != null}
         /* 4行のときは上下にも動く。3行のときは中身がちょうど収まるので左右だけ */
-        arrows={plan.rows > 3 ? "all" : "x"}
+        arrows={!strip && plan.rows > 3 ? "all" : "x"}
       />
 
       <p className={`${styles.hint} caption`}>
-        ドラッグで動かし、バナーを押すと拡大します
+        ドラッグで動かし、{label}を押すと拡大します
       </p>
 
       <BannerLightbox
@@ -324,6 +347,7 @@ export default function BannerCanvas({ banners, label = "バナー" }) {
         index={openAt}
         onClose={close}
         onChange={setOpenAt}
+        tall={strip}
       />
     </div>
   );

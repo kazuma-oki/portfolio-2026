@@ -81,8 +81,26 @@ function Block({ block }) {
     if (!items) return null;
     return (
       <div className={styles.bleed}>
-        <BannerCanvas banners={items} />
+        <BannerCanvas banners={items} mode={block.mode || "rows"} />
       </div>
+    );
+  }
+
+  // 縦に長い図。開くまでは見出しの行だけにしておく
+  if (block.fold) {
+    return (
+      <details className={styles.fold}>
+        <summary>
+          <span>{block.fold}</span>
+        </summary>
+        <Image
+          src={asset(block.image)}
+          alt={block.alt || ""}
+          width={block.width || 1200}
+          height={block.height || 2400}
+          sizes="(max-width: 1024px) 100vw, 800px"
+        />
+      </details>
     );
   }
 

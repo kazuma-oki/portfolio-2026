@@ -137,6 +137,48 @@
   height: auto;
 }
 
+/* 縦に長い図の折りたたみ。押すと下に伸びる */
+.fold {
+  margin-top: var(--gap-m);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.fold summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-s);
+  padding-block: calc(var(--u) * 1.1);
+  font-size: calc(var(--u) * 0.94);
+  line-height: 1.6;
+  cursor: pointer;
+  list-style: none;
+  transition: opacity 0.2s var(--ease);
+}
+.fold summary::-webkit-details-marker { display: none; }
+.fold summary:hover { opacity: 0.6; }
+/* 開いているかどうかを ＋ / − で示す */
+.fold summary::after {
+  content: "";
+  position: relative;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background:
+    linear-gradient(var(--text), var(--text)) center / 13px 1px no-repeat,
+    linear-gradient(var(--text), var(--text)) center / 1px 13px no-repeat;
+}
+.fold[open] summary::after {
+  background: linear-gradient(var(--text), var(--text)) center / 13px 1px no-repeat;
+}
+.fold :global(img) {
+  width: 100%;
+  height: auto;
+  margin-bottom: calc(var(--u) * 1.1);
+  border-radius: var(--r-card);
+  background: var(--surface);
+}
+
 /* 制作情報。本文の一番下に置く */
 .info {
   margin-top: 16px;

@@ -11,16 +11,21 @@ import styles from "./BannerLightbox.module.css";
 const SWIPE = 50;
 
 /**
- * バナーの拡大表示。
+ * バナーやワイヤーフレームの拡大表示。
  * 背景をグレーで伏せ、その上に1枚だけ大きく出す。
  *
  * 送るのは画像の左半分・右半分を押す（マウスのときは丸が前後どちらかを示す）。
  * 指では横に払っても送れる。閉じるのは ×・画像の外・Esc。
+ *
+ * tall のときは、画面に収めきると幅が数十pxまで縮んで読めなくなるので、
+ * 幅を優先して縦に送りながら見てもらう。そのため「縦に送れる層」と
+ * 「送っても動かない層（×・送り・枚数）」を分けてある。
  */
-export default function BannerLightbox({ banners, index, onClose, onChange }) {
+export default function BannerLightbox({ banners, index, onClose, onChange, tall = false }) {
   const open = index != null;
   const item = open ? banners[index] : null;
-  const panelRef = useRef(null);
+  const rootRef = useRef(null);
+  const scrollRef = useRef(null);
   const frameRef = useRef(null);
   const closeRef = useRef(null);
   const swipeRef = useRef(null);
@@ -42,6 +47,11 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
     }
   }, [open, index, banners]);
 
+  // 送ったら、次の1枚は頭から見せる
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [index]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -61,7 +71,7 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
         step(-1);
       } else if (e.key === "Tab") {
         // 行き先を中だけに閉じこめる（画像に重ねた送りの領域は数に入れない）
-        const items = panelRef.current?.querySelectorAll('button:not([tabindex="-1"])');
+        const items = rootRef.current?.querySelectorAll('button:not([tabindex="-1"])');
         if (!items || !items.length) return;
         const first = items[0];
         const last = items[items.length - 1];
@@ -88,12 +98,13 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
     if (!e.target.closest(`.${styles.figure}`)) onClose();
   };
 
-  /* 指で横に払って送る（縦はそのまま。閉じる操作と取り違えないように） */
+  /* 指で横に払って送る（縦はそのまま。送りや閉じると取り違えないように） */
   const onPointerDown = (e) => {
     setPressed(true);
     if (e.pointerType !== "touch") return;
     swipeRef.current = { x: e.clientX, y: e.clientY };
   };
+
   const onPointerUp = (e) => {
     setPressed(false);
     const s = swipeRef.current;
@@ -134,44 +145,63 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
           role="dialog"
           aria-modal="true"
           aria-label={`${item.title} の拡大表示`}
+          data-tall={tall ? "true" : undefined}
+          ref={rootRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
-          onClick={onBackdrop}
         >
+          {/* ここから下の3つは、縦に送っても動かない */}
+          <p className={`${styles.count} caption`}>
+            {index + 1} / {banners.length}
+          </p>
+
+          <button
+            type="button"
+            className={styles.close}
+            ref={closeRef}
+            onClick={onClose}
+            aria-label="閉じる"
+          >
+            <span aria-hidden="true" />
+          </button>
+
+          {/* 指のときの送りボタン。マウスのときは隠してあるが、
+              キーボードで進んだときだけ現れる */}
+          <button
+            type="button"
+            className={`${styles.arrow} ${styles.prev}`}
+            onClick={() => step(-1)}
+            aria-label="前のバナー"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+          <button
+            type="button"
+            className={`${styles.arrow} ${styles.next}`}
+            onClick={() => step(1)}
+            aria-label="次のバナー"
+          >
+            <span aria-hidden="true">→</span>
+          </button>
+
+          {/* ここが縦に送れる層 */}
           <div
-            className={styles.panel}
-            ref={panelRef}
+            className={styles.scroller}
+            ref={scrollRef}
             onClick={onBackdrop}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
-            onPointerCancel={() => { setPressed(false); swipeRef.current = null; }}
+            onPointerCancel={() => {
+              setPressed(false);
+              swipeRef.current = null;
+            }}
           >
-            <button
-              type="button"
-              className={styles.close}
-              ref={closeRef}
-              onClick={onClose}
-              aria-label="閉じる"
-            >
-              <span aria-hidden="true" />
-            </button>
-
-            {/* 指のときの送りボタン。マウスのときは隠してあるが、
-                キーボードで進んだときだけ現れる */}
-            <button
-              type="button"
-              className={`${styles.arrow} ${styles.prev}`}
-              onClick={() => step(-1)}
-              aria-label="前のバナー"
-            >
-              <span aria-hidden="true">←</span>
-            </button>
-
             <motion.figure
               className={styles.figure}
-              layout={!reduce}
+              /* 丈が大きく変わるものは、枠の大きさを動かさない */
+              layout={!reduce && !tall}
               transition={{ layout: { duration: 0.3, ease: [0.22, 0.61, 0.36, 1] } }}
             >
               <div className={styles.frame} ref={frameRef}>
@@ -186,7 +216,7 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
                   >
                     <Image
                       src={asset(item.large)}
-                      alt={`タイムズカー公式Xのバナー：${item.title}`}
+                      alt={`${item.title} の拡大`}
                       width={item.w * 2.25}
                       height={item.h * 2.25}
                       sizes="(max-width: 1024px) 92vw, 1100px"
@@ -196,7 +226,7 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
                 </AnimatePresence>
 
                 {/* 画像の左半分・右半分。読み上げとタブ移動からは外し、
-                    そちらは上下の矢印ボタンと矢印キーにまかせる */}
+                    そちらは送りボタンと矢印キーにまかせる */}
                 <button
                   type="button"
                   className={`${styles.half} ${styles.halfPrev}`}
@@ -212,23 +242,10 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
                   aria-hidden="true"
                 />
               </div>
-
-              <figcaption className={`${styles.caption} caption`}>
-                {index + 1} / {banners.length}
-              </figcaption>
             </motion.figure>
-
-            <button
-              type="button"
-              className={`${styles.arrow} ${styles.next}`}
-              onClick={() => step(1)}
-              aria-label="次のバナー"
-            >
-              <span aria-hidden="true">→</span>
-            </button>
-
-            <HoverCursor areaRef={frameRef} labelFor={labelFor} pressed={pressed} />
           </div>
+
+          <HoverCursor areaRef={frameRef} labelFor={labelFor} pressed={pressed} />
         </motion.div>
       )}
     </AnimatePresence>

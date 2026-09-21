@@ -64,6 +64,32 @@
   object-fit: cover;
   pointer-events: none;
 }
+
+/* ---- 1列に並べる形（ワイヤーフレーム） ----
+   幅をそろえて上端をそろえ、左から右へ。丈は元の比率のままで、
+   面より長いぶんは上から切って見せる（続きは押して拡大して見る） */
+.canvas[data-mode="strip"] {
+  --cardw: calc(var(--u) * 16);
+  width: calc(var(--cardw) * var(--cw));
+  height: 100%;
+}
+.canvas[data-mode="strip"] .card {
+  left: calc(var(--cardw) * var(--x));
+  top: 0;
+  width: var(--cardw);
+  height: min(calc(var(--cardw) / var(--ratio)), 100%);
+}
+.canvas[data-mode="strip"] .card :global(img) {
+  /* 上端から見せる */
+  object-position: top;
+}
+
+@media (max-width: 1024px) {
+  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 14); }
+}
+@media (max-width: 540px) {
+  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 12); }
+}
 /* 掴んでいる間は持ち上げない（動かしている最中にちらつくため） */
 .view:not([data-dragging="true"]) .card:hover,
 .card:focus-visible {

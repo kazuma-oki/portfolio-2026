@@ -324,5 +324,200 @@
       "ratio": 1.0,
       "title": "学生プラン"
     }
+  ],
+  "lenscare-receipt": [
+    {
+      "id": "lenscare-receipt-01",
+      "src": "images/works/wireframes/lenscare-receipt-01.webp",
+      "large": "images/works/wireframes/lenscare-receipt-01-lg.webp",
+      "w": 375,
+      "h": 968,
+      "ratio": 0.3874,
+      "title": "購入商品選択"
+    },
+    {
+      "id": "lenscare-receipt-02",
+      "src": "images/works/wireframes/lenscare-receipt-02.webp",
+      "large": "images/works/wireframes/lenscare-receipt-02-lg.webp",
+      "w": 375,
+      "h": 1148,
+      "ratio": 0.3267,
+      "title": "レシートアップ画面"
+    },
+    {
+      "id": "lenscare-receipt-03",
+      "src": "images/works/wireframes/lenscare-receipt-03.webp",
+      "large": "images/works/wireframes/lenscare-receipt-03-lg.webp",
+      "w": 375,
+      "h": 1393,
+      "ratio": 0.2692,
+      "title": "レシート確認画面"
+    },
+    {
+      "id": "lenscare-receipt-04",
+      "src": "images/works/wireframes/lenscare-receipt-04.webp",
+      "large": "images/works/wireframes/lenscare-receipt-04-lg.webp",
+      "w": 375,
+      "h": 1602,
+      "ratio": 0.2341,
+      "title": "確認画面"
+    },
+    {
+      "id": "lenscare-receipt-05",
+      "src": "images/works/wireframes/lenscare-receipt-05.webp",
+      "large": "images/works/wireframes/lenscare-receipt-05-lg.webp",
+      "w": 375,
+      "h": 1013,
+      "ratio": 0.3702,
+      "title": "レシート登録完了画面"
+    },
+    {
+      "id": "lenscare-receipt-06",
+      "src": "images/works/wireframes/lenscare-receipt-06.webp",
+      "large": "images/works/wireframes/lenscare-receipt-06-lg.webp",
+      "w": 375,
+      "h": 803,
+      "ratio": 0.467,
+      "title": "エラー画面"
+    }
+  ],
+  "lenscare-entry": [
+    {
+      "id": "lenscare-entry-01",
+      "src": "images/works/wireframes/lenscare-entry-01.webp",
+      "large": "images/works/wireframes/lenscare-entry-01-lg.webp",
+      "w": 375,
+      "h": 1277,
+      "ratio": 0.2937,
+      "title": "応募コース選択(1pt)"
+    },
+    {
+      "id": "lenscare-entry-02",
+      "src": "images/works/wireframes/lenscare-entry-02.webp",
+      "large": "images/works/wireframes/lenscare-entry-02-lg.webp",
+      "w": 375,
+      "h": 1277,
+      "ratio": 0.2937,
+      "title": "応募コース選択(2pt)"
+    },
+    {
+      "id": "lenscare-entry-03",
+      "src": "images/works/wireframes/lenscare-entry-03.webp",
+      "large": "images/works/wireframes/lenscare-entry-03-lg.webp",
+      "w": 375,
+      "h": 1277,
+      "ratio": 0.2937,
+      "title": "応募コース選択(4pt)"
+    },
+    {
+      "id": "lenscare-entry-04",
+      "src": "images/works/wireframes/lenscare-entry-04.webp",
+      "large": "images/works/wireframes/lenscare-entry-04-lg.webp",
+      "w": 375,
+      "h": 1356,
+      "ratio": 0.2765,
+      "title": "応募確認画面"
+    },
+    {
+      "id": "lenscare-entry-05",
+      "src": "images/works/wireframes/lenscare-entry-05.webp",
+      "large": "images/works/wireframes/lenscare-entry-05-lg.webp",
+      "w": 375,
+      "h": 1473,
+      "ratio": 0.2546,
+      "title": "応募完了画面"
+    },
+    {
+      "id": "lenscare-entry-06",
+      "src": "images/works/wireframes/lenscare-entry-06.webp",
+      "large": "images/works/wireframes/lenscare-entry-06-lg.webp",
+      "w": 375,
+      "h": 788,
+      "ratio": 0.4759,
+      "title": "エラー画面"
+    }
+  ],
+  "snack-entry": [
+    {
+      "id": "snack-entry-01",
+      "src": "images/works/wireframes/snack-entry-01.webp",
+      "large": "images/works/wireframes/snack-entry-01-lg.webp",
+      "w": 520,
+      "h": 2455,
+      "ratio": 0.2118,
+      "title": "情報入力画面"
+    },
+    {
+      "id": "snack-entry-02",
+      "src": "images/works/wireframes/snack-entry-02.webp",
+      "large": "images/works/wireframes/snack-entry-02-lg.webp",
+      "w": 520,
+      "h": 1137,
+      "ratio": 0.4573,
+      "title": "レシートアップロード1枚目"
+    },
+    {
+      "id": "snack-entry-03",
+      "src": "images/works/wireframes/snack-entry-03.webp",
+      "large": "images/works/wireframes/snack-entry-03-lg.webp",
+      "w": 520,
+      "h": 1838,
+      "ratio": 0.2829,
+      "title": "レシートアップロード1枚目確認"
+    },
+    {
+      "id": "snack-entry-04",
+      "src": "images/works/wireframes/snack-entry-04.webp",
+      "large": "images/works/wireframes/snack-entry-04-lg.webp",
+      "w": 520,
+      "h": 1838,
+      "ratio": 0.2829,
+      "title": "レシートアップロード2枚目確認"
+    },
+    {
+      "id": "snack-entry-05",
+      "src": "images/works/wireframes/snack-entry-05.webp",
+      "large": "images/works/wireframes/snack-entry-05-lg.webp",
+      "w": 520,
+      "h": 1722,
+      "ratio": 0.302,
+      "title": "レシートアップロード3枚目確認"
+    },
+    {
+      "id": "snack-entry-06",
+      "src": "images/works/wireframes/snack-entry-06.webp",
+      "large": "images/works/wireframes/snack-entry-06-lg.webp",
+      "w": 520,
+      "h": 3271,
+      "ratio": 0.159,
+      "title": "確認画面(レシート1枚ver)"
+    },
+    {
+      "id": "snack-entry-07",
+      "src": "images/works/wireframes/snack-entry-07.webp",
+      "large": "images/works/wireframes/snack-entry-07-lg.webp",
+      "w": 520,
+      "h": 3993,
+      "ratio": 0.1302,
+      "title": "確認画面(レシート2枚ver)"
+    },
+    {
+      "id": "snack-entry-08",
+      "src": "images/works/wireframes/snack-entry-08.webp",
+      "large": "images/works/wireframes/snack-entry-08-lg.webp",
+      "w": 520,
+      "h": 4713,
+      "ratio": 0.1103,
+      "title": "確認画面(レシート3枚ver)"
+    },
+    {
+      "id": "snack-entry-09",
+      "src": "images/works/wireframes/snack-entry-09.webp",
+      "large": "images/works/wireframes/snack-entry-09-lg.webp",
+      "w": 520,
+      "h": 1125,
+      "ratio": 0.4622,
+      "title": "応募完了"
+    }
   ]
 }
