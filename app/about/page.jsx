@@ -54,7 +54,7 @@ export default function AboutPage() {
           <ol className={styles.career}>
             {about.career.map((item, i) => (
               <FadeIn as="li" key={item.title} className={styles.careerItem} delay={i * 70}>
-                <p className={`${styles.careerPeriod} caption en`}>{item.period}</p>
+                <p className={`${styles.careerPeriod} en`}>{item.period}</p>
                 <div className={styles.careerBody}>
                   <h3 className={styles.careerTitle}>{item.title}</h3>
                   {item.text && (

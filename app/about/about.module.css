@@ -57,7 +57,9 @@
 /* 見出し2.2u > できるの題1.375u > 経歴の題1.25u > 本文0.94u。
    すべて --u の倍数なので、画面幅が変わっても大小関係が動かない */
 .sectionHead {
-  margin-bottom: calc(var(--u) * 4.5);
+  /* 0.15em は見出し自身の行送りの下の余り。引いておくと、
+     指定した値がそのまま「文字から文字まで」の間隔になる */
+  margin-bottom: calc(var(--u) * 5.6 - 0.15em);
   font-size: calc(var(--u) * 2.2);
   line-height: 1.3;
   font-weight: 500;
@@ -69,30 +71,43 @@
 .career {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 2.8);
+  gap: calc(var(--u) * 3.2);
 }
 
+/* 年月・題・説明で一つの塊。塊の中は詰め、塊どうしは離す。
+   年月の列は文字の幅ぶんだけにする（決め打ちの幅だと、
+   短い年月のあとに大きな空きができて題から離れて見える） */
 .careerItem {
   display: grid;
-  grid-template-columns: calc(var(--u) * 8.75) 1fr;
-  gap: calc(var(--u) * 1.6);
+  grid-template-columns: auto 1fr;
+  gap: var(--u);
 }
 
-/* 年月と題は、どちらも行送りの余りを打ち消して
-   「文字の上端」が同じ高さに来るようにする */
+/* 年月は、題の1行目に対して上下中央に置く。
+   -0.3em で自分の行送りの余りを打ち消し、
+   題(1.25u)と年月(0.875u)の文字の大きさの差の半分だけ下げる */
 .careerPeriod {
-  margin-top: -0.3em;   /* 行送り1.6em の半分 */
+  margin-top: calc(var(--u) * 0.1875 - 0.3em);
+  font-size: calc(var(--u) * 0.875);
+  line-height: 1.6;
   color: var(--text);
   letter-spacing: 0.1em;
 }
 
 .careerTitle {
-  margin-top: -0.25em;  /* 行送り1.5em の半分 */
+  margin-top: -0.25em;     /* 上の余りを打ち消す */
+  margin-bottom: -0.25em;  /* 下の余りも打ち消す */
   font-size: calc(var(--u) * 1.25);
   line-height: 1.5;
   font-weight: 500;
 }
-.careerText { margin-top: 8px; }
+
+/* 題との間隔を 0.5u に、下の余りも打ち消して、
+   項目どうしの間隔（2.8u）が見た目どおりになるようにする */
+.careerText {
+  margin-top: calc(var(--u) * 0.5 - 0.43em);
+  margin-bottom: -0.43em;
+}
 
 /* 直前の「経歴」がすでに下の余白を持っているので、ここでは足さない */
 .skillSection {
@@ -145,8 +160,8 @@
 
 @media (max-width: 1024px) {
   .careerItem {
-    grid-template-columns: calc(var(--u) * 6.5) 1fr;
-    gap: calc(var(--u) * 1.2);
+    grid-template-columns: auto 1fr;
+    gap: var(--u);
   }
   .skills {
     grid-template-columns: 1fr;
@@ -156,9 +171,11 @@
 
 @media (max-width: 540px) {
   /* 年月と内容を縦に積む。縦でも 項目どうし > 年月↔題名 を保つ */
-  /* 縦に積んでも 経歴どうし(2.8u) > 年月↔題(0.6u) を保つ */
+  /* 縦に積んでも 経歴どうし(2.8u) > 年月↔題(0.6u) を保つ。
+     横に並ばないので、中央ぞろえのぶんの下げは戻す */
   .careerItem {
     grid-template-columns: 1fr;
     gap: calc(var(--u) * 0.6);
   }
+  .careerPeriod { margin-top: -0.3em; }
 }
