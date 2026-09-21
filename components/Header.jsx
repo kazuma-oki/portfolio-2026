@@ -5,14 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import site from "@/data/site.json";
 import Drawer from "./Drawer";
-import HashLink from "./HashLink";
 import styles from "./Header.module.css";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const isHome = pathname === "/";
 
   // スクロール80pxを超えたら背景をぼかす（設計図の「ヘッダーのスクロール固定」）
   useEffect(() => {
@@ -46,19 +44,7 @@ export default function Header() {
           <nav className={styles.nav} aria-label="メインナビゲーション">
             <ul className={styles.navList}>
               {site.nav.filter((item) => item.href !== "/contact").map((item) => {
-                // TOPにいるときだけ、Works は一覧ページではなく
-                // 同じページの実績セクションへなめらかに移動する
                 const label = <span className={styles.navLabel}>{item.label}</span>;
-
-                if (isHome && item.href === "/works") {
-                  return (
-                    <li key={item.href}>
-                      <HashLink hash="works" className={styles.navLink}>
-                        {label}
-                      </HashLink>
-                    </li>
-                  );
-                }
                 return (
                   <li key={item.href}>
                     <Link

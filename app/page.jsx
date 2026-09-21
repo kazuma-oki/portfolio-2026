@@ -10,7 +10,7 @@ import Button from "@/components/Button";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const { about, aboutSection } = site;
+  const { about, aboutSection, serviceSection } = site;
 
   return (
     <>
@@ -68,22 +68,28 @@ export default function Home() {
             </FadeIn>
           </div>
 
-          <ul className={styles.skills}>
-            {about.skills.map((skill, i) => (
-              <FadeIn as="li" key={skill.title} className={styles.skill} delay={i * 90}>
-                <p className={`${styles.skillNo} caption en`}>0{i + 1}</p>
-                <h3 className={styles.skillTitle}>{skill.title}</h3>
-                <p className={`${styles.skillText} body-s subtext`}>{skill.text}</p>
-                <p className={`${styles.skillTools} caption`}>{skill.tools}</p>
-              </FadeIn>
-            ))}
-          </ul>
-
           <FadeIn className={styles.aboutAction} delay={120}>
             <Button href="/about" variant="ghost">
               About me
             </Button>
           </FadeIn>
+        </div>
+      </section>
+
+      {/* できること。Aboutとは別のまとまりなのでセクションを分けている */}
+      <section className="section">
+        <div className="container">
+          <SectionTitle eyebrow={serviceSection.eyebrow} title={serviceSection.title} />
+
+          <ul className={styles.skills}>
+            {about.skills.map((skill, i) => (
+              <FadeIn as="li" key={skill.title} className={styles.skill} delay={i * 90}>
+                <h3 className={styles.skillTitle}>{skill.title}</h3>
+                <p className={`${styles.skillText} subtext`}>{skill.text}</p>
+                <p className={`${styles.skillTools} caption`}>{skill.tools}</p>
+              </FadeIn>
+            ))}
+          </ul>
         </div>
       </section>
 

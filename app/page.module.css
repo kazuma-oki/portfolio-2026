@@ -17,11 +17,19 @@
 
 /* ---------- About プレビュー ---------- */
 /* 左に写真と名前、右に短い紹介文 */
+/* 写真と紹介文のまとまり。
+   間隔は「リード文↔このまとまり（96px）> まとまりの中の 写真↔本文（56px）」。
+   幅は塊全体に上限をかけて中央に置く。本文だけを固定pxで狭めると、
+   画面が狭いときに左右が余白の線とずれてしまうため */
 .profile {
-  margin-top: 96px;
+  /* 寸法はすべて基準単位 --u の倍数。文字も --u 連動なので、
+     画面幅が変わっても写真と本文の高さの釣り合いが崩れない */
+  width: min(100%, calc(var(--u) * 53.5));
+  margin-inline: auto;
+  margin-top: calc(var(--u) * 6.375);  /* リード文の余りを足して 見た目96px */
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: var(--gap-l);
+  grid-template-columns: calc(var(--u) * 17.5) 1fr;
+  gap: calc(var(--u) * 3.5);
   align-items: start;
 }
 
@@ -32,21 +40,20 @@
 }
 
 .profileName {
-  margin-top: 16px;
-  font-size: 17px;
-  line-height: 28px;
+  margin-top: var(--u);
+  font-size: calc(var(--u) * 1.0625);
+  line-height: 1.75;
   font-weight: 500;
 }
 
 .profileText {
-  max-width: 34em;
   font-size: calc(var(--u) * 0.94);
   line-height: 2;
 }
 .profileText p + p { margin-top: 1.5em; }
 
 .skills {
-  margin-top: var(--section);
+  margin-top: 96px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-m);
@@ -57,16 +64,21 @@
   border-top: 1px solid var(--line);
 }
 
-.skillNo { color: var(--text); }
-
+/* タイトルは要素の中央に置き、本文よりはっきり大きくする。
+   大きさは --u の倍数にして、画面幅を変えても本文との比が動かないようにする
+   （タイトル1.375u ÷ 本文0.94u ＝ 1.46倍） */
 .skillTitle {
-  margin-top: 12px;
-  font-size: 19px;
-  line-height: 30px;
+  text-align: center;
+  font-size: calc(var(--u) * 1.375);
+  line-height: 1.5;
   font-weight: 500;
 }
 
-.skillText { margin-top: 12px; }
+.skillText {
+  margin-top: 20px;
+  font-size: calc(var(--u) * 0.94);
+  line-height: 1.86;
+}
 
 .skillTools {
   margin-top: 16px;
@@ -104,17 +116,25 @@
 
 @media (max-width: 1024px) {
   .worksInner { margin-top: 56px; }
+  /* 1列になるので、青＝リード文↔まとまり（56px）、
+     ピンク＝写真の組↔本文（32px）で大小をつける */
+  /* 1列になる。青＝リード文↔まとまり、ピンク＝写真の組↔本文 で大小をつける */
   .profile {
-    margin-top: 56px;
+    margin-top: calc(var(--u) * 3.2);
     grid-template-columns: 1fr;
-    gap: var(--gap-m);
+    gap: calc(var(--u) * 1.33);
   }
-  .profileVisual { max-width: 240px; }
+  /* 写真と名前は中央に置く（まわりの見出しが中央揃えなのに合わせる） */
+  .profileVisual {
+    max-width: calc(var(--u) * 17.5);
+    margin-inline: auto;
+    text-align: center;
+  }
   .profileText { font-size: 15px; line-height: 1.95; }
   .skills {
     margin-top: 56px;
     grid-template-columns: 1fr;
-    gap: var(--gap-s);
+    gap: var(--gap-l);
   }
   .cta {
     min-height: 0;
@@ -128,11 +148,8 @@
 
 @media (max-width: 540px) {
   .worksInner { margin-top: 40px; }
-  .profile { margin-top: 40px; }
-  .profileVisual { max-width: 200px; }
-  .profileName { margin-top: 12px; font-size: 16px; }
+  .profileName { margin-top: calc(var(--u) * 0.85); }
   .profileText { font-size: 14px; }
   .skills { margin-top: 40px; }
-  .skillTitle { font-size: 17px; line-height: 28px; }
   .ctaInner { width: 100%; }
 }

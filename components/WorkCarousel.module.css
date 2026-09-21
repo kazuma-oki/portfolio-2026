@@ -137,7 +137,10 @@
   height: 72px;
   margin: -36px 0 0 -36px;
   border-radius: var(--r-pill);
-  background: var(--accent-dark);
+  /* 少し透かしている。左右のボタンに重なったとき、
+     丸の下にボタンがあることが分かるようにするため
+     （ボタンは .stage の中にあり、丸より前には出せない） */
+  background: rgba(17, 17, 17, 0.78);
   color: var(--bg);
   font-size: 11px;
   line-height: 1.5;
@@ -189,7 +192,8 @@
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--line);
+  /* 丸に重なっても輪郭が分かるよう、枠線は濃いめ */
+  border: 1.5px solid var(--subtext);
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.92);
   -webkit-backdrop-filter: blur(6px);

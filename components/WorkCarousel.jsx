@@ -11,10 +11,6 @@ const GROW_MS = 500;
 const DRAG_SLOP = 6;
 // これより速く払ったら、最寄りではなく1枚先へ送る（px/ミリ秒）
 const FLICK_SPEED = 0.4;
-// ホイールがこれだけたまったら1枚送る
-const WHEEL_STEP = 40;
-// 1枚送ったあと、つぎを受け付けるまで待つ時間
-const WHEEL_WAIT = 300;
 // バーのツマミの最小幅。これより細いと掴めない
 const THUMB_MIN = 28;
 // 大きさを直に書き込む範囲（中央から前後何枚まで）
@@ -177,22 +173,6 @@ export default function WorkCarousel({ works }) {
     const near = Math.round(raw);
     const fixed = Math.abs(raw - near) < 0.01 ? near : raw;
     return ((fixed % n) + n) % n;
-  };
-
-  /** 画面に主に出ているカードの枚数（CSSの区切りとそろえる） */
-  const perView = () => {
-    if (typeof window === "undefined") return 3;
-    if (window.matchMedia("(max-width: 1024px)").matches) return 1;
-    return 3;
-  };
-
-  /** 主表示のカードが占める横幅の範囲に、その x があるか */
-  const inMainArea = (t, clientX) => {
-    const m = metrics(t);
-    if (!m) return false;
-    const per = perView();
-    const half = (per * m.w + (per - 1) * m.gap) / 2;
-    return Math.abs(clientX - window.innerWidth / 2) <= half;
   };
 
   // scrollBy は Safari でスナップ位置がずれることがあるため、
@@ -469,37 +449,6 @@ export default function WorkCarousel({ works }) {
     };
   }, [goToIndex, nearest, loop]);
 
-  /* ホイールで送る。効くのは主表示のカードの上だけ。
-     全域で効かせると、カーソルがカルーセルの上にある間ページが進まなくなる
-     （ループするので「端まで行ったら解放」も使えない） */
-  useEffect(() => {
-    const t = trackRef.current;
-    if (!t || !loop) return undefined;
-
-    let acc = 0;
-    let until = 0;
-
-    const onWheel = (e) => {
-      if (!inMainArea(t, e.clientX)) return; // ページの縦スクロールにまかせる
-      e.preventDefault();
-
-      const now = e.timeStamp;
-      if (now < until) return;
-
-      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      acc += d;
-      if (Math.abs(acc) < WHEEL_STEP) return;
-
-      const dir = acc > 0 ? 1 : -1;
-      acc = 0;
-      until = now + WHEEL_WAIT;
-      goToIndex(indexRef.current + dir, true);
-    };
-
-    t.addEventListener("wheel", onWheel, { passive: false });
-    return () => t.removeEventListener("wheel", onWheel);
-  }, [goToIndex, loop]);
-
   /* バーを掴んで動かす。マウスも指も同じ処理 */
   useEffect(() => {
     const bar = barRef.current;
@@ -606,18 +555,10 @@ export default function WorkCarousel({ works }) {
       t.setAttribute("data-cursor", "on");
 
       /* 中央のカードは「開く」対象なので View。
-         それ以外は動かす場所なので Drag。
-         ホイールが効くのは主表示のカードの上だけなので、
-         そこだけ「or scroll」を添える（効かない場所で書くと嘘になる） */
+         それ以外は動かす場所なので Drag（送れるのはドラッグと左右ボタンだけ） */
       const slide = e.target.closest("li");
       const onCenter = slide && slide.dataset.center === "true";
-      if (!t.hasAttribute("data-dragging") && onCenter) {
-        setCursorLabel(["View"]);
-      } else if (inMainArea(t, e.clientX)) {
-        setCursorLabel(["Drag", "or scroll"]);
-      } else {
-        setCursorLabel(["Drag"]);
-      }
+      setCursorLabel(!t.hasAttribute("data-dragging") && onCenter ? ["View"] : ["Drag"]);
     };
 
     const onLeave = () => {
