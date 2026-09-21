@@ -1,0 +1,67 @@
+/* 大きさを変える ＋ と −。面の右下と、拡大表示の右下に置く */
+
+.zoom {
+  display: flex;
+  gap: 8px;
+}
+
+.zoom button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.zoom button:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+/* 明るいところ（面の上）。背景を敷いて読めるようにする */
+.zoom[data-variant="solid"] button {
+  background: rgba(17, 17, 17, 0.62);
+}
+.zoom[data-variant="solid"] button:not(:disabled):hover {
+  background: rgba(17, 17, 17, 0.82);
+}
+
+/* 暗いところ（拡大表示）。×や送りと同じ細い枠にそろえる */
+.zoom[data-variant="outline"] button {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+}
+.zoom[data-variant="outline"] button:not(:disabled):hover,
+.zoom[data-variant="outline"] button:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #fff;
+}
+
+/* ＋ と − は線を組み合わせて作る */
+.minus,
+.plus {
+  position: relative;
+  display: block;
+  width: 13px;
+  height: 1px;
+  background: #fff;
+}
+.plus::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 6px;
+  width: 1px;
+  height: 13px;
+  background: #fff;
+}
+
+@media (max-width: 540px) {
+  .zoom button { width: 36px; height: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zoom button { transition: none; }
+}

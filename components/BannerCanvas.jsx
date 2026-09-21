@@ -5,6 +5,7 @@ import Image from "next/image";
 import { asset } from "@/lib/asset";
 import BannerLightbox from "./BannerLightbox";
 import HoverCursor from "./HoverCursor";
+import ZoomButtons from "./ZoomButtons";
 import styles from "./BannerCanvas.module.css";
 
 // バナーどうしの間。カードの高さを1としたときの比
@@ -17,6 +18,11 @@ const ROW_OFFSETS = [-0.3, 0.22, -0.14, 0.34];
 const FRICTION = 0.92;
 // これより遅くなったら止める（px/コマ）
 const STOP_SPEED = 0.4;
+// 大きさの段階。1がふつう
+const SCALES = [0.6, 0.8, 1, 1.3, 1.7, 2.2];
+/* 中身のまわりに置く余白。カードが面のふちに接していると、
+   カーソルを当てて少し持ち上がったときに上が切れてしまう */
+const PAD = 0.06;
 
 /** 画面の広さで行数を決める。狭いほど1枚が小さくなりすぎないよう行を減らす */
 function rowsFor(width) {
@@ -34,7 +40,15 @@ function layoutStrip(items) {
     x += 1 + GAP;
     return card;
   });
-  return { cards, width: x - GAP, height: 1, rows: 1, strip: true };
+  // 丈は切らずに元の比率のまま。いちばん長いものが中身の高さになる
+  const height = Math.max(...items.map((b) => 1 / b.ratio));
+  return {
+    cards: cards.map((c) => ({ ...c, x: c.x + PAD, y: PAD })),
+    width: x - GAP + PAD * 2,
+    height: height + PAD * 2,
+    rows: 1,
+    strip: true,
+  };
 }
 
 /**
@@ -62,9 +76,13 @@ function layout(items, rows) {
   const left = Math.min(...placed.map((p) => p.x));
   const right = Math.max(...placed.map((p) => p.x + p.ratio));
   return {
-    cards: placed.map((p) => ({ ...p, x: p.x - left, y: p.row * (1 + GAP) })),
-    width: right - left,
-    height: rows + (rows - 1) * GAP,
+    cards: placed.map((p) => ({
+      ...p,
+      x: p.x - left + PAD,
+      y: p.row * (1 + GAP) + PAD,
+    })),
+    width: right - left + PAD * 2,
+    height: rows + (rows - 1) * GAP + PAD * 2,
     rows,
   };
 }
@@ -84,6 +102,13 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
   const canvasRef = useRef(null);
 
   const [rows, setRows] = useState(4);
+  const [scale, setScale] = useState(1);
+  // 指のとき用。面ごと下に伸ばして、ページのスクロールで見てもらう
+  const [touch, setTouch] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [contentH, setContentH] = useState(0);
+  // 縦にも動かせるかどうか（向きの印に使う）
+  const [canY, setCanY] = useState(false);
   // 掴んでいる間は追従する丸を少し縮める
   const [pressed, setPressed] = useState(false);
   const [openAt, setOpenAt] = useState(null);
@@ -123,6 +148,11 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
     }
   }, [limits]);
 
+  // 指の端末では、縦に動かす代わりに面ごと伸ばせるようにする
+  useEffect(() => {
+    setTouch(window.matchMedia("(hover: none)").matches);
+  }, []);
+
   /* 画面の広さに合わせて行数を決め直し、真ん中から見せる */
   useEffect(() => {
     const view = viewRef.current;
@@ -139,6 +169,16 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
     ro.observe(view);
     return () => ro.disconnect();
   }, [apply]);
+
+  /* 大きさを変えたあとは、はみ出さない位置に寄せて、
+     いま縦に動かせるかどうかを測り直す（向きの印に使う） */
+  useEffect(() => {
+    apply();
+    const canvas = canvasRef.current;
+    if (canvas) setContentH(canvas.offsetHeight);
+    const { minY } = limits();
+    setCanY(minY < -1);
+  }, [scale, expanded, plan, apply, limits]);
 
   /* 行数が変わると中身の大きさも変わるので置き直す。
      縦は真ん中に置くと、ちょうど1行ぶんが隠れて「上にも続きがある」ことが
@@ -178,6 +218,9 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
 
     const onDown = (e) => {
       if (e.button != null && e.button > 0) return;
+      /* ＋−は面の中に置いてあるので、ここで掴んでしまうと
+         ポインタを面が預かってしまい、ボタンまで押下が届かない */
+      if (e.target.closest(`.${styles.zoom}`)) return;
       cancelAnimationFrame(frameRef.current);
       frameRef.current = 0;
       velRef.current = { x: 0, y: 0 };
@@ -265,6 +308,32 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
     apply();
   };
 
+  /* 大きさを変える。変える前後で、面の真ん中に見えていた点を合わせる */
+  const changeScale = useCallback(
+    (next) => {
+      if (!next) return;
+      const view = viewRef.current;
+      if (view) {
+        const r = next / scale;
+        const p = posRef.current;
+        const cx = -p.x + view.clientWidth / 2;
+        const cy = -p.y + view.clientHeight / 2;
+        p.x = view.clientWidth / 2 - cx * r;
+        p.y = view.clientHeight / 2 - cy * r;
+      }
+      setScale(next);
+    },
+    [scale]
+  );
+
+  /* 面ごと下に伸ばす／戻す。伸ばしたら頭から見せる */
+  const toggleExpand = useCallback(() => {
+    setExpanded((v) => {
+      if (!v) posRef.current.y = 0;
+      return !v;
+    });
+  }, []);
+
   const open = useCallback((i, el) => {
     openerRef.current = el;
     setOpenAt(i);
@@ -285,6 +354,8 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         role="group"
         aria-label={`${label}（掴んで動かせます）`}
         onKeyDown={onKeyDown}
+        data-expanded={expanded ? "true" : undefined}
+        style={expanded && contentH ? { height: contentH } : undefined}
       >
         <div
           className={styles.canvas}
@@ -294,6 +365,7 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
             "--rows": plan.rows,
             "--cw": plan.width,
             "--ch": plan.height,
+            "--scale": scale,
           }}
         >
           {plan.cards.map((card, i) => (
@@ -326,6 +398,10 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         {/* 指のときは丸が出ないので、左右に動かせることをここで示す */}
         <span className={styles.edge} data-side="left" aria-hidden="true" />
         <span className={styles.edge} data-side="right" aria-hidden="true" />
+
+        <div className={styles.zoom}>
+          <ZoomButtons value={scale} steps={SCALES} onChange={changeScale} label={label} />
+        </div>
       </div>
 
       {/* 拡大している間は、下の面の丸は出さない */}
@@ -335,11 +411,18 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         pressed={pressed}
         hidden={openAt != null}
         /* 4行のときは上下にも動く。3行のときは中身がちょうど収まるので左右だけ */
-        arrows={!strip && plan.rows > 3 ? "all" : "x"}
+        arrows={canY ? "all" : "x"}
       />
 
+      {/* 指のときは縦に動かせないので、面ごと下に伸ばして見てもらう */}
+      {strip && touch && (
+        <button type="button" className={styles.expand} onClick={toggleExpand}>
+          {expanded ? "もとに戻す" : "下に伸ばして見る"}
+        </button>
+      )}
+
       <p className={`${styles.hint} caption`}>
-        ドラッグで動かし、{label}を押すと拡大します
+        {touch ? "スライド" : "ドラッグ"}で動かし、{label}を押すと拡大します
       </p>
 
       <BannerLightbox
@@ -347,7 +430,6 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         index={openAt}
         onClose={close}
         onChange={setOpenAt}
-        tall={strip}
       />
     </div>
   );

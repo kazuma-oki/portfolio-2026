@@ -1,27 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { asset } from "@/lib/asset";
 import HoverCursor from "./HoverCursor";
+import ZoomButtons from "./ZoomButtons";
 import styles from "./BannerLightbox.module.css";
 
 // 指で払って送るときの、これだけ横に動いたら送るという目安
 const SWIPE = 50;
+// 大きさの段階の数。1（画面に収まる大きさ）から、元の解像度までを等比で刻む
+const STEPS = 4;
 
 /**
  * バナーやワイヤーフレームの拡大表示。
  * 背景をグレーで伏せ、その上に1枚だけ大きく出す。
  *
+ * 開いたときは画像の全体が画面に収まる。読みたいときは右下の＋で大きくし、
+ * そのぶん上下左右に動かして見る。
  * 送るのは画像の左半分・右半分を押す（マウスのときは丸が前後どちらかを示す）。
  * 指では横に払っても送れる。閉じるのは ×・画像の外・Esc。
- *
- * tall のときは、画面に収めきると幅が数十pxまで縮んで読めなくなるので、
- * 幅を優先して縦に送りながら見てもらう。そのため「縦に送れる層」と
- * 「送っても動かない層（×・送り・枚数）」を分けてある。
  */
-export default function BannerLightbox({ banners, index, onClose, onChange, tall = false }) {
+export default function BannerLightbox({ banners, index, onClose, onChange }) {
   const open = index != null;
   const item = open ? banners[index] : null;
   const rootRef = useRef(null);
@@ -32,11 +33,47 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
   const reduce = useReducedMotion();
   // 丸を「押した」状態にするため
   const [pressed, setPressed] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [vp, setVp] = useState({ w: 0, h: 0 });
 
   const step = useCallback(
     (d) => onChange((index + d + banners.length) % banners.length),
     [index, banners.length, onChange]
   );
+
+  /* 画面の大きさ。ここから「ちょうど収まる大きさ」を出す */
+  useEffect(() => {
+    const measure = () => setVp({ w: window.innerWidth, h: window.innerHeight });
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  /* 画面に収まる大きさ。丈の長いものは高さで決まる */
+  const fit = useMemo(() => {
+    if (!item || !vp.w) return null;
+    const maxW = Math.min(vp.w * 0.92, 1100);
+    const maxH = vp.h * 0.86;
+    const ratio = item.w / item.h;
+    let w = maxW;
+    let h = w / ratio;
+    if (h > maxH) {
+      h = maxH;
+      w = h * ratio;
+    }
+    return { w: Math.round(w), h: Math.round(h) };
+  }, [item, vp]);
+
+  /* 大きさの段階。押しきると元の画像の細かさで見られるところまで。
+     丈の長いものは収めると小さくなるぶん、段階が大きく取られる */
+  const scales = useMemo(() => {
+    if (!fit || !item) return [1];
+    const max = Math.max(1.2, Math.min(8, (item.w * 2.25) / fit.w));
+    return Array.from(
+      { length: STEPS + 1 },
+      (_, i) => Math.round(Math.pow(max, i / STEPS) * 100) / 100
+    );
+  }, [fit, item]);
 
   /* 前後の1枚を先に読んでおく。送った瞬間に読みに行くと引っかかって見える */
   useEffect(() => {
@@ -47,9 +84,13 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
     }
   }, [open, index, banners]);
 
-  // 送ったら、次の1枚は頭から見せる
+  // 送ったら、次の1枚はまた全体が見える大きさで頭から
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    setScale(1);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+      scrollRef.current.scrollLeft = 0;
+    }
   }, [index]);
 
   useEffect(() => {
@@ -98,10 +139,10 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
     if (!e.target.closest(`.${styles.figure}`)) onClose();
   };
 
-  /* 指で横に払って送る（縦はそのまま。送りや閉じると取り違えないように） */
+  /* 指で横に払って送る（大きくしている間は、動かして見るほうを優先する） */
   const onPointerDown = (e) => {
     setPressed(true);
-    if (e.pointerType !== "touch") return;
+    if (e.pointerType !== "touch" || scale > 1) return;
     swipeRef.current = { x: e.clientX, y: e.clientY };
   };
 
@@ -145,14 +186,14 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
           role="dialog"
           aria-modal="true"
           aria-label={`${item.title} の拡大表示`}
-          data-tall={tall ? "true" : undefined}
+          data-zoomed={scale > 1 ? "true" : undefined}
           ref={rootRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
         >
-          {/* ここから下の3つは、縦に送っても動かない */}
+          {/* ここから下は、動かしても同じところに出ている */}
           <p className={`${styles.count} caption`}>
             {index + 1} / {banners.length}
           </p>
@@ -186,7 +227,11 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
             <span aria-hidden="true">→</span>
           </button>
 
-          {/* ここが縦に送れる層 */}
+          <div className={styles.zoom}>
+            <ZoomButtons value={scale} steps={scales} onChange={setScale} variant="outline" />
+          </div>
+
+          {/* ここが動かせる層。大きくしたぶんだけ上下左右に動く */}
           <div
             className={styles.scroller}
             ref={scrollRef}
@@ -200,8 +245,8 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
           >
             <motion.figure
               className={styles.figure}
-              /* 丈が大きく変わるものは、枠の大きさを動かさない */
-              layout={!reduce && !tall}
+              /* 大きさを変えている間は、枠の動きを重ねない */
+              layout={!reduce && scale === 1}
               transition={{ layout: { duration: 0.3, ease: [0.22, 0.61, 0.36, 1] } }}
             >
               <div className={styles.frame} ref={frameRef}>
@@ -220,6 +265,7 @@ export default function BannerLightbox({ banners, index, onClose, onChange, tall
                       width={item.w * 2.25}
                       height={item.h * 2.25}
                       sizes="(max-width: 1024px) 92vw, 1100px"
+                      style={fit ? { width: fit.w * scale, height: fit.h * scale } : undefined}
                       priority
                     />
                   </motion.span>

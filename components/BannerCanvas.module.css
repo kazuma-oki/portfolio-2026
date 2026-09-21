@@ -38,7 +38,8 @@
   /* カード1枚の高さ。これを1として、位置も幅もすべてこの倍数で置く。
      画面の広さが変わっても倍数は変わらないので、並びは相似のまま */
   --zoom: 1.95;
-  --h: calc(var(--u) * 36 * var(--zoom) / var(--ch));
+  --scale: 1;
+  --h: calc(var(--u) * 36 * var(--zoom) * var(--scale) / var(--ch));
   width: calc(var(--h) * var(--cw));
   height: calc(var(--h) * var(--ch));
   will-change: transform;
@@ -69,31 +70,63 @@
    幅をそろえて上端をそろえ、左から右へ。丈は元の比率のままで、
    面より長いぶんは上から切って見せる（続きは押して拡大して見る） */
 .canvas[data-mode="strip"] {
-  --cardw: calc(var(--u) * 16);
+  --cardw: calc(var(--u) * 16 * var(--scale));
   width: calc(var(--cardw) * var(--cw));
-  height: 100%;
+  height: calc(var(--cardw) * var(--ch));
 }
 .canvas[data-mode="strip"] .card {
   left: calc(var(--cardw) * var(--x));
-  top: 0;
+  top: calc(var(--cardw) * var(--y));
   width: var(--cardw);
-  height: min(calc(var(--cardw) / var(--ratio)), 100%);
+  /* 丈は元の比率のまま。はみ出したぶんは掴んで動かして見る */
+  height: calc(var(--cardw) / var(--ratio));
 }
 .canvas[data-mode="strip"] .card :global(img) {
   /* 上端から見せる */
   object-position: top;
 }
+/* 丈が長いので、少し持ち上げると上下が大きくはみ出してしまう。
+   ここでは輪郭で「押せる」ことを示す */
+.canvas[data-mode="strip"] .card:hover,
+.canvas[data-mode="strip"] .card:focus-visible {
+  transform: none;
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 2px;
+}
 
 @media (max-width: 1024px) {
-  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 14); }
+  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 14 * var(--scale)); }
 }
 @media (max-width: 540px) {
-  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 12); }
+  .canvas[data-mode="strip"] { --cardw: calc(var(--u) * 12 * var(--scale)); }
 }
-/* 掴んでいる間は持ち上げない（動かしている最中にちらつくため） */
-.view:not([data-dragging="true"]) .card:hover,
-.card:focus-visible {
+/* 掴んでいる間は持ち上げない（動かしている最中にちらつくため）。
+   1列に並べるほうは丈が長く、持ち上げると上下がはみ出すので輪郭で示す */
+.view:not([data-dragging="true"]) .canvas:not([data-mode="strip"]) .card:hover,
+.canvas:not([data-mode="strip"]) .card:focus-visible {
   transform: scale(1.03);
+}
+
+/* 大きさを変える＋−。面の右下に重ねる */
+.zoom {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 4;
+}
+
+/* 面ごと下に伸ばすボタン。指の端末だけに出す */
+.expand {
+  display: block;
+  width: 100%;
+  margin-top: var(--gap-s);
+  padding-block: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  font-size: calc(var(--u) * 0.875);
+  letter-spacing: 0.04em;
+  cursor: pointer;
 }
 
 /* 指のときだけ出す、左右に動かせることを示す印 */
@@ -147,13 +180,13 @@
   .view { height: calc(var(--u) * 33); }
   .canvas {
     --zoom: 1;
-    --h: calc(var(--u) * 33 * var(--zoom) / var(--ch));
+    --h: calc(var(--u) * 33 * var(--zoom) * var(--scale) / var(--ch));
   }
 }
 
 @media (max-width: 540px) {
   .view { height: calc(var(--u) * 30); }
-  .canvas { --h: calc(var(--u) * 30 * var(--zoom) / var(--ch)); }
+  .canvas { --h: calc(var(--u) * 30 * var(--zoom) * var(--scale) / var(--ch)); }
   .hint { text-align: left; }
 }
 
