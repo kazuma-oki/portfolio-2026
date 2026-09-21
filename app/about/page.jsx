@@ -50,7 +50,7 @@ export default function AboutPage() {
       {/* 経歴 */}
       <section className={`section ${styles.careerSection}`}>
         <div className="container">
-          <h2 className={`${styles.sectionHead} h3`}>経歴</h2>
+          <h2 className={styles.sectionHead}>経歴</h2>
           <ol className={styles.career}>
             {about.career.map((item, i) => (
               <FadeIn as="li" key={item.title} className={styles.careerItem} delay={i * 70}>
@@ -69,7 +69,7 @@ export default function AboutPage() {
 
       <section className={`section ${styles.skillSection}`}>
         <div className="container">
-          <h2 className={`${styles.sectionHead} h3`}>できること</h2>
+          <h2 className={styles.sectionHead}>できること</h2>
           <ul className={styles.skills}>
             {about.skills.map((skill, i) => (
               <FadeIn as="li" key={skill.title} className={styles.skill} delay={i * 90}>

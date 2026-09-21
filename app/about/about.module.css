@@ -34,9 +34,12 @@
 /* 幅は決め打ちにしない。余白の線まで使う */
 .text { min-width: 0; }
 
+/* 行送りの上の余り（(1.6em - 1em) / 2）を打ち消して、
+   写真の上端と名前の「文字」の上端をそろえる */
 .name {
-  font-size: 20px;
-  line-height: 32px;
+  margin-top: -0.3em;
+  font-size: calc(var(--u) * 1.25);
+  line-height: 1.6;
   font-weight: 500;
 }
 .role { margin-top: 4px; }
@@ -51,31 +54,42 @@
   border-top: 1px solid var(--line);
 }
 
-.sectionHead { margin-bottom: var(--gap-l); }
+/* 見出し2.2u > できるの題1.375u > 経歴の題1.25u > 本文0.94u。
+   すべて --u の倍数なので、画面幅が変わっても大小関係が動かない */
+.sectionHead {
+  margin-bottom: calc(var(--u) * 4.5);
+  font-size: calc(var(--u) * 2.2);
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
 
 /* 線ではなく間隔で区切る。
    項目どうし（3.5u）> 年月↔題名（2u）で、どこまでが一つの項目か分かるようにする */
 .career {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 3.5);
+  gap: calc(var(--u) * 2.8);
 }
 
 .careerItem {
   display: grid;
   grid-template-columns: calc(var(--u) * 8.75) 1fr;
-  gap: calc(var(--u) * 2);
+  gap: calc(var(--u) * 1.6);
 }
 
-/* 年月がまだ決まっていない項目は空にしてある */
+/* 年月と題は、どちらも行送りの余りを打ち消して
+   「文字の上端」が同じ高さに来るようにする */
 .careerPeriod {
+  margin-top: -0.3em;   /* 行送り1.6em の半分 */
   color: var(--text);
   letter-spacing: 0.1em;
 }
 
 .careerTitle {
-  font-size: 18px;
-  line-height: 30px;
+  margin-top: -0.25em;  /* 行送り1.5em の半分 */
+  font-size: calc(var(--u) * 1.25);
+  line-height: 1.5;
   font-weight: 500;
 }
 .careerText { margin-top: 8px; }
@@ -92,10 +106,10 @@
   grid-template-columns: repeat(3, 1fr);
   gap: calc(var(--u) * 3);
 }
-/* タイトルは要素の中央に置き、本文よりはっきり大きくする。
-   大きさは --u の倍数にして、画面幅を変えても比（1.46倍）が動かないようにする */
+/* 題は左端そろえ（TOPのServiceは中央）。
+   大きさは --u の倍数にして、画面幅を変えても比が動かないようにする */
 .skillTitle {
-  text-align: center;
+  text-align: left;
   font-size: calc(var(--u) * 1.375);
   line-height: 1.5;
   font-weight: 500;
@@ -127,18 +141,12 @@
   }
   .name { text-align: center; }
   .role { display: none; }
-  /* 1列だと容器の幅いっぱいでは1行が60字を超えて読みにくいので、
-     2列のときと同じ約44字に収めて中央に置く */
-  .text {
-    max-width: calc(var(--u) * 41);
-    margin-inline: auto;
-  }
 }
 
 @media (max-width: 1024px) {
   .careerItem {
     grid-template-columns: calc(var(--u) * 6.5) 1fr;
-    gap: calc(var(--u) * 1.4);
+    gap: calc(var(--u) * 1.2);
   }
   .skills {
     grid-template-columns: 1fr;
@@ -148,12 +156,9 @@
 
 @media (max-width: 540px) {
   /* 年月と内容を縦に積む。縦でも 項目どうし > 年月↔題名 を保つ */
+  /* 縦に積んでも 経歴どうし(2.8u) > 年月↔題(0.6u) を保つ */
   .careerItem {
     grid-template-columns: 1fr;
     gap: calc(var(--u) * 0.6);
-  }
-  .careerTitle {
-    font-size: 17px;
-    line-height: 28px;
   }
 }
