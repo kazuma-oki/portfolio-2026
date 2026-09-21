@@ -29,10 +29,11 @@
   background: rgba(17, 17, 17, 0.82);
 }
 
-/* 暗いところ（拡大表示）。×や送りと同じ細い枠にそろえる */
+/* 暗いところ（拡大表示）。×や送りと同じ細い枠にそろえる。
+   明るい画像に重なっても消えないよう、うっすら敷く */
 .zoom[data-variant="outline"] button {
   border: 1px solid rgba(255, 255, 255, 0.5);
-  background: transparent;
+  background: rgba(24, 24, 24, 0.55);
 }
 .zoom[data-variant="outline"] button:not(:disabled):hover,
 .zoom[data-variant="outline"] button:focus-visible {

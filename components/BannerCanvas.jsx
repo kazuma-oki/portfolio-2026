@@ -181,10 +181,9 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
     if (canvas) setContentH(canvas.offsetHeight);
     const { minY } = limits();
     setCanY(minY < -1);
-    /* 中身が面の2.5倍より高いものだけ「下に伸ばす」を出す。
-       そこそこの丈なら、動かすだけでだいたい見えている */
+    // 面からはみ出しているなら「下に伸ばす」を出す
     if (canvas && view && !expanded) {
-      setCanExpand(canvas.offsetHeight > view.clientHeight * 2.5);
+      setCanExpand(canvas.offsetHeight > view.clientHeight * 1.2);
     }
   }, [scale, expanded, plan, apply, limits]);
 

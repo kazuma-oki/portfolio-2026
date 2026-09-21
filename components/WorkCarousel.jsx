@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import WorkCard from "./WorkCard";
+import { readList, writeList, TOP_KEY } from "@/lib/listReturn";
 import styles from "./WorkCarousel.module.css";
 
 const THUMB_RATIO = "1 / 1";
@@ -223,15 +224,79 @@ export default function WorkCarousel({ works }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 最初は真ん中の組の先頭を中央に置く。描画前にやるので動いて見えない
+  /* どれが中央かの印をつけ直す。中央から外れたものには左右の別をつける。
+     全部を書き換えると、変わっていないカードまで大きさの変化がかかり直して
+     スクロールが引っかかるので、前の中央と新しい中央のあいだだけ塗る */
+  const paintCenter = useCallback((i) => {
+    const t = trackRef.current;
+    if (!t) return;
+    const was = paintedRef.current;
+    const lo = Math.min(was, i);
+    const hi = Math.max(was, i);
+    for (let k = lo; k <= hi; k += 1) {
+      const el = t.children[k];
+      if (!el) continue;
+      if (k === i) {
+        el.setAttribute("data-center", "true");
+        el.removeAttribute("data-side");
+      } else {
+        el.removeAttribute("data-center");
+        el.setAttribute("data-side", k < i ? "left" : "right");
+      }
+    }
+    paintedRef.current = i;
+  }, []);
+
+  /* 最初の位置。描画前にやるので動いて見えない。
+     個別ページから戻ってきたときは、そのとき見ていたところに戻す
+     （ブラウザの戻るでも、ページの「← Home」でも同じように効く） */
   useBeforePaint(() => {
-    goToIndex(startIndex, false);
-    indexRef.current = startIndex;
-    setCenter(startIndex);
+    const { center: saved, focus } = readList(TOP_KEY);
+    let target = startIndex;
+    let jump = false;
+
+    if (focus) {
+      const i = works.findIndex((w) => w.id === focus);
+      if (i >= 0) {
+        target = startIndex + i;
+        jump = true;
+      }
+      writeList(TOP_KEY, { focus: null });
+    } else if (typeof saved === "number" && saved >= 0 && saved < n) {
+      target = startIndex + saved;
+    }
+
+    goToIndex(target, false);
+    indexRef.current = target;
+    setCenter(target);
+    paintCenter(target);
     paintThumb();
     if (trackRef.current) paintScale(posRaw(trackRef.current));
+
+    // 「← Home」で戻ってきたときは、カルーセルの位置まで連れていく
+    if (jump && wrapRef.current) {
+      wrapRef.current.scrollIntoView({ block: "center", behavior: "instant" });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goToIndex, paintThumb, startIndex]);
+
+  // いま真ん中に出しているものを覚えておく
+  useEffect(() => {
+    if (!loop) return;
+    writeList(TOP_KEY, { center: ((center - startIndex) % n + n) % n });
+  }, [center, startIndex, n, loop]);
+
+  /* カルーセルから個別ページへ入ったことを控える。
+     そのページの「←」は、一覧ではなくここへ戻す */
+  useEffect(() => {
+    const t = trackRef.current;
+    if (!t) return undefined;
+    const onClick = (e) => {
+      if (e.target.closest("a")) writeList(TOP_KEY, { came: true });
+    };
+    t.addEventListener("click", onClick);
+    return () => t.removeEventListener("click", onClick);
+  }, []);
 
   useEffect(() => {
     const t = trackRef.current;
@@ -247,25 +312,7 @@ export default function WorkCarousel({ works }) {
        全部を書き換えると、変わっていないカードまで大きさの変化が
        かかり直してスクロールが引っかかる。
        中央が i から j へ動いたとき、印が変わるのは i〜j のあいだだけ */
-    const mark = (k, i) => {
-      const el = t.children[k];
-      if (!el) return;
-      if (k === i) {
-        el.setAttribute("data-center", "true");
-        el.removeAttribute("data-side");
-      } else {
-        el.removeAttribute("data-center");
-        el.setAttribute("data-side", k < i ? "left" : "right");
-      }
-    };
-
-    const paint = (i) => {
-      const was = paintedRef.current;
-      const lo = Math.min(was, i);
-      const hi = Math.max(was, i);
-      for (let k = lo; k <= hi; k += 1) mark(k, i);
-      paintedRef.current = i;
-    };
+    const paint = paintCenter;
 
     const update = () => {
       frame = 0;

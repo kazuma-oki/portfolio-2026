@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import WorkGrid from "./WorkGrid";
-import { readList, writeList } from "@/lib/listReturn";
+import { readList, writeList, TOP_KEY } from "@/lib/listReturn";
 import styles from "./WorksBrowser.module.css";
 
 // 静的書き出しのため、サーバー側では useLayoutEffect を呼ばない
@@ -26,6 +26,8 @@ export default function WorksBrowser({ works, categories, storageKey, basePath =
 
     const { filter, focus: saved } = readList(storageKey);
     writeList(storageKey, { focus: null }); // 一度使ったら消す
+    // ここから個別ページへ入るぶんには、戻り先は一覧でよい
+    writeList(TOP_KEY, { came: false });
     if (!saved) return;
 
     const item = works.find((w) => w.id === saved);
