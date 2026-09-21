@@ -77,7 +77,7 @@ export default function Home() {
       </section>
 
       {/* できること。Aboutとは別のまとまりなのでセクションを分けている */}
-      <section className="section">
+      <section className={`section ${styles.service}`}>
         <div className="container">
           <SectionTitle eyebrow={serviceSection.eyebrow} title={serviceSection.title} />
 

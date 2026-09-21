@@ -52,16 +52,20 @@
 }
 .profileText p + p { margin-top: 1.5em; }
 
+/* ---------- Service（できること） ---------- */
+/* Works と同じように、背景を白にして上下に線を引き、
+   オフホワイトの About との切れ目をつくる */
+.service {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+}
+
 .skills {
   margin-top: 96px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--gap-m);
-}
-
-.skill {
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+  /* 項目の中（タイトル↔本文）よりはっきり広くとる */
+  gap: calc(var(--u) * 3);
 }
 
 /* タイトルは要素の中央に置き、本文よりはっきり大きくする。
@@ -131,10 +135,12 @@
     text-align: center;
   }
   .profileText { font-size: 15px; line-height: 1.95; }
+  /* 1列になると、項目どうしの区切りは間隔だけになる。
+     項目の中（タイトル↔本文 20px）よりはっきり広くとる */
   .skills {
     margin-top: 56px;
     grid-template-columns: 1fr;
-    gap: var(--gap-l);
+    gap: calc(var(--u) * 3);
   }
   .cta {
     min-height: 0;
