@@ -36,6 +36,7 @@ export default function AboutPage() {
 
           <FadeIn className={styles.text} delay={80}>
             <p className={styles.name}>{about.name}</p>
+            {/* SPでは出さない（画面が狭いと名前と重なって読みにくいため） */}
             <p className={`${styles.role} caption`}>{about.role}</p>
             <div className={styles.body}>
               {about.body.map((p, i) => (
@@ -72,7 +73,6 @@ export default function AboutPage() {
           <ul className={styles.skills}>
             {about.skills.map((skill, i) => (
               <FadeIn as="li" key={skill.title} className={styles.skill} delay={i * 90}>
-                <p className={`${styles.skillNo} caption en`}>0{i + 1}</p>
                 <h3 className={styles.skillTitle}>{skill.title}</h3>
                 <p className={`${styles.skillText} body-s subtext`}>{skill.text}</p>
                 <p className={`${styles.skillTools} caption`}>{skill.tools}</p>

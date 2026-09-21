@@ -1,7 +1,11 @@
+/* 寸法は基準単位 --u の倍数。画面幅が変わっても、1行あたりの文字数が
+   一定（約47字）になるので、写真と文章の高さの釣り合いが動かない。
+   幅に上限を置いているのは、very wide な画面で1行が長くなりすぎるのを防ぐため */
 .profile {
+  width: min(100%, calc(var(--u) * 84));
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 80px;
+  grid-template-columns: calc(var(--u) * 27.5) 1fr;
+  gap: calc(var(--u) * 3.5);
   align-items: start;
 }
 
@@ -27,7 +31,8 @@
   letter-spacing: 0.2em;
 }
 
-.text { max-width: 560px; }
+/* 幅は決め打ちにしない。余白の線まで使う */
+.text { min-width: 0; }
 
 .name {
   font-size: 20px;
@@ -48,19 +53,19 @@
 
 .sectionHead { margin-bottom: var(--gap-l); }
 
+/* 線ではなく間隔で区切る。
+   項目どうし（3.5u）> 年月↔題名（2u）で、どこまでが一つの項目か分かるようにする */
 .career {
   display: flex;
   flex-direction: column;
+  gap: calc(var(--u) * 3.5);
 }
 
 .careerItem {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: var(--gap-m);
-  padding-block: 24px;
-  border-top: 1px solid var(--line);
+  grid-template-columns: calc(var(--u) * 8.75) 1fr;
+  gap: calc(var(--u) * 2);
 }
-.career li:last-child { border-bottom: 1px solid var(--line); }
 
 /* 年月がまだ決まっていない項目は空にしてある */
 .careerPeriod {
@@ -80,23 +85,26 @@
   border-top: 1px solid var(--line);
 }
 
+/* 線をやめたぶん、項目どうしの区切りは間隔だけになる。
+   項目の中（タイトル↔本文 20px）よりはっきり広くとる */
 .skills {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--gap-m);
+  gap: calc(var(--u) * 3);
 }
-.skill {
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
-}
-.skillNo { color: var(--text); }
+/* タイトルは要素の中央に置き、本文よりはっきり大きくする。
+   大きさは --u の倍数にして、画面幅を変えても比（1.46倍）が動かないようにする */
 .skillTitle {
-  margin-top: 12px;
-  font-size: 20px;
-  line-height: 30px;
+  text-align: center;
+  font-size: calc(var(--u) * 1.375);
+  line-height: 1.5;
   font-weight: 500;
 }
-.skillText { margin-top: 12px; }
+.skillText {
+  margin-top: 20px;
+  font-size: calc(var(--u) * 0.94);
+  line-height: 1.86;
+}
 .skillTools {
   margin-top: 16px;
   font-size: 13px;
@@ -104,35 +112,48 @@
 
 .action { margin-top: var(--gap-l); }
 
-@media (max-width: 1024px) {
+/* 2列が成り立つのは内容幅が足りるときだけ。
+   これより狭いと文章が細くなり、行数が増えて写真の高さと揃わなくなる */
+@media (max-width: 1359px) {
   .profile {
+    width: 100%;
     grid-template-columns: 1fr;
-    gap: var(--gap-m);
+    gap: calc(var(--u) * 2.2);
   }
-  .visual { max-width: 320px; }
+  /* ⑤ 写真と名前は中央に置く。Designer / analyst はここでは出さない */
+  .visual {
+    max-width: calc(var(--u) * 21);
+    margin-inline: auto;
+  }
+  .name { text-align: center; }
+  .role { display: none; }
+  /* 1列だと容器の幅いっぱいでは1行が60字を超えて読みにくいので、
+     2列のときと同じ約44字に収めて中央に置く */
+  .text {
+    max-width: calc(var(--u) * 41);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 1024px) {
   .careerItem {
-    grid-template-columns: 100px 1fr;
-    gap: var(--gap-s);
+    grid-template-columns: calc(var(--u) * 6.5) 1fr;
+    gap: calc(var(--u) * 1.4);
   }
   .skills {
     grid-template-columns: 1fr;
-    gap: var(--gap-s);
+    gap: calc(var(--u) * 3);
   }
 }
 
 @media (max-width: 540px) {
-  /* 年月と内容を縦に積む */
+  /* 年月と内容を縦に積む。縦でも 項目どうし > 年月↔題名 を保つ */
   .careerItem {
     grid-template-columns: 1fr;
-    gap: 6px;
-    padding-block: 20px;
+    gap: calc(var(--u) * 0.6);
   }
   .careerTitle {
     font-size: 17px;
-    line-height: 28px;
-  }
-  .skillTitle {
-    font-size: 18px;
     line-height: 28px;
   }
 }
