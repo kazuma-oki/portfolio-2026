@@ -1,4 +1,5 @@
 import site from "@/data/site.json";
+import styles from "./SocialIcons.module.css";
 
 // アイコンのパスは Font Awesome Free 6（CC BY 4.0 / fontawesome.com）より
 const ICONS = {
@@ -12,25 +13,44 @@ const VIEWBOX = { X: "0 0 512 512", Instagram: "0 0 448 512" };
 /**
  * X / Instagram のリンク。フッターとドロワーで共有する。
  * 見た目（大きさ・間隔）は使う側のCSSで決める。
+ *
+ * data/site.json の href が空のものは「準備中」として、
+ * 押せない形で薄く出す（リンクにしないので、タブでも止まらない）。
  */
 export default function SocialIcons({ className = "", tabIndex }) {
   return (
     <ul className={className}>
-      {site.social.map((s) => (
-        <li key={s.name}>
-          <a
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.name}
-            tabIndex={tabIndex}
-          >
-            <svg viewBox={VIEWBOX[s.name]} aria-hidden="true">
-              <path d={ICONS[s.name]} />
-            </svg>
-          </a>
-        </li>
-      ))}
+      {site.social.map((s) => {
+        const icon = (
+          <svg viewBox={VIEWBOX[s.name]} aria-hidden="true">
+            <path d={ICONS[s.name]} />
+          </svg>
+        );
+        return (
+          <li key={s.name}>
+            {s.href ? (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.name}
+                tabIndex={tabIndex}
+              >
+                {icon}
+              </a>
+            ) : (
+              <span
+                className={styles.soon}
+                role="img"
+                aria-label={`${s.name}（準備中）`}
+                title="準備中"
+              >
+                {icon}
+              </span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -1,0 +1,9 @@
+/* 行き先がまだ決まっていないもの。押せないことが伝わるよう薄くする */
+
+.soon {
+  display: inline-flex;
+  cursor: default;
+}
+.soon svg {
+  opacity: 0.35;
+}
