@@ -103,10 +103,12 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
 
   const [rows, setRows] = useState(4);
   const [scale, setScale] = useState(1);
-  // 指のとき用。面ごと下に伸ばして、ページのスクロールで見てもらう
+  // 指のときの言い回しに使う
   const [touch, setTouch] = useState(false);
+  // 面ごと下に伸ばして、ページのスクロールで見てもらう
   const [expanded, setExpanded] = useState(false);
   const [contentH, setContentH] = useState(0);
+  const [canExpand, setCanExpand] = useState(false);
   // 縦にも動かせるかどうか（向きの印に使う）
   const [canY, setCanY] = useState(false);
   // 掴んでいる間は追従する丸を少し縮める
@@ -175,9 +177,15 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
   useEffect(() => {
     apply();
     const canvas = canvasRef.current;
+    const view = viewRef.current;
     if (canvas) setContentH(canvas.offsetHeight);
     const { minY } = limits();
     setCanY(minY < -1);
+    /* 中身が面の2.5倍より高いものだけ「下に伸ばす」を出す。
+       そこそこの丈なら、動かすだけでだいたい見えている */
+    if (canvas && view && !expanded) {
+      setCanExpand(canvas.offsetHeight > view.clientHeight * 2.5);
+    }
   }, [scale, expanded, plan, apply, limits]);
 
   /* 行数が変わると中身の大きさも変わるので置き直す。
@@ -342,7 +350,9 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
 
   const close = useCallback(() => {
     setOpenAt(null);
-    openerRef.current?.focus();
+    /* そのまま focus すると、ブラウザがその要素を見せようとして
+       面が内側にスクロールし、上の余白が詰まってしまう */
+    openerRef.current?.focus({ preventScroll: true });
   }, []);
 
   return (
@@ -399,9 +409,11 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         <span className={styles.edge} data-side="left" aria-hidden="true" />
         <span className={styles.edge} data-side="right" aria-hidden="true" />
 
-        <div className={styles.zoom}>
-          <ZoomButtons value={scale} steps={SCALES} onChange={changeScale} label={label} />
-        </div>
+        {strip && (
+          <div className={styles.zoom}>
+            <ZoomButtons value={scale} steps={SCALES} onChange={changeScale} label={label} />
+          </div>
+        )}
       </div>
 
       {/* 拡大している間は、下の面の丸は出さない */}
@@ -414,8 +426,9 @@ export default function BannerCanvas({ banners, mode = "rows" }) {
         arrows={canY ? "all" : "x"}
       />
 
-      {/* 指のときは縦に動かせないので、面ごと下に伸ばして見てもらう */}
-      {strip && touch && (
+      {/* 丈がうんと長いものだけ、面ごと下に伸ばせるようにする
+          （そこまで長くないものは、そのままでもだいたい見えている） */}
+      {strip && canExpand && (
         <button type="button" className={styles.expand} onClick={toggleExpand}>
           {expanded ? "もとに戻す" : "下に伸ばして見る"}
         </button>

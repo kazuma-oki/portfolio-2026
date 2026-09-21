@@ -168,6 +168,12 @@
   /* 画面より大きいときは左上から。小さいときは中央のまま */
   margin: auto;
 }
+/* 大きくしている間は、画像を押しても送らない（動かして見るほうを優先）。
+   代わりに送りの矢印を出す */
+.overlay[data-zoomed="true"] .half { pointer-events: none; }
+@media (hover: hover) {
+  .overlay[data-zoomed="true"] .arrow { opacity: 1; pointer-events: auto; }
+}
 
 @media (max-width: 1024px) {
   .slide :global(img) { max-height: calc(80vh - 56px); }

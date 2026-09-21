@@ -243,12 +243,9 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
               swipeRef.current = null;
             }}
           >
-            <motion.figure
-              className={styles.figure}
-              /* 大きさを変えている間は、枠の動きを重ねない */
-              layout={!reduce && scale === 1}
-              transition={{ layout: { duration: 0.3, ease: [0.22, 0.61, 0.36, 1] } }}
-            >
+            {/* 枠の大きさは動かさない。送るたびに枠が伸び縮みすると、
+                切り替わりが重たく見えるため */}
+            <figure className={styles.figure}>
               <div className={styles.frame} ref={frameRef}>
                 <AnimatePresence initial={false} mode="popLayout">
                   <motion.span
@@ -288,7 +285,7 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
                   aria-hidden="true"
                 />
               </div>
-            </motion.figure>
+            </figure>
           </div>
 
           <HoverCursor areaRef={frameRef} labelFor={labelFor} pressed={pressed} />
