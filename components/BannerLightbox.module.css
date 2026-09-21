@@ -73,6 +73,12 @@
   .half { cursor: none; }
 }
 
+/* 指のときは押したことを自分で見ているので、この領域は働かせない
+   （同じ操作で二度送ってしまわないように） */
+@media (hover: none) {
+  .half { pointer-events: none; }
+}
+
 /* ---- 閉じる ---- */
 .close {
   position: absolute;

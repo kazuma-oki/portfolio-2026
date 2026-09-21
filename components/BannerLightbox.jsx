@@ -99,8 +99,24 @@ export default function BannerLightbox({ banners, index, onClose, onChange }) {
     const s = swipeRef.current;
     swipeRef.current = null;
     if (!s || e.pointerType !== "touch") return;
+
     const dx = e.clientX - s.x;
-    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(e.clientY - s.y)) step(dx < 0 ? 1 : -1);
+    const dy = e.clientY - s.y;
+    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
+      step(dx < 0 ? 1 : -1);
+      return;
+    }
+
+    /* ほとんど動いていなければ「押した」とみなす。
+       指のときは払ったあとのタップで click が来ないことがあるので、
+       画像に重ねたボタンには頼らず、ここで左右を見て自分で送る */
+    if (Math.hypot(dx, dy) > 10) return;
+    const frame = frameRef.current;
+    if (!frame) return;
+    const r = frame.getBoundingClientRect();
+    const inside =
+      e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (inside) step(e.clientX < r.left + r.width / 2 ? -1 : 1);
   };
 
   const labelFor = useCallback((e) => {
