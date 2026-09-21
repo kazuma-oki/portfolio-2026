@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import site from "@/data/site.json";
+import { asset } from "@/lib/asset";
 import styles from "./Loader.module.css";
 
 const KEY = "kazuma-portfolio-2026-loaded";
@@ -39,6 +40,28 @@ export default function Loader() {
           exit={{ y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
         >
+          {/* 背景はTOPと同じ空のループ画像。横に流して動かす */}
+          <div
+            className={styles.sky}
+            aria-hidden="true"
+            style={{
+              backgroundImage: `url(${asset(site.hero.sky)})`,
+              aspectRatio: site.hero.skyRatio,
+            }}
+          />
+          <div className={styles.veil} aria-hidden="true" />
+
+          <motion.div
+            className={styles.rings}
+            aria-hidden="true"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+          >
+            <span className={styles.ring} />
+            <span className={`${styles.ring} ${styles.inner}`} />
+          </motion.div>
+
           <motion.p
             className={`${styles.logo} en`}
             initial={{ opacity: 0, y: 12 }}
@@ -47,13 +70,6 @@ export default function Loader() {
           >
             {site.logo}
           </motion.p>
-          <motion.span
-            className={styles.bar}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.2, ease: [0.22, 0.61, 0.36, 1] }}
-            aria-hidden="true"
-          />
         </motion.div>
       )}
     </AnimatePresence>

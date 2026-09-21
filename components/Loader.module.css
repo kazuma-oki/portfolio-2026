@@ -2,26 +2,107 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: var(--accent-dark);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 32px;
+  /* 画像が出そろう前の下地。TOPの空と同じ色 */
+  background: #bcd9ef;
+}
+
+/* 背景の空。画像は「1枚ぶん×2」でできているので、
+   半分だけ動かすと元の位置に戻り、継ぎ目なく流れ続ける。
+   TOPは130秒だが、ローディングは1.5秒しか出ないので、
+   その間に動きが分かる速さにしている */
+.sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: auto;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  will-change: transform;
+  animation: sky-flow 22s linear infinite;
+}
+
+@keyframes sky-flow {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+/* 空の上に置く文字と輪が沈まないよう、ごく薄く暗くする */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(58% 58% at 50% 46%, rgba(10, 30, 54, 0.46), rgba(10, 30, 54, 0.12));
+}
+
+.rings {
+  position: relative;
+  width: 164px;
+  height: 164px;
+}
+
+/* 二重の輪。外は時計回りでゆっくり、内は逆回りで速い。
+   それぞれの軌道の上を光の点がまわる */
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.62);
+  animation: spin 3.4s linear infinite;
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  top: -4.5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.95);
+}
+
+.inner {
+  inset: 24%;
+  border-color: rgba(255, 255, 255, 0.85);
+  animation-duration: 1.9s;
+  animation-direction: reverse;
+}
+.inner::after {
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  top: -3px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .logo {
-  color: var(--bg);
-  font-size: 24px;
+  position: relative;
+  color: #fff;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 0.3em;
   text-indent: 0.3em;
+  text-shadow: 0 2px 18px rgba(10, 30, 54, 0.7);
 }
 
-.bar {
-  display: block;
-  width: 120px;
-  height: 1px;
-  background: var(--accent);
-  transform-origin: left center;
+@media (max-width: 540px) {
+  .rings { width: 128px; height: 128px; }
+  .logo { font-size: 18px; }
+}
+
+/* 動きを減らす設定のときはローダー自体を出さないが、念のため */
+@media (prefers-reduced-motion: reduce) {
+  .sky,
+  .ring { animation: none; }
 }
