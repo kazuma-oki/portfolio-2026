@@ -61,6 +61,14 @@
 
 .body { padding-block: var(--section); }
 
+/* 本文は760pxの1本だが、ここだけ画面幅いっぱいに広げる。
+   body に overflow-x: clip があるので横には漏れない */
+.bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: var(--gutter);
+}
+
 .section + .section {
   margin-top: var(--gap-l);
   padding-top: var(--gap-l);

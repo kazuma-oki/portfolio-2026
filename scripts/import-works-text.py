@@ -50,12 +50,7 @@ INFO_HEADING = "制作情報"
 
 # いま入っている画像の置き場所（②に手をつけるときに決め直す前提で、いったん残す）
 KEEP_IMAGES = {
-    "carshare-banners": ("Banner Collection", {
-        "gallery": [{
-            "src": "images/works/carshare-banners.webp",
-            "alt": "カーシェアサービスの公式X向けバナー6点",
-        }],
-    }),
+    "carshare-banners": ("Banner Collection", {"canvas": "timescar-banners"}),
     "kaiza": ("工夫したポイント", {
         "image": "images/works/kaiza-full.webp",
         "alt": "Ka!zaコーポレートサイトの全ページ。上から順にファーストビュー、事業内容、会社概要、新着情報",

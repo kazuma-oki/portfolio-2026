@@ -1,0 +1,132 @@
+/* バナーを敷きつめた面。掴んで動かして見て回る */
+
+.wrap {
+  position: relative;
+  margin-top: var(--gap-m);
+}
+
+.view {
+  /* 中身はこの窓より大きく、はみ出したぶんだけ動かせる */
+  position: relative;
+  overflow: hidden;
+  height: calc(var(--u) * 36);
+  border-radius: var(--r-card);
+  background: #ecece9;
+  cursor: grab;
+  /* マウスのときは上下左右とも掴んで動かす */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.view:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 3px; }
+.view[data-dragging="true"] { cursor: grabbing; }
+
+/* 追従する丸が出ている間は、標準のカーソルを消す。
+   ボタンには UA が cursor: pointer を当ててくるので * にも指定する */
+.view[data-cursor="on"],
+.view[data-cursor="on"] * { cursor: none; }
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* カード1枚の高さ。これを1として、位置も幅もすべてこの倍数で置く。
+     画面の広さが変わっても倍数は変わらないので、並びは相似のまま */
+  --zoom: 1.62;
+  --h: calc(var(--u) * 36 * var(--zoom) / var(--ch));
+  width: calc(var(--h) * var(--cw));
+  height: calc(var(--h) * var(--ch));
+  will-change: transform;
+}
+
+.card {
+  position: absolute;
+  left: calc(var(--h) * var(--x));
+  top: calc(var(--h) * var(--y));
+  width: calc(var(--h) * var(--w));
+  height: var(--h);
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--surface);
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out);
+}
+.card :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+/* 掴んでいる間は持ち上げない（動かしている最中にちらつくため） */
+.view:not([data-dragging="true"]) .card:hover,
+.card:focus-visible {
+  transform: scale(1.03);
+}
+
+.hint {
+  margin-top: var(--gap-s);
+  text-align: right;
+}
+
+/* ---- マウスについてくる丸（カルーセルと同じ見せ方） ---- */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  will-change: transform;
+}
+.cursor[data-on="true"] { opacity: 1; }
+
+.cursor span {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-radius: var(--r-pill);
+  background: rgba(17, 17, 17, 0.78);
+  color: var(--bg);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transition: transform 0.25s var(--ease-out);
+}
+.cursor em {
+  display: block;
+  font-style: normal;
+}
+/* 押している間は少し縮む */
+.wrap:has(.view[data-dragging="true"]) .cursor span { transform: scale(0.82); }
+
+/* 指やペンでは出さない。あわせて上下はページのスクロールにまかせる */
+@media (hover: none) {
+  .cursor { display: none; }
+  .view { touch-action: pan-y; }
+  /* 縦には動かさないので、中身がちょうど収まる高さにする */
+  .canvas { --zoom: 1; }
+}
+
+@media (max-width: 1024px) {
+  .view { height: calc(var(--u) * 33); }
+  .canvas { --h: calc(var(--u) * 33 * var(--zoom) / var(--ch)); }
+}
+
+@media (max-width: 540px) {
+  .view { height: calc(var(--u) * 30); }
+  .canvas { --h: calc(var(--u) * 30 * var(--zoom) / var(--ch)); }
+  .hint { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cursor,
+  .cursor span { transition: none; }
+}

@@ -1,0 +1,328 @@
+{
+  "timescar-banners": [
+    {
+      "id": "b01",
+      "src": "images/works/timescar-banners/b01.webp",
+      "large": "images/works/timescar-banners/b01-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "忘れ物②"
+    },
+    {
+      "id": "b02",
+      "src": "images/works/timescar-banners/b02.webp",
+      "large": "images/works/timescar-banners/b02-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "忘れ物"
+    },
+    {
+      "id": "b03",
+      "src": "images/works/timescar-banners/b03.webp",
+      "large": "images/works/timescar-banners/b03-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "高速道路の逆走"
+    },
+    {
+      "id": "b04",
+      "src": "images/works/timescar-banners/b04.webp",
+      "large": "images/works/timescar-banners/b04-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "成人の日"
+    },
+    {
+      "id": "b05",
+      "src": "images/works/timescar-banners/b05.webp",
+      "large": "images/works/timescar-banners/b05-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き④"
+    },
+    {
+      "id": "b06",
+      "src": "images/works/timescar-banners/b06.webp",
+      "large": "images/works/timescar-banners/b06-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "水分補給"
+    },
+    {
+      "id": "b07",
+      "src": "images/works/timescar-banners/b07.webp",
+      "large": "images/works/timescar-banners/b07-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "ロングドライブ"
+    },
+    {
+      "id": "b08",
+      "src": "images/works/timescar-banners/b08.webp",
+      "large": "images/works/timescar-banners/b08-lg.webp",
+      "w": 1440,
+      "h": 480,
+      "ratio": 3.0,
+      "title": "ひな祭り"
+    },
+    {
+      "id": "b09",
+      "src": "images/works/timescar-banners/b09.webp",
+      "large": "images/works/timescar-banners/b09-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "超過料金"
+    },
+    {
+      "id": "b10",
+      "src": "images/works/timescar-banners/b10.webp",
+      "large": "images/works/timescar-banners/b10-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "富士急_0831"
+    },
+    {
+      "id": "b11",
+      "src": "images/works/timescar-banners/b11.webp",
+      "large": "images/works/timescar-banners/b11-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "エアコン使い方"
+    },
+    {
+      "id": "b12",
+      "src": "images/works/timescar-banners/b12.webp",
+      "large": "images/works/timescar-banners/b12-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "夏休み前3ヶ月前予約"
+    },
+    {
+      "id": "b13",
+      "src": "images/works/timescar-banners/b13.webp",
+      "large": "images/works/timescar-banners/b13-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き⑤"
+    },
+    {
+      "id": "b14",
+      "src": "images/works/timescar-banners/b14.webp",
+      "large": "images/works/timescar-banners/b14-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "名月"
+    },
+    {
+      "id": "b15",
+      "src": "images/works/timescar-banners/b15.webp",
+      "large": "images/works/timescar-banners/b15-lg.webp",
+      "w": 853,
+      "h": 480,
+      "ratio": 1.7778,
+      "title": "たのまち（忍野八海）_0831"
+    },
+    {
+      "id": "b16",
+      "src": "images/works/timescar-banners/b16.webp",
+      "large": "images/works/timescar-banners/b16-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "七夕"
+    },
+    {
+      "id": "b17",
+      "src": "images/works/timescar-banners/b17.webp",
+      "large": "images/works/timescar-banners/b17-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "西日対策"
+    },
+    {
+      "id": "b18",
+      "src": "images/works/timescar-banners/b18.webp",
+      "large": "images/works/timescar-banners/b18-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き⑥"
+    },
+    {
+      "id": "b19",
+      "src": "images/works/timescar-banners/b19.webp",
+      "large": "images/works/timescar-banners/b19-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "測量の日"
+    },
+    {
+      "id": "b20",
+      "src": "images/works/timescar-banners/b20.webp",
+      "large": "images/works/timescar-banners/b20-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "予約延長"
+    },
+    {
+      "id": "b21",
+      "src": "images/works/timescar-banners/b21.webp",
+      "large": "images/works/timescar-banners/b21-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き①"
+    },
+    {
+      "id": "b22",
+      "src": "images/works/timescar-banners/b22.webp",
+      "large": "images/works/timescar-banners/b22-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き（修正版 ）"
+    },
+    {
+      "id": "b23",
+      "src": "images/works/timescar-banners/b23.webp",
+      "large": "images/works/timescar-banners/b23-lg.webp",
+      "w": 853,
+      "h": 480,
+      "ratio": 1.7778,
+      "title": "ロゴの日"
+    },
+    {
+      "id": "b24",
+      "src": "images/works/timescar-banners/b24.webp",
+      "large": "images/works/timescar-banners/b24-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "荷物が多い日"
+    },
+    {
+      "id": "b25",
+      "src": "images/works/timescar-banners/b25.webp",
+      "large": "images/works/timescar-banners/b25-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "予約開始前の安全点検"
+    },
+    {
+      "id": "b26",
+      "src": "images/works/timescar-banners/b26.webp",
+      "large": "images/works/timescar-banners/b26-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "花火遠征"
+    },
+    {
+      "id": "b27",
+      "src": "images/works/timescar-banners/b27.webp",
+      "large": "images/works/timescar-banners/b27-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "会員取消し"
+    },
+    {
+      "id": "b28",
+      "src": "images/works/timescar-banners/b28.webp",
+      "large": "images/works/timescar-banners/b28-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "ヘッダー(シークレット)"
+    },
+    {
+      "id": "b29",
+      "src": "images/works/timescar-banners/b29.webp",
+      "large": "images/works/timescar-banners/b29-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "給油割"
+    },
+    {
+      "id": "b30",
+      "src": "images/works/timescar-banners/b30.webp",
+      "large": "images/works/timescar-banners/b30-lg.webp",
+      "w": 853,
+      "h": 480,
+      "ratio": 1.7778,
+      "title": "車内温度クイズ"
+    },
+    {
+      "id": "b31",
+      "src": "images/works/timescar-banners/b31.webp",
+      "large": "images/works/timescar-banners/b31-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "謎解き③"
+    },
+    {
+      "id": "b32",
+      "src": "images/works/timescar-banners/b32.webp",
+      "large": "images/works/timescar-banners/b32-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "返却地案内"
+    },
+    {
+      "id": "b33",
+      "src": "images/works/timescar-banners/b33.webp",
+      "large": "images/works/timescar-banners/b33-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "シルエットクイズ"
+    },
+    {
+      "id": "b34",
+      "src": "images/works/timescar-banners/b34.webp",
+      "large": "images/works/timescar-banners/b34-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "入会キャンペーン"
+    },
+    {
+      "id": "b35",
+      "src": "images/works/timescar-banners/b35.webp",
+      "large": "images/works/timescar-banners/b35-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "エアコンの効率の良い使い方"
+    },
+    {
+      "id": "b36",
+      "src": "images/works/timescar-banners/b36.webp",
+      "large": "images/works/timescar-banners/b36-lg.webp",
+      "w": 480,
+      "h": 480,
+      "ratio": 1.0,
+      "title": "学生プラン"
+    }
+  ]
+}

@@ -2668,12 +2668,7 @@
             "text": "サービス紹介、利用時の注意、交通安全、季節情報、キャンペーン、参加型コンテンツなど、さまざまなテーマに合わせてデザインを展開しています。"
           },
           {
-            "gallery": [
-              {
-                "src": "images/works/carshare-banners.webp",
-                "alt": "カーシェアサービスの公式X向けバナー6点"
-              }
-            ]
+            "canvas": "timescar-banners"
           }
         ]
       },

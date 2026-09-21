@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { asset } from "@/lib/asset";
+import banners from "@/data/banners.json";
+import BannerCanvas from "@/components/BannerCanvas";
 import FadeIn from "@/components/FadeIn";
 import Button from "@/components/Button";
 import BackToList from "@/components/BackToList";
@@ -70,6 +72,17 @@ function Block({ block }) {
           </li>
         ))}
       </ul>
+    );
+  }
+
+  // 掴んで動かせるバナーの面。本文の枠から出して画面幅いっぱいに使う
+  if (block.canvas) {
+    const items = banners[block.canvas];
+    if (!items) return null;
+    return (
+      <div className={styles.bleed}>
+        <BannerCanvas banners={items} />
+      </div>
     );
   }
 
