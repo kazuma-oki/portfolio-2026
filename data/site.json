@@ -152,11 +152,11 @@
     "thanksText": "内容を確認のうえ、折り返しご連絡いたします。"
   },
   "googleForm": {
-    "actionUrl": "",
+    "actionUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfTABjlCBIZ0t5YtKi1sbArHxh4Zr0yY7IfM47GQRqJn8wrcw/formResponse",
     "entries": {
-      "name": "",
-      "email": "",
-      "message": ""
+      "name": "entry.2004547044",
+      "email": "entry.394897473",
+      "message": "entry.1690579385"
     }
   },
   "social": [

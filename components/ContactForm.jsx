@@ -74,8 +74,10 @@ export default function ContactForm() {
             {contact.submitLabel}
           </Button>
           {!ready && (
+            /* 送信先が設定されていないときだけ出る。押せるのに何も起きない
+               フォームになるのを防ぐための保険 */
             <p className={`${styles.notice} caption`}>
-              ※送信先が未設定です。data/site.json の googleForm を設定すると有効になります。
+              ※ただいまお問い合わせフォームを準備中です。
             </p>
           )}
         </div>
