@@ -23,7 +23,7 @@ export default function Loader() {
       setShow(false);
       sessionStorage.setItem(KEY, "1");
       document.body.style.overflow = "";
-    }, 2600);
+    }, 3400);
 
     return () => {
       clearTimeout(timer);
@@ -36,11 +36,11 @@ export default function Loader() {
       {show && (
         <motion.div
           className={styles.overlay}
-          /* 上へ持ち上げずに、ふわっと消して本編に切り替える
-             （ページの切り替わりと同じ見せ方） */
+          /* 上へ持ち上げず、間をためてゆっくり消す。
+             はじめのうちはほとんど変わらず、後半で静かに抜けていく */
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+          transition={{ duration: 1.4, ease: [0.55, 0, 0.3, 1] }}
         >
           {/* 背景はTOPと同じ空のループ画像。横に流して動かす */}
           <div
