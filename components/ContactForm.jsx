@@ -19,8 +19,13 @@ export default function ContactForm() {
   if (sent) {
     return (
       <div className={styles.thanks}>
-        <p className={`${styles.thanksTitle} h3`}>{contact.thanksTitle}</p>
+        <p className="h3">{contact.thanksTitle}</p>
         <p className={`${styles.thanksText} body-s subtext`}>{contact.thanksText}</p>
+        <div className={styles.thanksAction}>
+          <Button href="/" variant="ghost">
+            {contact.thanksButton}
+          </Button>
+        </div>
       </div>
     );
   }

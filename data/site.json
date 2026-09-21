@@ -148,8 +148,9 @@
       }
     ],
     "submitLabel": "送信する",
-    "thanksTitle": "送信ありがとうございました",
-    "thanksText": "内容を確認のうえ、折り返しご連絡いたします。"
+    "thanksTitle": "お問い合わせありがとうございます",
+    "thanksText": "ご入力いただきました内容は送信されました。\n内容を確認の上、ご返信させていただきます",
+    "thanksButton": "Home"
   },
   "googleForm": {
     "actionUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfTABjlCBIZ0t5YtKi1sbArHxh4Zr0yY7IfM47GQRqJn8wrcw/formResponse",
