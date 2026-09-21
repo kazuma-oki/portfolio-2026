@@ -64,14 +64,26 @@ export default function Loader() {
             <span className={`${styles.ring} ${styles.inner}`} />
           </motion.div>
 
-          <motion.p
-            className={`${styles.logo} en`}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
-          >
-            {site.logo}
-          </motion.p>
+          {/* Loading を一文字ずつ打ち、打ち終わったら「...」だけが繰り返し点く */}
+          <p className={`${styles.text} en`} aria-label="Loading">
+            <span aria-hidden="true">
+              {"Loading".split("").map((ch, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.18 + i * 0.085, duration: 0.12 }}
+                >
+                  {ch}
+                </motion.span>
+              ))}
+              <span className={styles.dots}>
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            </span>
+          </p>
         </motion.div>
       )}
     </AnimatePresence>
