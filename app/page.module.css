@@ -51,12 +51,20 @@
      余りがないときは padding-top ぶんだけ空く */
   margin-top: auto;
   padding-top: var(--u);
+  /* 行送りの下の余り（(1.75em - 1em) / 2）を打ち消して、
+     文字の下端そのものを本文の最終行とそろえる */
+  margin-bottom: -0.375em;
   font-size: calc(var(--u) * 1.0625);
   line-height: 1.75;
   font-weight: 500;
 }
 
+/* 行送りの上下の余り（(2em - 1em) / 2 ＝ 0.5em）を打ち消す。
+   こうすると1行目の文字の上端が写真の上端と、
+   最終行の文字の下端が名前の下端とそろう */
 .profileText {
+  margin-top: -0.5em;
+  margin-bottom: -0.5em;
   font-size: calc(var(--u) * 0.94);
   line-height: 2;
 }
@@ -136,7 +144,8 @@
   .profile {
     margin-top: calc(var(--u) * 3.2);
     grid-template-columns: 1fr;
-    gap: calc(var(--u) * 1.33);
+    /* 行送りの余りを打ち消したぶん、実寸がそのまま見た目の間隔になる */
+    gap: calc(var(--u) * 2.2);
   }
   /* 写真と名前は中央に置く（まわりの見出しが中央揃えなのに合わせる） */
   .profileVisual {
@@ -144,7 +153,13 @@
     margin-inline: auto;
     text-align: center;
   }
-  .profileText { font-size: 15px; line-height: 1.95; }
+  /* 行送りが 1.95 になるので、打ち消す量も合わせる */
+  .profileText {
+    margin-top: -0.475em;
+    margin-bottom: -0.475em;
+    font-size: 15px;
+    line-height: 1.95;
+  }
   /* 1列になると、項目どうしの区切りは間隔だけになる。
      項目の中（タイトル↔本文 20px）よりはっきり広くとる */
   .skills {
