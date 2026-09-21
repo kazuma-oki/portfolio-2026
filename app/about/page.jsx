@@ -58,7 +58,7 @@ export default function AboutPage() {
                 <div className={styles.careerBody}>
                   <h3 className={styles.careerTitle}>{item.title}</h3>
                   {item.text && (
-                    <p className={`${styles.careerText} body-s subtext`}>{item.text}</p>
+                    <p className={`${styles.careerText} subtext`}>{item.text}</p>
                   )}
                 </div>
               </FadeIn>

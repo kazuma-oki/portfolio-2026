@@ -80,7 +80,7 @@
 .careerItem {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--u);
+  gap: calc(var(--u) * 2);
 }
 
 /* 年月は、題の1行目に対して上下中央に置く。
@@ -92,6 +92,9 @@
   line-height: 1.6;
   color: var(--text);
   letter-spacing: 0.1em;
+  /* 数字を等幅にする。項目ごとに grid が独立しているので、
+     年月の幅が1pxでも違うと題の左端がそろわない */
+  font-variant-numeric: tabular-nums;
 }
 
 .careerTitle {
@@ -102,11 +105,14 @@
   font-weight: 500;
 }
 
-/* 題との間隔を 0.5u に、下の余りも打ち消して、
-   項目どうしの間隔（2.8u）が見た目どおりになるようにする */
+/* 題との間隔は、年月↔題と同じ 2u。
+   0.43em は自分の行送りの余り（(1.86em - 1em) / 2）。
+   上下とも打ち消して、指定した値がそのまま見た目の間隔になるようにする */
 .careerText {
-  margin-top: calc(var(--u) * 0.5 - 0.43em);
+  margin-top: calc(var(--u) * 2 - 0.43em);
   margin-bottom: -0.43em;
+  font-size: calc(var(--u) * 0.94);
+  line-height: 1.86;
 }
 
 /* 直前の「経歴」がすでに下の余白を持っているので、ここでは足さない */
@@ -161,7 +167,7 @@
 @media (max-width: 1024px) {
   .careerItem {
     grid-template-columns: auto 1fr;
-    gap: var(--u);
+    gap: calc(var(--u) * 2);
   }
   .skills {
     grid-template-columns: 1fr;
