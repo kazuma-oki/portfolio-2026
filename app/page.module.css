@@ -30,7 +30,14 @@
   display: grid;
   grid-template-columns: calc(var(--u) * 17.5) 1fr;
   gap: calc(var(--u) * 3.5);
-  align-items: start;
+  /* 左右の列を同じ高さにして、名前と本文の最終行の下端をそろえる */
+  align-items: stretch;
+}
+
+/* 名前を下端へ寄せられるよう、列を縦のflexにする */
+.profileVisual {
+  display: flex;
+  flex-direction: column;
 }
 
 .profilePhoto {
@@ -40,7 +47,10 @@
 }
 
 .profileName {
-  margin-top: var(--u);
+  /* 余った高さを上に逃がして、本文の最終行と下端をそろえる。
+     余りがないときは padding-top ぶんだけ空く */
+  margin-top: auto;
+  padding-top: var(--u);
   font-size: calc(var(--u) * 1.0625);
   line-height: 1.75;
   font-weight: 500;
@@ -154,7 +164,7 @@
 
 @media (max-width: 540px) {
   .worksInner { margin-top: 40px; }
-  .profileName { margin-top: calc(var(--u) * 0.85); }
+  .profileName { padding-top: calc(var(--u) * 0.85); }
   .profileText { font-size: 14px; }
   .skills { margin-top: 40px; }
   .ctaInner { width: 100%; }

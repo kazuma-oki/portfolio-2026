@@ -44,8 +44,18 @@
   margin-inline: calc(50% - 50vw);
   padding-inline: calc(50vw - var(--slide-w) / 2);
   overflow-x: auto;
+  /* overflow-x を指定すると縦は auto 扱いになり、丸め誤差ぶんだけ
+     縦にもスクロールできてしまう（ホイールや指で中身が上下に動く）。
+     縦は切って、ページのスクロールにまかせる */
+  overflow-y: hidden;
+  /* カード側で題名の行送りの余りを負のマージンで切っているため、
+     文字が箱より数px下に出る。縦を切ると欠けるので、その分を足しておく */
+  padding-bottom: 8px;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
+  /* 指の縦のスワイプはページへ。横だけこのカルーセルが受け取る
+     （pinch-zoom は残して拡大できるようにしておく） */
+  touch-action: pan-x pinch-zoom;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   /* 掴んで動かせることの手がかり。JSが動かないときはこれだけが残る */
