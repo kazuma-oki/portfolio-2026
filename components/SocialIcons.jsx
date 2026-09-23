@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import site from "@/data/site.json";
 import styles from "./SocialIcons.module.css";
 
@@ -9,6 +12,33 @@ const ICONS = {
 };
 
 const VIEWBOX = { X: "0 0 512 512", Instagram: "0 0 448 512" };
+
+/** 行き先がまだ決まっていないもの。押すと「只今準備中です！」と出す */
+function Soon({ name, icon, tabIndex }) {
+  const [shown, setShown] = useState(false);
+
+  // 出したままにせず、少し経ったら引っこめる
+  useEffect(() => {
+    if (!shown) return undefined;
+    const timer = setTimeout(() => setShown(false), 2400);
+    return () => clearTimeout(timer);
+  }, [shown]);
+
+  return (
+    <button
+      type="button"
+      className={styles.soon}
+      onClick={() => setShown(true)}
+      aria-label={`${name}（準備中）`}
+      tabIndex={tabIndex}
+    >
+      {icon}
+      <span className={styles.note} data-on={shown ? "true" : undefined} role="status">
+        只今準備中です！
+      </span>
+    </button>
+  );
+}
 
 /**
  * X / Instagram のリンク。フッターとドロワーで共有する。
@@ -39,14 +69,7 @@ export default function SocialIcons({ className = "", tabIndex }) {
                 {icon}
               </a>
             ) : (
-              <span
-                className={styles.soon}
-                role="img"
-                aria-label={`${s.name}（準備中）`}
-                title="準備中"
-              >
-                {icon}
-              </span>
+              <Soon name={s.name} icon={icon} tabIndex={tabIndex} />
             )}
           </li>
         );

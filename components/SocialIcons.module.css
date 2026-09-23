@@ -1,9 +1,47 @@
-/* 行き先がまだ決まっていないもの。押せないことが伝わるよう薄くする */
+/* 行き先がまだ決まっていないもの。押すと「準備中」と出す */
 
 .soon {
+  position: relative;
   display: inline-flex;
-  cursor: default;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
 }
 .soon svg {
-  opacity: 0.35;
+  opacity: 0.4;
+  transition: opacity 0.15s var(--ease);
+}
+.soon:hover svg,
+.soon:focus-visible svg {
+  opacity: 0.7;
+}
+
+/* 押したときに出る小さな吹き出し。アイコンの上に重ねる */
+.note {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 5;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--accent-dark);
+  color: var(--bg);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease-out);
+}
+.note[data-on="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soon svg,
+  .note { transition: none; }
 }
