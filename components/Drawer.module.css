@@ -2,6 +2,9 @@
   position: fixed;
   inset: 0;
   z-index: 90;
+  /* 閉じているときのメニューは右の画面外に逃がしてある。
+     そのままだと、その幅ぶん横に動かせてしまうので切る */
+  overflow: hidden;
   visibility: hidden;
   pointer-events: none;
   /* visibility は途中の状態を持たないので、そのままだと閉じる動きが
